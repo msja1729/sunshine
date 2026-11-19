@@ -3,8 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#FAF7F2" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#1F1A17" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#1A120D">
 <meta name="description" content="Sunshine: a gentle 21-day habit, mood and grounding companion. Private to your phone.">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
@@ -19,32 +18,19 @@
 body{margin:0}img{max-width:100%}
 /* Layout: top bar (brand + page tabs) → greeting with progress ring → 21-day garden → habits (left) beside a care column (right) → 21-day tracker. Phones stack in a fixed, calm order. */
 :root{
-  --bg:#FAF7F2; --surface:#FFFDF9; --ink:#3B2F2A; --muted:#7A6B62; --line:#EADFD3;
-  --terra-bg:#FCF1E9; --terra:#D9805F; --terra-ink:#9E5236; --honey:#E5AE57;
-  --sage-bg:#EEF4EF; --sage:#6B9071; --sage-ink:#4A6B50;
-  --calm-bg:#EEF0F7; --calm:#7C8DB5; --calm-ink:#4D5C82;
-  --soil:#D8C6B2; --water:#8DB8C9; --water-deep:#5E95AB;
-  --paper:#FFFFFF; --shadow:rgba(90,62,40,.12);
+  /* Dark "dusk temple" palette: night-brown ground, saffron and gold light, sage and calm blue kept for their roles */
+  --bg:#1A120D; --surface:#241913; --ink:#F6E9DA; --muted:#C4AE98; --line:#3A2A1F;
+  --terra-bg:#2F1D13; --terra:#F08A3C; --terra-ink:#FFB46B; --honey:#F4C25B;
+  --sage-bg:#1D2A20; --sage:#8DB98F; --sage-ink:#B5D8B4;
+  --calm-bg:#222538; --calm:#9EA9E0; --calm-ink:#CDD3F5;
+  --soil:#5C4433; --water:#6FB3C8; --water-deep:#9AD3E3;
+  --paper:#FBF3E6; --shadow:rgba(0,0,0,.55);
   --f-display:"Fraunces", Georgia, "Times New Roman", serif;
   --f-body:"Nunito", "Segoe UI", system-ui, sans-serif;
   --f-hand:"Caveat", "Segoe Print", cursive;
   --f-deva:"Tiro Devanagari Sanskrit", "Noto Serif Devanagari", "Mangal", serif;
+  color-scheme:dark;
 }
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
-  --bg:#1F1A17; --surface:#2A2420; --ink:#F2E8DE; --muted:#B5A699; --line:#3D342E;
-  --terra-bg:#36261F; --terra:#E89A7A; --terra-ink:#F0B49A; --honey:#E8BE6E;
-  --sage-bg:#222E25; --sage:#8FB394; --sage-ink:#A9CBAD;
-  --calm-bg:#262A36; --calm:#98A6CC; --calm-ink:#C2CBE6;
-  --soil:#5A4A3E; --water:#6FA3B8; --water-deep:#8CC0D4;
-  --paper:#F4ECE1; --shadow:rgba(0,0,0,.4); color-scheme:dark}}
-:root[data-theme="dark"]{
-  --bg:#1F1A17; --surface:#2A2420; --ink:#F2E8DE; --muted:#B5A699; --line:#3D342E;
-  --terra-bg:#36261F; --terra:#E89A7A; --terra-ink:#F0B49A; --honey:#E8BE6E;
-  --sage-bg:#222E25; --sage:#8FB394; --sage-ink:#A9CBAD;
-  --calm-bg:#262A36; --calm:#98A6CC; --calm-ink:#C2CBE6;
-  --soil:#5A4A3E; --water:#6FA3B8; --water-deep:#8CC0D4;
-  --paper:#F4ECE1; --shadow:rgba(0,0,0,.4); color-scheme:dark}
-
 *{box-sizing:border-box}
 [hidden]{display:none!important}
 body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.55;
@@ -543,7 +529,18 @@ footer{display:flex;flex-direction:column;gap:14px;align-items:center;text-align
 }
 
 /* ---------- Warm sunlit background and photo first ---------- */
-body{background-color:var(--bg);background-image:radial-gradient(130% 55% at 50% -8%,color-mix(in srgb,var(--honey) 30%,transparent),transparent 70%),linear-gradient(180deg,var(--terra-bg) 0%,var(--bg) 45%);background-repeat:no-repeat;min-height:100vh}
+body{background-color:var(--bg);background-image:radial-gradient(120% 50% at 50% -12%,rgba(240,138,60,.32),transparent 70%),radial-gradient(60% 30% at 85% 0%,rgba(244,194,91,.14),transparent 70%),linear-gradient(180deg,#24150D 0%,var(--bg) 40%);background-repeat:no-repeat;min-height:100vh}
+.mandala-clip{position:absolute;top:0;left:0;right:0;height:460px;overflow:hidden;pointer-events:none;z-index:0}
+.mandala{position:absolute;top:-150px;left:50%;width:560px;max-width:none;transform:translateX(-50%);opacity:.09;pointer-events:none;z-index:0;animation:spin 180s linear infinite}
+.wrap{position:relative;z-index:1}
+.panel,.card,.lifeline,.stepper li{box-shadow:0 14px 34px -24px rgba(0,0,0,.8)}
+.panel{border-color:color-mix(in srgb,var(--terra) 14%,var(--line))}
+.ring .fg{filter:drop-shadow(0 0 6px rgba(244,194,91,.55))}
+.brand svg{filter:drop-shadow(0 0 8px rgba(244,194,91,.6))}
+.hero h1 em{color:var(--honey)}
+.quote{color:#FBE3BF}
+.mantra .dv{color:var(--honey);text-shadow:0 0 14px rgba(244,194,91,.45)}
+.photo{background:#E9DCCB}
 .garden{background:linear-gradient(160deg,var(--terra-bg),var(--surface) 78%)}
 .wins{background:linear-gradient(170deg,var(--terra-bg),var(--surface) 62%)}
 .memory{background:linear-gradient(170deg,color-mix(in srgb,var(--honey) 14%,var(--surface)),var(--surface) 70%)}
@@ -558,11 +555,12 @@ body{background-color:var(--bg);background-image:radial-gradient(130% 55% at 50%
 </head>
 <body>
 
-<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><linearGradient id="ringGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#D9805F"/><stop offset=".5" stop-color="#E5AE57"/><stop offset="1" stop-color="#6B9071"/></linearGradient></defs></svg>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><linearGradient id="ringGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#F08A3C"/><stop offset=".5" stop-color="#F4C25B"/><stop offset="1" stop-color="#8DB98F"/></linearGradient></defs></svg>
 
+<div class="mandala-clip" aria-hidden="true"><svg class="mandala" viewBox="0 0 400 400" aria-hidden="true" fill="none" stroke="#F4C25B" stroke-width="1.2"><circle cx="200" cy="200" r="196"/><circle cx="200" cy="200" r="182"/><circle cx="200" cy="200" r="120"/><circle cx="200" cy="200" r="70"/><circle cx="200" cy="200" r="30"/><ellipse cx="200" cy="50" rx="22" ry="46" transform="rotate(0.0 200 200)"/><ellipse cx="200" cy="50" rx="22" ry="46" transform="rotate(30.0 200 200)"/><ellipse cx="200" cy="50" rx="22" ry="46" transform="rotate(60.0 200 200)"/><ellipse cx="200" cy="50" rx="22" ry="46" transform="rotate(90.0 200 200)"/><ellipse cx="200" cy="50" rx="22" ry="46" transform="rotate(120.0 200 200)"/><ellipse cx="200" cy="50" rx="22" ry="46" transform="rotate(150.0 200 200)"/><ellipse cx="200" cy="50" rx="22" ry="46" transform="rotate(180.0 200 200)"/><ellipse cx="200" cy="50" rx="22" ry="46" transform="rotate(210.0 200 200)"/><ellipse cx="200" cy="50" rx="22" ry="46" transform="rotate(240.0 200 200)"/><ellipse cx="200" cy="50" rx="22" ry="46" transform="rotate(270.0 200 200)"/><ellipse cx="200" cy="50" rx="22" ry="46" transform="rotate(300.0 200 200)"/><ellipse cx="200" cy="50" rx="22" ry="46" transform="rotate(330.0 200 200)"/><ellipse cx="200" cy="104" rx="14" ry="32" transform="rotate(0.0 200 200)"/><ellipse cx="200" cy="104" rx="14" ry="32" transform="rotate(22.5 200 200)"/><ellipse cx="200" cy="104" rx="14" ry="32" transform="rotate(45.0 200 200)"/><ellipse cx="200" cy="104" rx="14" ry="32" transform="rotate(67.5 200 200)"/><ellipse cx="200" cy="104" rx="14" ry="32" transform="rotate(90.0 200 200)"/><ellipse cx="200" cy="104" rx="14" ry="32" transform="rotate(112.5 200 200)"/><ellipse cx="200" cy="104" rx="14" ry="32" transform="rotate(135.0 200 200)"/><ellipse cx="200" cy="104" rx="14" ry="32" transform="rotate(157.5 200 200)"/><ellipse cx="200" cy="104" rx="14" ry="32" transform="rotate(180.0 200 200)"/><ellipse cx="200" cy="104" rx="14" ry="32" transform="rotate(202.5 200 200)"/><ellipse cx="200" cy="104" rx="14" ry="32" transform="rotate(225.0 200 200)"/><ellipse cx="200" cy="104" rx="14" ry="32" transform="rotate(247.5 200 200)"/><ellipse cx="200" cy="104" rx="14" ry="32" transform="rotate(270.0 200 200)"/><ellipse cx="200" cy="104" rx="14" ry="32" transform="rotate(292.5 200 200)"/><ellipse cx="200" cy="104" rx="14" ry="32" transform="rotate(315.0 200 200)"/><ellipse cx="200" cy="104" rx="14" ry="32" transform="rotate(337.5 200 200)"/><ellipse cx="200" cy="148" rx="10" ry="22" transform="rotate(0.0 200 200)"/><ellipse cx="200" cy="148" rx="10" ry="22" transform="rotate(45.0 200 200)"/><ellipse cx="200" cy="148" rx="10" ry="22" transform="rotate(90.0 200 200)"/><ellipse cx="200" cy="148" rx="10" ry="22" transform="rotate(135.0 200 200)"/><ellipse cx="200" cy="148" rx="10" ry="22" transform="rotate(180.0 200 200)"/><ellipse cx="200" cy="148" rx="10" ry="22" transform="rotate(225.0 200 200)"/><ellipse cx="200" cy="148" rx="10" ry="22" transform="rotate(270.0 200 200)"/><ellipse cx="200" cy="148" rx="10" ry="22" transform="rotate(315.0 200 200)"/></svg></div>
 <div class="wrap">
   <header class="topbar">
-    <div class="brand"><svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="7" fill="#E5AE57"/><g stroke="#D9805F" stroke-width="2.2" stroke-linecap="round"><path d="M16 2.5v4M16 25.5v4M2.5 16h4M25.5 16h4M6.4 6.4l2.8 2.8M22.8 22.8l2.8 2.8M6.4 25.6l2.8-2.8M22.8 9.2l2.8-2.8"/></g></svg>Sunshine</div>
+    <div class="brand"><svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="7" fill="#F4C25B"/><g stroke="#F08A3C" stroke-width="2.2" stroke-linecap="round"><path d="M16 2.5v4M16 25.5v4M2.5 16h4M25.5 16h4M6.4 6.4l2.8 2.8M22.8 22.8l2.8 2.8M6.4 25.6l2.8-2.8M22.8 9.2l2.8-2.8"/></g></svg>Sunshine</div>
     <nav class="nav" aria-label="Pages">
       <button class="tab" data-go="home" aria-selected="true">🌿 Daily Sunshine (Home)</button>
       <button class="tab" data-go="progress" aria-selected="false">🌱 Progress</button>
@@ -768,30 +766,30 @@ const ICON={
 };
 const STARS='radial-gradient(1.2px 1.2px at 12% 30%,#fff 60%,transparent),radial-gradient(1px 1px at 28% 60%,#fff 60%,transparent),radial-gradient(1.4px 1.4px at 44% 22%,#fff 60%,transparent),radial-gradient(1px 1px at 58% 48%,#fff 60%,transparent),radial-gradient(1px 1px at 36% 80%,#fff 60%,transparent),radial-gradient(1.3px 1.3px at 6% 72%,#fff 60%,transparent),';
 const HEART=(x,y,d)=>`<g transform="translate(${x} ${y})"><path class="rise" style="animation-delay:${d}s" d="M0 4C0-1 7-1 7 4c0-5 7-5 7 0 0 5-7 9-7 9S0 9 0 4z" fill="#FFF1E8"/></g>`;
-const G1='#E8A266', G2='#8FB394';
+const G1='#F08A3C', G2='#8DB98F';
 /* Category 1 scenes stay in warm terracotta / honey tones; category 2 scenes stay in sage / eucalyptus tones. */
 const HABITS=[
- {id:'sleep',cat:1,icon:'moon',short:'Sleep',title:'Sleep Schedule',meta:'7–8 hours of real rest',glow:'#E5AE57',cap:'Rest by 10:45 PM · Rise at 7:00 AM',
-  sbg:STARS+'linear-gradient(120deg,#2F2B55,#5B4777 55%,#C98A5E)',
+ {id:'sleep',cat:1,icon:'moon',short:'Sleep',title:'Sleep Schedule',meta:'7–8 hours of real rest',glow:'#F4C25B',cap:'Rest by 10:45 PM · Rise at 7:00 AM',
+  sbg:STARS+'linear-gradient(120deg,#1F1B3D,#4A3566 55%,#D2773A)',
   art:'<circle class="tw" cx="20" cy="14" r="1.6" fill="#fff"/><circle class="tw" style="animation-delay:.7s" cx="34" cy="34" r="1.3" fill="#fff"/><circle class="tw" style="animation-delay:1.3s" cx="12" cy="42" r="1.1" fill="#fff"/><path d="M60 8a18 18 0 1 0 16 27 14 14 0 0 1-16-27z" fill="#F6DFA8"/>',
   subs:[{id:'sleep',label:'Slept by 10:45 PM, up at 7:00 AM',win:'Kept your gentle sleep rhythm'}]},
  {id:'meals',cat:1,icon:'bowl',short:'Meals',title:'Three Meals on Time',meta:'Nourishing yourself, gently',glow:G1,cap:'9:30 AM · 1:00 PM · 7:00 PM',
-  sbg:'linear-gradient(120deg,#C9694B,#DE8E66 55%,#EDB884)',
+  sbg:'linear-gradient(120deg,#C2541C,#E2782E 55%,#F2A64C)',
   art:'<path class="rise" d="M40 28c-3-4 3-6 0-11" stroke="#fff" stroke-width="2.2" fill="none" stroke-linecap="round"/><path class="rise" style="animation-delay:.8s" d="M50 28c-3-4 3-6 0-11" stroke="#fff" stroke-width="2.2" fill="none" stroke-linecap="round"/><path class="rise" style="animation-delay:1.6s" d="M60 28c-3-4 3-6 0-11" stroke="#fff" stroke-width="2.2" fill="none" stroke-linecap="round"/><path d="M28 34h44a22 22 0 0 1-44 0z" fill="#FFF3E2"/><rect x="25" y="32" width="50" height="3.5" rx="1.7" fill="#FFE0BE"/>',
   subs:[{id:'bfast',label:'Breakfast',time:'9:30 AM',win:'Ate breakfast'},{id:'lunch',label:'Lunch',time:'1:00 PM',win:'Ate lunch'},{id:'dinner',label:'Dinner',time:'7:00 PM',win:'Ate dinner'}]},
  {id:'water',cat:1,icon:'drop',short:'Water',title:'Hydrate',meta:'3 liters through the day',water:true,glow:G1,cap:'3 liters, sip by sip',
-  sbg:'linear-gradient(120deg,#B9674E,#D58E6C 55%,#E9C09A)',
+  sbg:'linear-gradient(120deg,#B04A1C,#D46E2C 55%,#EBA157)',
   art:'<circle class="rise" cx="22" cy="46" r="3" fill="#FFF3E6"/><circle class="rise" style="animation-delay:.9s" cx="32" cy="50" r="2.2" fill="#FFF3E6"/><circle class="rise" style="animation-delay:1.7s" cx="16" cy="54" r="1.8" fill="#FFF3E6"/><path class="bob" d="M58 6s13 14 13 24a13 13 0 0 1-26 0c0-10 13-24 13-24z" fill="#DDF0F5"/>',
   subs:[]},
  {id:'meds',cat:1,icon:'pill',short:'Medicines',title:'Medicines & Vitamins',meta:'Caring for your body’s chemistry',glow:G1,cap:'10 AM · 9 PM · B12 daily · Vitamin D on Sundays',
-  sbg:'linear-gradient(120deg,#A85A44,#C97F5C 55%,#E3AE76)',
+  sbg:'linear-gradient(120deg,#9C3F17,#C86425 55%,#E6963F)',
   art:'<g class="spin"><circle cx="28" cy="30" r="9" fill="#FFE7A3"/><path d="M28 14v4M28 42v4M12 30h4M40 30h4M17 19l3 3M36 38l3 3M17 41l3-3M36 22l3-3" stroke="#FFE7A3" stroke-width="2" stroke-linecap="round"/></g><path class="bob" d="M66 16a11 11 0 1 0 10 17 9 9 0 0 1-10-17z" fill="#FFF1DA"/>',
   subs:[{id:'medam',label:'Escitalopram',time:'10:00 AM',win:'Took morning medicine'},
         {id:'b12',label:'Vitamin B12',time:'Daily',win:'Took Vitamin B12'},
         {id:'vitd',label:'Vitamin D',time:'Sundays',only:[0],win:'Took your Sunday Vitamin D'},
         {id:'medpm',label:'Clonazepam',time:'9:00 PM',win:'Took night medicine'}]},
  {id:'pray',cat:1,icon:'candle',short:'Prayer',title:'Prayer & Grounding',meta:'A quiet moment to feel held',glow:'#F2C46D',cap:'ॐ श्री मात्रे नमः',deva:true,
-  sbg:'radial-gradient(circle at 75% 45%,#D69A48,#7E4529 72%)',mantra:true,
+  sbg:'radial-gradient(circle at 75% 45%,#E6A23C,#6E2E14 72%)',mantra:true,
   art:'<circle class="breathe" cx="56" cy="20" r="16" fill="rgba(255,214,130,.35)"/><rect x="49" y="30" width="14" height="28" rx="2" fill="#FFF4E0"/><path d="M56 30v-4" stroke="#5a3b1f" stroke-width="1.5"/><path class="flick" d="M56 8c4 5 5 9 0 16-5-7-4-11 0-16z" fill="#FFD27A"/>',
   subs:[{id:'pray',label:'Prayed: Om Shree Matre Namaha',win:'Prayed: Om Shree Matre Namaha'}]},
  {id:'classes',cat:2,icon:'book',short:'Classes',title:'Attend Classes',meta:'Showing up is enough',glow:G2,cap:'Showing up is enough',
@@ -1200,7 +1198,7 @@ let sos={feel:null,chosen:null,done:false,suggest:null},sosTimers=[],timerLeft=0
 const clearSos=()=>{sosTimers.forEach(clearInterval);sosTimers=[];timerRun=false};
 const sosDay=d=>Math.round((parse(d)-parse(state.start))/864e5)+1;
 const mmss=n=>Math.floor(n/60)+':'+String(n%60).padStart(2,'0');
-const SUN='<svg class="sun" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="7" fill="#E5AE57"/><g stroke="#D9805F" stroke-width="2" stroke-linecap="round"><path d="M16 2.5v4M16 25.5v4M2.5 16h4M25.5 16h4M6.4 6.4l2.8 2.8M22.8 22.8l2.8 2.8M6.4 25.6l2.8-2.8M22.8 9.2l2.8-2.8"/></g></svg>';
+const SUN='<svg class="sun" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="7" fill="#F4C25B"/><g stroke="#F08A3C" stroke-width="2" stroke-linecap="round"><path d="M16 2.5v4M16 25.5v4M2.5 16h4M25.5 16h4M6.4 6.4l2.8 2.8M22.8 22.8l2.8 2.8M6.4 25.6l2.8-2.8M22.8 9.2l2.8-2.8"/></g></svg>';
 function toolHTML(tool){
   if(!tool)return'<p class="soft">Take your time. Tap Done whenever you’re ready.</p>';
   if(tool.startsWith('breath'))return'<div class="breather"><div class="ring2"></div><div class="orb"></div><div class="t"><span class="phase">Get comfortable</span><span class="count"></span></div></div>';
@@ -1357,7 +1355,7 @@ function renderLock(mode){
   <button class="linkc" data-lock="forgot">Forgot PIN?</button>`;
   setTimeout(()=>{try{$('lPin').focus()}catch(e){}},50);
 }
-const SUN_SVG='<svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="7" fill="#E5AE57"/><g stroke="#D9805F" stroke-width="2.2" stroke-linecap="round"><path d="M16 2.5v4M16 25.5v4M2.5 16h4M25.5 16h4M6.4 6.4l2.8 2.8M22.8 22.8l2.8 2.8M6.4 25.6l2.8-2.8M22.8 9.2l2.8-2.8"/></g></svg>';
+const SUN_SVG='<svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="7" fill="#F4C25B"/><g stroke="#F08A3C" stroke-width="2.2" stroke-linecap="round"><path d="M16 2.5v4M16 25.5v4M2.5 16h4M25.5 16h4M6.4 6.4l2.8 2.8M22.8 22.8l2.8 2.8M6.4 25.6l2.8-2.8M22.8 9.2l2.8-2.8"/></g></svg>';
 $('lock').addEventListener('submit',async e=>{
   e.preventDefault();const msg=$('lockMsg');
   if(e.target.id==='regForm'){
@@ -1523,7 +1521,7 @@ function buildNotifications(){
         const at=new Date(day);at.setHours(hh,mm,0,0);if(at.getTime()<=now+30000)return;
         const pick=(arr,o)=>arr[(d+ri+k+o)%arr.length];
         const title=fill(pick(r.t,0),n),body=fill(pick(r.b,1),n);
-        list.push({id:id++,title,body,largeBody:body,summaryText:'Sunshine',channelId:'sunshine',smallIcon:'ic_stat_sunshine',iconColor:'#D9805F',
+        list.push({id:id++,title,body,largeBody:body,summaryText:'Sunshine',channelId:'sunshine',smallIcon:'ic_stat_sunshine',iconColor:'#F08A3C',
           schedule:{at,allowWhileIdle:true},extra:{card:r.card}});
       });
     });
@@ -1544,7 +1542,7 @@ async function scheduleReminders(){
 }
 async function setupNative(){
   if(!LN)return;
-  try{await LN.createChannel({id:'sunshine',name:'Gentle reminders',description:'Friendly reminders for your Sunshine habits',importance:4,visibility:0,lights:true,lightColor:'#E5AE57',vibration:true})}catch(e){}
+  try{await LN.createChannel({id:'sunshine',name:'Gentle reminders',description:'Friendly reminders for your Sunshine habits',importance:4,visibility:0,lights:true,lightColor:'#F4C25B',vibration:true})}catch(e){}
   try{await LN.addListener('localNotificationActionPerformed',ev=>{
     const card=ev&&ev.notification&&ev.notification.extra&&ev.notification.extra.card;
     if(location.hash!=='#home')location.hash='home';
@@ -1578,7 +1576,7 @@ $('remBox').addEventListener('click',async e=>{
   if(b.id==='remTest'){
     if(!(await askNotify())){m.textContent='Notifications are turned off for Sunshine. Turn them on in your phone’s app settings.';return}
     const n=(profile&&profile.name)||'friend';
-    try{await LN.schedule({notifications:[{id:99999,title:`Hello, ${n} ☀️`,body:'This is how your Sunshine reminders will look. You’re doing beautifully.',largeBody:'This is how your Sunshine reminders will look. You’re doing beautifully.',summaryText:'Sunshine',channelId:'sunshine',smallIcon:'ic_stat_sunshine',iconColor:'#D9805F',schedule:{at:new Date(Date.now()+5000),allowWhileIdle:true},extra:{card:'wins'}}]});m.textContent='A test reminder will arrive in about 5 seconds.'}
+    try{await LN.schedule({notifications:[{id:99999,title:`Hello, ${n} ☀️`,body:'This is how your Sunshine reminders will look. You’re doing beautifully.',largeBody:'This is how your Sunshine reminders will look. You’re doing beautifully.',summaryText:'Sunshine',channelId:'sunshine',smallIcon:'ic_stat_sunshine',iconColor:'#F08A3C',schedule:{at:new Date(Date.now()+5000),allowWhileIdle:true},extra:{card:'wins'}}]});m.textContent='A test reminder will arrive in about 5 seconds.'}
     catch(err){m.textContent='The test couldn’t be sent.'}}
 });
 if(CAP){

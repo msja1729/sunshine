@@ -3,12 +3,12 @@
   "appName": "Sunshine",
   "webDir": "www",
   "android": {
-    "backgroundColor": "#FAF7F2"
+    "backgroundColor": "#1A120D"
   },
   "plugins": {
     "LocalNotifications": {
       "smallIcon": "ic_stat_sunshine",
-      "iconColor": "#D9805F"
+      "iconColor": "#F08A3C"
     }
   }
 }

@@ -1,0 +1,1280 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#FAF7F2" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#1F1A17" media="(prefers-color-scheme: dark)">
+<meta name="description" content="Sunshine: a gentle 21-day habit, mood and grounding companion. Private to your phone.">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>Sunshine</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Nunito:wght@400;500;600;700;800&family=Caveat:wght@500;600&family=Tiro+Devanagari+Sanskrit&display=swap">
+<style>
+body{margin:0}img{max-width:100%}
+/* Layout: top bar (brand + page tabs) → greeting with progress ring → 21-day garden → habits (left) beside a care column (right) → 21-day tracker. Phones stack in a fixed, calm order. */
+:root{
+  --bg:#FAF7F2; --surface:#FFFDF9; --ink:#3B2F2A; --muted:#7A6B62; --line:#EADFD3;
+  --terra-bg:#FCF1E9; --terra:#D9805F; --terra-ink:#9E5236; --honey:#E5AE57;
+  --sage-bg:#EEF4EF; --sage:#6B9071; --sage-ink:#4A6B50;
+  --calm-bg:#EEF0F7; --calm:#7C8DB5; --calm-ink:#4D5C82;
+  --soil:#D8C6B2; --water:#8DB8C9; --water-deep:#5E95AB;
+  --paper:#FFFFFF; --shadow:rgba(90,62,40,.12);
+  --f-display:"Fraunces", Georgia, "Times New Roman", serif;
+  --f-body:"Nunito", "Segoe UI", system-ui, sans-serif;
+  --f-hand:"Caveat", "Segoe Print", cursive;
+  --f-deva:"Tiro Devanagari Sanskrit", "Noto Serif Devanagari", "Mangal", serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#1F1A17; --surface:#2A2420; --ink:#F2E8DE; --muted:#B5A699; --line:#3D342E;
+  --terra-bg:#36261F; --terra:#E89A7A; --terra-ink:#F0B49A; --honey:#E8BE6E;
+  --sage-bg:#222E25; --sage:#8FB394; --sage-ink:#A9CBAD;
+  --calm-bg:#262A36; --calm:#98A6CC; --calm-ink:#C2CBE6;
+  --soil:#5A4A3E; --water:#6FA3B8; --water-deep:#8CC0D4;
+  --paper:#F4ECE1; --shadow:rgba(0,0,0,.4); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#1F1A17; --surface:#2A2420; --ink:#F2E8DE; --muted:#B5A699; --line:#3D342E;
+  --terra-bg:#36261F; --terra:#E89A7A; --terra-ink:#F0B49A; --honey:#E8BE6E;
+  --sage-bg:#222E25; --sage:#8FB394; --sage-ink:#A9CBAD;
+  --calm-bg:#262A36; --calm:#98A6CC; --calm-ink:#C2CBE6;
+  --soil:#5A4A3E; --water:#6FA3B8; --water-deep:#8CC0D4;
+  --paper:#F4ECE1; --shadow:rgba(0,0,0,.4); color-scheme:dark}
+
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.55;
+  padding-left:max(16px, env(safe-area-inset-left,0px));padding-right:max(16px, env(safe-area-inset-right,0px));padding-block:14px 90px}
+.wrap{max-width:1160px;margin:0 auto;display:flex;flex-direction:column;gap:20px}
+h1,h2,h3{font-family:var(--f-display);font-weight:500;margin:0;text-wrap:balance;letter-spacing:-.01em}
+p{margin:0}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:2.5px solid var(--terra);outline-offset:2px;border-radius:8px}
+.sr{position:absolute;opacity:0;width:1px;height:1px;pointer-events:none}
+.eyebrow{font-size:.72rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.soft{font-size:.88rem;color:var(--muted)}
+.view{display:flex;flex-direction:column;gap:20px}
+
+/* Top bar */
+.topbar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px}
+.brand{display:flex;align-items:center;gap:8px;font-family:var(--f-display);font-size:1.45rem;font-weight:600}
+.brand svg{width:30px;height:30px}
+.nav{display:flex;gap:4px;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:4px}
+.tab{border:0;background:transparent;border-radius:999px;padding:8px 16px;font-weight:700;font-size:.9rem;color:var(--muted);transition:background .25s,color .25s;white-space:nowrap}
+.tab:hover{color:var(--ink)}
+.tab[data-go="home"][aria-selected="true"]{background:var(--sage);color:#fff}
+.tab[data-go="sos"][aria-selected="true"]{background:var(--calm);color:#fff}
+@media (max-width:520px){.topbar{justify-content:center}.nav{width:100%}.tab{flex:1;padding:8px 6px;font-size:.82rem;white-space:normal}}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:8px 15px;font-weight:700;font-size:.88rem;transition:background .2s,border-color .2s,transform .15s;cursor:pointer;text-decoration:none}
+.btn:hover{border-color:var(--soil);transform:translateY(-1px)}
+.btn.terra{background:var(--terra);border-color:var(--terra);color:#fff}
+.btn.sage{background:var(--sage);border-color:var(--sage);color:#fff}
+.btn.calm{background:var(--calm);border-color:var(--calm);color:#fff}
+.btn.ghost{background:transparent}
+.btn.big{padding:12px 22px;font-size:1rem}
+
+/* Hero */
+.hero{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px 28px;padding:6px 0}
+.hero-text{display:flex;flex-direction:column;gap:6px;min-width:0;flex:1 1 360px}
+.hero h1{font-size:clamp(1.8rem,4.2vw,2.7rem);line-height:1.1}
+.hero h1 em{font-style:italic;color:var(--terra-ink)}
+.hero .sub{color:var(--muted);max-width:54ch}
+.ring{display:flex;align-items:center;gap:12px}
+.ring svg{width:84px;height:84px;transform:rotate(-90deg)}
+.ring circle{fill:none;stroke-width:8}
+.ring .bg{stroke:var(--line)}
+.ring .fg{stroke:url(#ringGrad);stroke-linecap:round;transition:stroke-dashoffset .7s ease}
+.ring-text{display:flex;flex-direction:column}
+.ring-text b{font-family:var(--f-display);font-size:1.6rem;font-weight:500;line-height:1;font-variant-numeric:tabular-nums}
+
+.banner{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;justify-content:space-between;background:var(--surface);border:1px dashed var(--soil);border-radius:16px;padding:12px 16px;color:var(--muted)}
+
+/* Shared surfaces */
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:22px;padding:18px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.panel h2{font-size:1.2rem}
+.panel-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:4px 14px}
+.legend{font-size:.8rem;color:var(--muted)}
+
+/* Garden */
+.plots{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
+@media (min-width:860px){.plots{grid-template-columns:repeat(21,minmax(0,1fr))}}
+.plot{border:0;background:transparent;border-radius:12px;padding:4px 0 2px;display:flex;flex-direction:column;align-items:center;transition:background .2s}
+.plot svg{width:100%;max-width:42px;height:auto;display:block}
+.plot span{font-size:.7rem;color:var(--muted);font-variant-numeric:tabular-nums;font-weight:700}
+.plot:hover:not(:disabled){background:var(--terra-bg)}
+.plot.today span{color:var(--terra-ink)}
+.plot.sel{background:var(--sage-bg);box-shadow:inset 0 0 0 1.5px var(--sage)}
+.plot:disabled{cursor:default;opacity:.5}
+
+/* Main layout */
+.layout{display:flex;flex-direction:column;gap:20px}
+.side{display:contents}
+.mood{order:1}.habits{order:2}.wins{order:3}.step{order:4}.memory{order:5}
+@media (min-width:940px){
+  .layout{display:grid;grid-template-columns:minmax(0,1fr) 340px;align-items:start;gap:24px}
+  .habits{order:0}
+  .side{display:flex;flex-direction:column;gap:20px}
+  .mood{order:1}.wins{order:2}.step{order:3}.memory{order:4}
+}
+.habits{display:flex;flex-direction:column;gap:24px;min-width:0}
+.cat-head{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.cat-head .pill{font-size:.72rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;border-radius:99px;padding:4px 10px;color:#fff}
+.cat1 .pill{background:var(--terra)}.cat2 .pill{background:var(--sage)}
+.cat-head h2{font-size:1.35rem}
+.cat-head p{color:var(--muted);font-size:.88rem;margin-left:auto;text-align:right}
+@media (max-width:600px){.cat-head{flex-wrap:wrap}.cat-head p{margin-left:0;text-align:left;width:100%}}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:14px}
+
+/* Habit card */
+.card{--glow:var(--honey);position:relative;border-radius:20px;padding:0 16px 16px;display:flex;flex-direction:column;gap:12px;overflow:hidden;min-width:0;transition:box-shadow .4s}
+.cat1 .card{background:var(--terra-bg);border:1px solid color-mix(in srgb,var(--terra) 22%,transparent)}
+.cat2 .card{background:var(--sage-bg);border:1px solid color-mix(in srgb,var(--sage) 22%,transparent)}
+.scene{margin:0 -16px;height:72px;position:relative;overflow:hidden;background:var(--sbg);transition:filter .6s}
+.scene small{position:absolute;left:16px;bottom:9px;right:100px;color:#FFF8EE;font-size:.76rem;font-weight:800;letter-spacing:.03em;text-shadow:0 1px 3px rgba(0,0,0,.3);line-height:1.25}
+.scene small.deva{font-family:var(--f-deva);font-size:.95rem;font-weight:400;letter-spacing:0}
+.scene .motif{position:absolute;right:10px;top:5px;width:84px;height:62px;opacity:.75;transition:opacity .5s,filter .5s}
+.motif *{transform-box:fill-box;transform-origin:center}
+.scene::after{content:"";position:absolute;inset:0;background:radial-gradient(circle at 78% 45%,rgba(255,250,232,.95),transparent 62%);opacity:0;pointer-events:none}
+.card-head{display:flex;gap:10px;align-items:center}
+.card h3{font-size:1.06rem;line-height:1.25;flex:1;min-width:0}
+.card .meta{font-size:.82rem;color:var(--muted);margin-top:-6px}
+.badge{font-size:.68rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;border-radius:99px;padding:3px 9px;opacity:0;transform:scale(.8);transition:all .35s;color:#fff;flex:none}
+.cat1 .badge{background:var(--terra)}.cat2 .badge{background:var(--sage)}
+.card.done .badge{opacity:1;transform:scale(1)}
+.card.done{box-shadow:0 0 0 1.5px var(--glow),0 10px 32px -8px color-mix(in srgb,var(--glow) 65%,transparent);animation:glow 3.6s ease-in-out infinite}
+.card.done .scene{filter:brightness(1.12) saturate(1.15)}
+.card.done .motif{opacity:1;filter:drop-shadow(0 0 7px rgba(255,240,200,.85))}
+.card.flash .scene::after{animation:flash 1.3s ease-out}
+@keyframes flash{25%{opacity:1}100%{opacity:0}}
+@keyframes glow{50%{box-shadow:0 0 0 1.5px var(--glow),0 10px 46px -2px color-mix(in srgb,var(--glow) 80%,transparent)}}
+.card.done .tw{animation:tw 2.2s ease-in-out infinite}
+.card.done .rise{animation:rise 2.6s ease-in-out infinite}
+.card.done .bob{animation:bob 2.8s ease-in-out infinite}
+.card.done .spin{animation:spin 16s linear infinite}
+.card.done .flick{transform-origin:50% 100%;animation:flicker 1.6s ease-in-out infinite}
+.card.done .shim{animation:shimmer 2.2s ease-in-out infinite}
+.card.done .breathe{animation:breathe 5s ease-in-out infinite}
+@keyframes tw{50%{opacity:.25}}
+@keyframes rise{0%{transform:translateY(5px);opacity:0}35%{opacity:1}100%{transform:translateY(-12px);opacity:0}}
+@keyframes bob{50%{transform:translateY(-4px)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes flicker{50%{transform:scale(.86,1.1) rotate(-4deg)}}
+@keyframes shimmer{0%,100%{transform:scale(.6);opacity:.5}50%{transform:scale(1.15);opacity:1}}
+@keyframes breathe{50%{transform:scale(1.28);opacity:.55}}
+
+.subs{display:flex;flex-direction:column;gap:6px}
+.check{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:12px;background:color-mix(in srgb,var(--surface) 70%,transparent);cursor:pointer;transition:background .2s;font-size:.94rem}
+.check:hover{background:var(--surface)}
+.check .box{width:22px;height:22px;flex:none;border-radius:7px;border:1.6px solid var(--soil);display:grid;place-items:center;transition:all .25s;background:var(--surface)}
+.check .box svg{width:14px;height:14px;stroke:#fff;stroke-width:3;fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:20;stroke-dashoffset:20;transition:stroke-dashoffset .35s ease .05s}
+.check input:checked + .box svg{stroke-dashoffset:0}
+.cat1 .check input:checked + .box{background:var(--terra);border-color:var(--terra)}
+.cat2 .check input:checked + .box,.step .check input:checked + .box{background:var(--sage);border-color:var(--sage)}
+.check input:focus-visible + .box{outline:2.5px solid var(--terra);outline-offset:2px}
+.check .lbl{flex:1;min-width:0}
+.check .time{font-size:.74rem;font-weight:800;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
+.check input:checked ~ .lbl{color:var(--muted)}
+.mantra{text-align:center;padding:10px;border-radius:14px;background:color-mix(in srgb,var(--honey) 14%,var(--surface));display:flex;flex-direction:column;gap:2px}
+.mantra .dv{font-family:var(--f-deva);font-size:1.35rem;color:var(--terra-ink);line-height:1.3}
+.mantra .tr{font-size:.82rem;font-weight:700;color:var(--muted);letter-spacing:.03em}
+
+/* Water */
+.water-row{display:flex;gap:16px;align-items:center}
+.glass{width:58px;height:104px;flex:none;border-radius:10px 10px 20px 20px;border:2px solid color-mix(in srgb,var(--water) 70%,var(--line));background:var(--surface);position:relative;overflow:hidden}
+.fill{position:absolute;left:0;right:0;bottom:0;height:0;background:linear-gradient(180deg,var(--water),var(--water-deep));transition:height .7s cubic-bezier(.3,1.3,.5,1)}
+.fill svg{position:absolute;top:-9px;left:0;width:200%;height:10px;animation:wave 2.6s linear infinite}
+.fill svg path{fill:var(--water)}
+@keyframes wave{to{transform:translateX(-50%)}}
+.glass .marks{position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent 0 20px,color-mix(in srgb,var(--water) 35%,transparent) 20px 21px)}
+.water-info{display:flex;flex-direction:column;gap:8px;min-width:0}
+.water-amt{font-family:var(--f-display);font-size:1.5rem;font-variant-numeric:tabular-nums;line-height:1}
+.water-amt small{font-family:var(--f-body);font-size:.85rem;color:var(--muted)}
+.water-btns{display:flex;flex-wrap:wrap;gap:6px}
+.water-btns .btn{padding:6px 11px;font-size:.84rem}
+
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{border:1px solid color-mix(in srgb,var(--sage) 40%,transparent);background:transparent;border-radius:99px;padding:4px 11px;font-size:.82rem;font-weight:700;color:var(--sage-ink);transition:all .2s}
+.chip[aria-pressed="true"]{background:var(--sage);color:#fff;border-color:var(--sage)}
+.note{width:100%;border:1px solid var(--line);border-radius:12px;background:var(--bg);color:var(--ink);padding:9px 12px;font:inherit;font-size:.92rem}
+.note:focus{outline:none;border-color:var(--sage)}
+.card .note{background:var(--surface)}
+
+/* Mood */
+.moods{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}
+.mood-btn{border:1px solid var(--line);background:transparent;border-radius:14px;padding:8px 2px 6px;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:.74rem;font-weight:800;color:var(--muted);transition:all .25s}
+.mood-btn svg{width:26px;height:26px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.mood-btn:hover{transform:translateY(-2px)}
+.mood-btn[aria-pressed="true"]{color:var(--mc);border-color:var(--mc);background:color-mix(in srgb,var(--mc) 14%,transparent)}
+.mood-reply{font-size:.88rem;color:var(--muted)}
+
+/* Wins */
+.wins-head{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.wins-count{min-width:42px;height:42px;padding:0 10px;border-radius:99px;display:grid;place-items:center;background:var(--terra-bg);font-family:var(--f-display);font-size:1.3rem;color:var(--terra-ink);font-variant-numeric:tabular-nums}
+.win-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px;max-height:300px;overflow:auto}
+.win-list li{display:flex;gap:9px;align-items:center;font-size:.92rem}
+.win-list li svg{width:16px;height:16px;flex:none}
+.win-list li.new{animation:pop .6s cubic-bezier(.3,1.6,.5,1)}
+@keyframes pop{from{transform:translateX(-8px) scale(.9);opacity:0}}
+.quote-box{border-top:1px dashed var(--soil);padding-top:12px;display:flex;flex-direction:column;gap:6px}
+.quote{font-family:var(--f-display);font-style:italic;font-size:1.04rem;line-height:1.45}
+
+/* Healing step */
+.step .idea{font-family:var(--f-display);font-size:1.08rem;line-height:1.4}
+
+/* Polaroid */
+.memory{align-items:center;text-align:center}
+.polaroid{position:relative;background:var(--paper);padding:12px 12px 14px;border-radius:4px;box-shadow:0 18px 36px -18px rgba(70,45,25,.45),0 2px 6px rgba(70,45,25,.12);transform:rotate(-1.5deg);width:100%;max-width:300px;margin-top:8px;transition:transform .4s}
+.polaroid:hover{transform:rotate(0)}
+.polaroid::before{content:"";position:absolute;top:-11px;left:50%;width:88px;height:22px;transform:translateX(-50%) rotate(3deg);background:color-mix(in srgb,var(--honey) 55%,transparent);border-radius:2px}
+.photo{aspect-ratio:1/1;width:100%;max-width:100%;background:#EFE6DA;overflow:hidden;display:grid;place-items:center;border-radius:2px}
+.photo img{width:100%;height:100%;object-fit:cover;display:block;animation:develop 1.2s ease}
+@keyframes develop{from{filter:sepia(.8) brightness(1.3) blur(3px);opacity:.3}to{filter:none;opacity:1}}
+.photo .empty{padding:22px;color:#8A7766;display:flex;flex-direction:column;gap:10px;align-items:center;font-size:.9rem}
+.polaroid .title{font-family:var(--f-hand);font-size:1.4rem;color:#5B4335;margin-top:10px;line-height:1.1}
+.polaroid .cap{font-family:var(--f-hand);font-size:1.15rem;color:#8A6650;line-height:1.15;margin-top:4px}
+.mem-actions{display:flex;flex-wrap:wrap;justify-content:center;gap:8px}
+.mem-msg{font-size:.82rem;color:var(--terra-ink);min-height:0}
+
+/* Tracker */
+.tracker-wrap{overflow-x:auto;padding-bottom:4px}
+.tracker table{border-collapse:separate;border-spacing:2px 3px;width:100%;min-width:680px}
+.tracker th,.tracker td{padding:0;text-align:center;font-weight:700;border-radius:8px}
+.tracker .rowh{position:sticky;left:0;z-index:1;background:var(--surface);text-align:left;white-space:nowrap;font-size:.84rem;padding-right:10px}
+.tracker .lab{display:flex;align-items:center;gap:7px}
+.mini svg{width:16px;height:16px;display:block;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.mini.c1{color:var(--terra)}.mini.c2{color:var(--sage)}
+.tracker thead button{border:0;background:transparent;font-size:.72rem;font-weight:800;color:var(--muted);width:100%;min-width:22px;padding:4px 0;border-radius:8px;font-variant-numeric:tabular-nums}
+.tracker thead button:disabled{opacity:.45;cursor:default}
+.tracker th.tod button{color:var(--terra-ink)}
+.tracker .sel{background:var(--sage-bg)}
+.dot{display:block;width:16px;height:16px;margin:3px auto;border-radius:50%;background:color-mix(in srgb,var(--line) 75%,transparent)}
+.dot.full.c1{background:var(--terra);box-shadow:0 0 8px color-mix(in srgb,var(--terra) 55%,transparent)}
+.dot.full.c2{background:var(--sage);box-shadow:0 0 8px color-mix(in srgb,var(--sage) 55%,transparent)}
+.dot.half.c1{background:linear-gradient(90deg,var(--terra) 50%,transparent 50%);box-shadow:inset 0 0 0 1.5px var(--terra)}
+.dot.half.c2{background:linear-gradient(90deg,var(--sage) 50%,transparent 50%);box-shadow:inset 0 0 0 1.5px var(--sage)}
+.dot.fut{background:transparent;box-shadow:inset 0 0 0 1.2px var(--line)}
+.tracker .tot{font-size:.76rem;color:var(--muted);font-variant-numeric:tabular-nums;padding-left:6px;white-space:nowrap}
+.tracker tfoot td,.tracker tfoot th{font-size:.7rem;color:var(--muted);font-variant-numeric:tabular-nums;padding-top:4px}
+.tracker .gap td{height:6px}
+
+/* Celebration */
+.burst{position:fixed;width:0;height:0;pointer-events:none;z-index:60}
+.burst i{position:absolute;left:-5px;top:-5px;width:10px;height:10px;animation:fly .95s ease-out forwards}
+.burst i.leaf{border-radius:0 100% 0 100%}
+.burst i.spark{clip-path:polygon(50% 0,62% 38%,100% 50%,62% 62%,50% 100%,38% 62%,0 50%,38% 38%)}
+@keyframes fly{from{transform:translate(0,0) rotate(0) scale(.4);opacity:1}to{transform:translate(var(--dx),var(--dy)) rotate(var(--r)) scale(1);opacity:0}}
+
+/* Floating support button */
+.sos-fab{position:fixed;z-index:40;right:calc(16px + env(safe-area-inset-right,0px));bottom:calc(18px + env(safe-area-inset-bottom,0px));border:0;border-radius:999px;padding:12px 20px;font-weight:800;font-size:.95rem;color:#fff;background:var(--calm);box-shadow:0 10px 28px -8px color-mix(in srgb,var(--calm) 80%,transparent)}
+.sos-fab::before{content:"";position:absolute;inset:-6px;border-radius:inherit;border:2px solid color-mix(in srgb,var(--calm) 45%,transparent);animation:halo 3.2s ease-in-out infinite;pointer-events:none}
+@keyframes halo{0%,100%{opacity:0;transform:scale(.94)}50%{opacity:1;transform:scale(1.04)}}
+
+/* ---------- SOS page ---------- */
+.sos-hero{position:relative;overflow:hidden;border-radius:26px;padding:26px clamp(18px,4vw,34px);background:linear-gradient(135deg,var(--calm-bg),var(--surface) 70%);border:1px solid color-mix(in srgb,var(--calm) 25%,transparent);display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:18px}
+.sos-hero .txt{display:flex;flex-direction:column;gap:8px;flex:1 1 320px;min-width:0;position:relative;z-index:1}
+.sos-hero h1{font-size:clamp(1.7rem,4vw,2.5rem);line-height:1.12}
+.sos-hero h1 em{color:var(--calm-ink)}
+.sos-hero p{color:var(--muted);max-width:50ch}
+.amb{width:120px;height:120px;flex:none;position:relative;display:grid;place-items:center}
+.amb i{position:absolute;border-radius:50%;background:var(--calm);opacity:.18;animation:ambient 8s ease-in-out infinite}
+.amb i:nth-child(1){width:120px;height:120px}
+.amb i:nth-child(2){width:84px;height:84px;opacity:.28;animation-delay:.4s}
+.amb i:nth-child(3){width:46px;height:46px;opacity:.5;animation-delay:.8s}
+.amb span{position:relative;font-size:.72rem;font-weight:800;color:var(--calm-ink);letter-spacing:.06em;text-transform:uppercase}
+@keyframes ambient{0%,100%{transform:scale(.82)}50%{transform:scale(1.06)}}
+.lifeline{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:12px 16px}
+.lifeline b{font-size:.92rem}
+.lifeline .lines{display:flex;flex-wrap:wrap;gap:6px}
+.lifeline .ln{border-radius:99px;padding:5px 12px;background:var(--calm-bg);color:var(--calm-ink);font-weight:800;font-size:.86rem;user-select:all;font-variant-numeric:tabular-nums}
+.lifeline .ln.em{background:var(--terra-bg);color:var(--terra-ink)}
+.lifeline p{flex:1 1 100%;font-size:.84rem;color:var(--muted)}
+.stepper{list-style:none;margin:0;padding:0;display:flex;gap:6px}
+.stepper li{flex:1;display:flex;align-items:center;gap:8px;font-size:.84rem;font-weight:700;color:var(--muted);padding:10px 12px;border-radius:14px;background:var(--surface);border:1px solid var(--line);min-width:0}
+.stepper li b{width:24px;height:24px;flex:none;border-radius:50%;display:grid;place-items:center;font-size:.78rem;background:var(--line);color:var(--muted)}
+.stepper li.on{color:var(--ink);border-color:var(--calm)}
+.stepper li.on b{background:var(--calm);color:#fff}
+.stepper li.past b{background:var(--sage);color:#fff}
+@media (max-width:520px){.stepper li{flex-direction:column;gap:4px;text-align:center;font-size:.74rem;padding:8px 4px}}
+.sos-main{padding:22px;gap:16px}
+.sos-main h2{font-size:1.4rem}
+.feelings{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.feel{border:1.5px solid transparent;background:color-mix(in srgb,var(--fc) 11%,var(--surface));border-radius:20px;padding:16px 14px;text-align:left;display:flex;flex-direction:column;gap:8px;min-height:132px;transition:transform .2s,border-color .2s,box-shadow .2s}
+.feel:hover{border-color:var(--fc);transform:translateY(-2px);box-shadow:0 10px 24px -14px var(--fc)}
+.feel .em{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;font-size:1.45rem;background:var(--surface)}
+.feel b{font-family:var(--f-display);font-weight:500;font-size:1.03rem;line-height:1.25}
+.feel small{color:var(--muted);font-size:.78rem;margin-top:auto}
+.feeling-chip{display:flex;flex-wrap:wrap;align-items:center;gap:10px}
+.feeling-chip .fc{display:inline-flex;align-items:center;gap:8px;border-radius:99px;padding:6px 14px 6px 6px;background:color-mix(in srgb,var(--fc) 15%,var(--surface));font-weight:800;font-size:.92rem}
+.feeling-chip .fc span{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:var(--surface)}
+.pick-banner{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;justify-content:space-between;background:color-mix(in srgb,var(--fc) 12%,var(--surface));border-radius:16px;padding:14px 16px}
+.pick-banner p{font-family:var(--f-display);font-style:italic;font-size:1.04rem;flex:1 1 260px;min-width:0}
+.acts{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+.act{border:1.5px solid var(--line);background:var(--bg);border-radius:18px;padding:16px;display:flex;flex-direction:column;gap:8px;transition:border-color .3s,box-shadow .3s;min-width:0}
+.act:hover{border-color:color-mix(in srgb,var(--fc) 60%,var(--line))}
+.act h3{font-size:1.06rem}
+.act .how{font-size:.93rem}
+.act .why{font-size:.8rem;color:var(--muted)}
+.act .btn{align-self:flex-start;margin-top:auto}
+.act.suggest{border-color:var(--fc);box-shadow:0 0 0 3px color-mix(in srgb,var(--fc) 22%,transparent)}
+.tag-pick{font-size:.7rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--fc)}
+.btn.fc{background:var(--fc);border-color:var(--fc);color:#fff}
+.focus{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:22px;align-items:center}
+@media (max-width:760px){.focus{grid-template-columns:1fr}}
+.focus .info{display:flex;flex-direction:column;gap:10px}
+.focus h3{font-size:1.5rem}
+.focus .how{font-size:1.02rem}
+.focus .tool{background:color-mix(in srgb,var(--fc) 9%,var(--bg));border-radius:20px;padding:18px;display:flex;flex-direction:column;gap:12px;align-items:center;justify-content:center;min-height:200px;text-align:center}
+.focus .actions{display:flex;flex-wrap:wrap;gap:8px}
+.linkbtn{border:0;background:none;color:var(--muted);font-weight:700;font-size:.88rem;padding:4px 0;align-self:flex-start}
+.linkbtn:hover{color:var(--ink)}
+.breather{position:relative;width:200px;height:200px;display:grid;place-items:center}
+.breather .ring2{position:absolute;width:170px;height:170px;border-radius:50%;border:2px dashed color-mix(in srgb,var(--fc) 60%,transparent)}
+.breather .orb{position:absolute;width:76px;height:76px;border-radius:50%;background:radial-gradient(circle at 35% 35%,color-mix(in srgb,var(--fc) 35%,#fff),var(--fc));opacity:.85;transform:scale(1);transition-property:transform;transition-timing-function:ease-in-out}
+.breather .t{position:relative;display:flex;flex-direction:column;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.25)}
+.breather .phase{font-family:var(--f-display);font-size:1.05rem}
+.breather .count{font-size:1.5rem;font-weight:800;font-variant-numeric:tabular-nums}
+.clock{font-family:var(--f-display);font-size:2.4rem;font-variant-numeric:tabular-nums;line-height:1}
+.copyrow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:center;background:var(--surface);border-radius:12px;padding:10px 14px}
+.copyrow .msg{user-select:all}
+.affirm{font-family:var(--f-display);font-style:italic;font-size:1.2rem;max-width:26ch}
+.dump{min-height:80px;resize:vertical;transition:opacity .6s,transform .6s;background:var(--surface)}
+.dump.release{opacity:0;transform:translateY(-14px) scale(.98)}
+.anchors{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}
+.anchors span{background:var(--terra-bg);color:var(--terra-ink);border-radius:99px;padding:5px 12px;font-size:.84rem;font-weight:800}
+.sos-done{display:flex;flex-direction:column;gap:12px;align-items:center;text-align:center;padding:16px 8px}
+.sos-done .sun{width:72px;height:72px}
+.sos-done h3{font-size:1.5rem;max-width:28ch}
+.sos-done .row{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.sos-log{padding:22px;gap:18px}
+.sos-log h2{font-size:1.3rem}
+#sosLog{display:flex;flex-direction:column;gap:16px}
+.log-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.log-card{background:var(--bg);border-radius:18px;padding:16px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.log-card h3{font-size:1rem}
+.big-total{font-family:var(--f-display);font-size:2.4rem;line-height:1;color:var(--calm-ink)}
+.today-chips{display:flex;flex-wrap:wrap;gap:6px}
+.today-chips span{border-radius:99px;padding:5px 12px;font-size:.85rem;font-weight:800;background:color-mix(in srgb,var(--fc) 16%,var(--surface))}
+.fbar{display:flex;flex-direction:column;gap:4px}
+.fbar .top{display:flex;justify-content:space-between;gap:10px;font-size:.88rem}
+.fbar .top span:last-child{color:var(--muted);white-space:nowrap}
+.fbar .track{height:9px;border-radius:99px;background:var(--line);overflow:hidden}
+.fbar .track i{display:block;height:100%;border-radius:inherit;background:var(--fc)}
+.daystrip{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px}
+@media (min-width:860px){.daystrip{grid-template-columns:repeat(21,minmax(0,1fr))}}
+.dcell{background:var(--bg);border-radius:10px;padding:5px 2px;display:flex;flex-direction:column;align-items:center;gap:3px;min-height:46px}
+.dcell.tod{box-shadow:inset 0 0 0 1.5px var(--calm)}
+.dcell b{font-size:.68rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.dcell .ds{display:flex;flex-wrap:wrap;justify-content:center;gap:2px;max-width:30px}
+.dcell .ds i{width:7px;height:7px;border-radius:50%}
+.recent{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.recent li{display:flex;gap:4px 10px;align-items:baseline;font-size:.88rem;flex-wrap:wrap}
+.recent li .when{color:var(--muted);font-variant-numeric:tabular-nums;min-width:110px}
+
+footer{display:flex;flex-direction:column;gap:14px;align-items:center;text-align:center;color:var(--muted);font-size:.88rem;padding-top:6px}
+.care{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:14px 18px;max-width:560px}
+.care b{color:var(--ink);user-select:all}
+.settings{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;align-items:center}
+.settings input{border:1px solid var(--line);border-radius:10px;background:var(--surface);color:var(--ink);padding:5px 9px;font:inherit}
+.prestart .habits,.prestart .mood,.prestart .step{pointer-events:none;opacity:.6}
+.confirm{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:center}
+
+/* ---------- Lock screen, profile & install ---------- */
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+.lock{position:fixed;inset:0;z-index:100;background:radial-gradient(circle at 50% 0%,color-mix(in srgb,var(--honey) 22%,var(--bg)),var(--bg) 60%);overflow-y:auto;
+  padding:calc(24px + env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) calc(24px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));display:flex;justify-content:center;align-items:flex-start}
+.lock-card{width:100%;max-width:420px;margin:auto 0;background:var(--surface);border:1px solid var(--line);border-radius:28px;padding:28px 22px;display:flex;flex-direction:column;gap:14px;box-shadow:0 24px 60px -30px var(--shadow)}
+.lock-logo{display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center}
+.lock-logo svg{width:64px;height:64px;animation:sunspin 40s linear infinite}
+@keyframes sunspin{to{transform:rotate(360deg)}}
+.lock-logo h1{font-size:1.7rem}
+.lock-logo p{color:var(--muted);font-size:.92rem;max-width:32ch}
+.field{display:flex;flex-direction:column;gap:5px}
+.field label{font-size:.84rem;font-weight:800;color:var(--ink)}
+.field .hint{font-size:.78rem;color:var(--muted)}
+.field input{width:100%;border:1.5px solid var(--line);border-radius:12px;background:var(--bg);color:var(--ink);padding:11px 13px;font:inherit;font-size:1rem}
+.field input:focus{outline:none;border-color:var(--sage)}
+.field input.pin{font-size:1.4rem;letter-spacing:.5em;text-align:center;font-variant-numeric:tabular-nums}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media (max-width:380px){.row2{grid-template-columns:1fr}}
+.lock-msg{font-size:.88rem;color:var(--terra-ink);min-height:1.3em;text-align:center}
+.lock-note{font-size:.8rem;color:var(--muted);text-align:center}
+.btn.wide{width:100%;padding:13px;font-size:1rem}
+.linkc{border:0;background:none;color:var(--muted);font-weight:700;font-size:.86rem;align-self:center;padding:4px}
+.linkc:hover{color:var(--ink)}
+.danger{background:#B4553A;border-color:#B4553A;color:#fff}
+.profile-panel{max-width:760px;width:100%;margin:0 auto;text-align:left}
+.profile-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+.pbox{background:var(--bg);border-radius:16px;padding:14px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.pbox h3{font-size:1rem}
+.pbox .btns{display:flex;flex-wrap:wrap;gap:8px}
+.pmsg{font-size:.84rem;color:var(--sage-ink);min-height:1.2em}
+.footer-actions{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.lifeline .ln.me{background:var(--sage);color:#fff;text-decoration:none}
+.install-btn{border:0;border-radius:999px;padding:8px 14px;font-weight:800;font-size:.84rem;background:var(--terra);color:#fff}
+@media (prefers-reduced-motion: reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><linearGradient id="ringGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#D9805F"/><stop offset=".5" stop-color="#E5AE57"/><stop offset="1" stop-color="#6B9071"/></linearGradient></defs></svg>
+
+<div class="wrap">
+  <header class="topbar">
+    <div class="brand"><svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="7" fill="#E5AE57"/><g stroke="#D9805F" stroke-width="2.2" stroke-linecap="round"><path d="M16 2.5v4M16 25.5v4M2.5 16h4M25.5 16h4M6.4 6.4l2.8 2.8M22.8 22.8l2.8 2.8M6.4 25.6l2.8-2.8M22.8 9.2l2.8-2.8"/></g></svg>Sunshine</div>
+    <nav class="nav" aria-label="Pages">
+      <button class="tab" data-go="home" aria-selected="true">🌿 Daily Sunshine (Home)</button>
+      <button class="tab" data-go="sos" aria-selected="false">🫂 Gentle SOS &amp; Grounding</button>
+    </nav>
+    <button class="install-btn" id="installBtn" hidden>Install app</button>
+  </header>
+
+  <!-- ================= HOME ================= -->
+  <div id="homeView" class="view">
+    <section class="hero">
+      <div class="hero-text">
+        <span class="eyebrow" id="dateLine"></span>
+        <h1 id="greet">Good morning. <em>Day 1</em> of 21.</h1>
+        <p class="sub">A quiet place to look after yourself, one small kindness at a time. Nothing here is a test.</p>
+      </div>
+      <div class="ring" aria-live="polite">
+        <svg viewBox="0 0 84 84" aria-hidden="true"><circle class="bg" cx="42" cy="42" r="34"/><circle class="fg" id="ringFg" cx="42" cy="42" r="34" stroke-dasharray="213.6" stroke-dashoffset="213.6"/></svg>
+        <div class="ring-text"><b id="ringNum">0/10</b><span class="soft">done today</span></div>
+      </div>
+    </section>
+
+    <div class="banner" id="viewBanner" hidden></div>
+
+    <section class="panel garden" aria-label="21-day garden">
+      <div class="panel-head"><h2>Your 21-Day Garden</h2><span class="legend">Each day grows with what you do. Tap a past day to revisit it.</span></div>
+      <div class="plots" id="plots"></div>
+    </section>
+
+    <div class="layout">
+      <main class="habits" id="habits"></main>
+      <div class="side">
+        <section class="panel mood" aria-label="Mood check-in">
+          <span class="eyebrow">Check in</span>
+          <h2>How are you feeling today?</h2>
+          <div class="moods" id="moods" role="group" aria-label="Mood"></div>
+          <input class="note" id="note" maxlength="140" placeholder="One line about today, if you like">
+          <p class="mood-reply" id="moodReply"></p>
+        </section>
+
+        <section class="panel wins" aria-label="Today's wins">
+          <div class="wins-head"><div><span class="eyebrow">Celebrate</span><h2>Today's Wins</h2></div><span class="wins-count" id="winCount">0</span></div>
+          <ul class="win-list" id="winList"></ul>
+          <div class="quote-box"><span class="eyebrow" id="quoteLabel">Gratitude &amp; hope</span><p class="quote" id="quote"></p></div>
+        </section>
+
+        <section class="panel step" aria-label="Today's gentle healing step">
+          <span class="eyebrow" id="stepLabel">Gentle healing step</span>
+          <p class="idea" id="stepIdea"></p>
+          <label class="check"><input type="checkbox" class="sr" id="stepCheck"><span class="box"><svg viewBox="0 0 16 16"><path d="M3 8.5l3.2 3L13 4.5"/></svg></span><span class="lbl">I did this, gently</span></label>
+        </section>
+
+        <section class="panel memory" aria-label="A little reminder of love and joy">
+          <span class="eyebrow">Memories</span>
+          <div class="polaroid">
+            <div class="photo" id="photo"></div>
+            <p class="title">A Little Reminder of Love &amp; Joy</p>
+            <p class="cap" id="photoCap">Look how far you've come—you are deeply loved.</p>
+          </div>
+          <div class="mem-actions" id="memActions"></div>
+          <p class="mem-msg" id="memMsg" aria-live="polite"></p>
+          <p class="soft">Your photos stay private in this browser, on this device.</p>
+          <input type="file" id="photoInput" class="sr" multiple accept="image/*">
+        </section>
+      </div>
+    </div>
+
+    <section class="panel tracker" aria-label="21-day habit tracker">
+      <div class="panel-head"><h2>21-Day Habit Tracker</h2><span class="legend">Filled: done · half: partly done · tap a day number to open it</span></div>
+      <div class="tracker-wrap"><table id="tracker"></table></div>
+    </section>
+  </div>
+
+  <!-- ================= SOS ================= -->
+  <div id="sosView" class="view" hidden>
+    <section class="sos-hero">
+      <div class="txt">
+        <span class="eyebrow">Gentle Grounding &amp; Rescue Rituals</span>
+        <h1>You reached for support. <em>That already counts.</em></h1>
+        <p>Take one slow breath with the circle. Then we'll find one small, kind thing together.</p>
+      </div>
+      <div class="amb" aria-hidden="true"><i></i><i></i><i></i><span>Breathe</span></div>
+    </section>
+
+    <div class="lifeline">
+      <div class="lines" id="myPerson" hidden></div>
+      <b>Talk to someone now</b>
+      <div class="lines"><span class="ln">Tele-MANAS 14416</span><span class="ln">1-800-891-4416</span><span class="ln em">Emergency 112</span></div>
+      <p>Free and open 24/7. If you feel unsafe or think you might hurt yourself, please call now or go to someone near you.</p>
+    </div>
+
+    <ol class="stepper" id="stepper">
+      <li><b>1</b><span>How you feel</span></li>
+      <li><b>2</b><span>One small thing</span></li>
+      <li><b>3</b><span>Done</span></li>
+    </ol>
+
+    <section class="panel sos-main" id="sosMain"></section>
+
+    <section class="panel sos-log">
+      <div><span class="eyebrow">Emotional Check-In &amp; SOS Log</span><h2>Moments you showed up to comfort yourself</h2></div>
+      <div id="sosLog"></div>
+    </section>
+  </div>
+
+  <footer>
+    <div class="footer-actions" id="footerActions">
+      <button class="btn" id="profileBtn">Profile &amp; backup</button>
+      <button class="btn ghost" id="lockNow">Lock now</button>
+    </div>
+    <section class="panel profile-panel" id="profilePanel" hidden aria-label="Profile and backup">
+      <div class="panel-head"><h2>Profile &amp; backup</h2><button class="linkc" id="closeProfile">Close</button></div>
+      <p class="soft">Everything here is stored only on this phone.</p>
+      <div class="profile-grid">
+        <form class="pbox" id="profileForm">
+          <h3>About you</h3>
+          <div class="field"><label for="pName">Your name</label><input id="pName" maxlength="40" autocomplete="given-name" required></div>
+          <div class="field"><label for="pCName">Trusted person</label><input id="pCName" maxlength="40" placeholder="e.g. Amma"></div>
+          <div class="field"><label for="pCPhone">Their phone number</label><input id="pCPhone" type="tel" maxlength="20" inputmode="tel" placeholder="+91 …"></div>
+          <div class="btns"><button class="btn sage" type="submit">Save</button></div>
+          <p class="pmsg" id="profileMsg" aria-live="polite"></p>
+        </form>
+        <form class="pbox" id="pinForm">
+          <h3>Change PIN</h3>
+          <div class="field"><label for="pinOld">Current PIN</label><input id="pinOld" class="pin" type="password" inputmode="numeric" maxlength="6" autocomplete="current-password"></div>
+          <div class="field"><label for="pinNew">New PIN (4–6 digits)</label><input id="pinNew" class="pin" type="password" inputmode="numeric" maxlength="6" autocomplete="new-password"></div>
+          <div class="field"><label for="pinNew2">Confirm new PIN</label><input id="pinNew2" class="pin" type="password" inputmode="numeric" maxlength="6" autocomplete="new-password"></div>
+          <div class="btns"><button class="btn sage" type="submit">Update PIN</button></div>
+          <p class="pmsg" id="pinMsg" aria-live="polite"></p>
+        </form>
+        <div class="pbox">
+          <h3>Backup</h3>
+          <p class="soft">Save a backup file now and then. If you change phones or forget your PIN, you can bring everything back.</p>
+          <div class="btns"><button class="btn terra" id="exportBtn">Export backup</button><label class="btn" for="importInput" role="button" tabindex="0" id="importLabel">Import backup</label></div>
+          <input type="file" id="importInput" class="sr" accept="application/json,.json">
+          <div id="importConfirm"></div>
+          <p class="pmsg" id="backupMsg" aria-live="polite"></p>
+        </div>
+      </div>
+    </section>
+    <div class="care">If a day feels too heavy, you don't have to carry it alone. Reach out to someone you trust or your doctor. In India, Tele-MANAS offers free support any time: <b>14416</b> or <b>1-800-891-4416</b>.</div>
+    <div class="settings" id="settings">
+      <label for="startDate">Journey began on</label>
+      <input type="date" id="startDate">
+      <span id="resetArea"><button class="btn ghost" id="resetBtn">Start a new 21 days</button></span>
+    </div>
+  </footer>
+</div>
+<button class="sos-fab" id="fab" data-go="sos">🫂 Need support?</button>
+<div class="lock" id="lock" hidden>
+  <div class="lock-card" id="lockCard"></div>
+</div>
+
+
+<div id="errBox" hidden style="position:fixed;left:12px;right:12px;bottom:12px;z-index:99;background:#FFF3EC;color:#6B2E18;border:1px solid #E0A080;border-radius:14px;padding:12px 14px;font:14px/1.4 system-ui,sans-serif"></div>
+<script>
+window.addEventListener('error',function(e){var b=document.getElementById('errBox');if(!b)return;b.hidden=false;b.textContent='Sunshine hit a problem: '+(e.message||'unknown error')+(e.lineno?' (line '+e.lineno+')':'')+'. Please send this message to Claude.';});
+</script>
+<script>
+(function(){
+const REAL_KEY='sanctuary21-v1',TRIAL_KEY='sunshine-trial-v1',FIRST='2026-11-20';
+const $=id=>document.getElementById(id);
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const CHECK='<span class="box"><svg viewBox="0 0 16 16"><path d="M3 8.5l3.2 3L13 4.5"/></svg></span>';
+const ICON={
+ moon:'<path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/>',
+ bowl:'<path d="M3 11h18a9 9 0 0 1-18 0z"/><path d="M8 7.5c0-1.5 1-2 1-3.5M12 7.5c0-1.5 1-2 1-3.5M16 7.5c0-1.5 1-2 1-3.5"/>',
+ drop:'<path d="M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11z"/>',
+ pill:'<rect x="2.5" y="8.5" width="19" height="7" rx="3.5" transform="rotate(-35 12 12)"/><path d="M9.6 8.2l4.8 7.6"/>',
+ candle:'<rect x="9" y="11" width="6" height="10" rx="1"/><path d="M12 11V8.5"/><path d="M12 2.5c1.5 1.8 2 3 0 5-2-2-1.5-3.2 0-5z"/>',
+ book:'<path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 19V5M8 7h7"/>',
+ spa:'<path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path d="M19 15.5l.7 2 2 .7-2 .7-.7 2-.7-2-2-.7 2-.7z"/>',
+ leaf:'<path d="M5 19c0-8 6-14 15-14 0 9-6 15-14 15"/><path d="M5 19c3-4 6-7 10-9"/>',
+ wind:'<path d="M3 9h11a3 3 0 1 0-3-3"/><path d="M3 15h15a3 3 0 1 1-3 3"/><path d="M3 12h7"/>',
+ heart:'<path d="M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.5-7 10-7 10z"/>'
+};
+const STARS='radial-gradient(1.2px 1.2px at 12% 30%,#fff 60%,transparent),radial-gradient(1px 1px at 28% 60%,#fff 60%,transparent),radial-gradient(1.4px 1.4px at 44% 22%,#fff 60%,transparent),radial-gradient(1px 1px at 58% 48%,#fff 60%,transparent),radial-gradient(1px 1px at 36% 80%,#fff 60%,transparent),radial-gradient(1.3px 1.3px at 6% 72%,#fff 60%,transparent),';
+const HEART=(x,y,d)=>`<g transform="translate(${x} ${y})"><path class="rise" style="animation-delay:${d}s" d="M0 4C0-1 7-1 7 4c0-5 7-5 7 0 0 5-7 9-7 9S0 9 0 4z" fill="#FFF1E8"/></g>`;
+const G1='#E8A266', G2='#8FB394';
+/* Category 1 scenes stay in warm terracotta / honey tones; category 2 scenes stay in sage / eucalyptus tones. */
+const HABITS=[
+ {id:'sleep',cat:1,icon:'moon',short:'Sleep',title:'Sleep Schedule',meta:'7–8 hours of real rest',glow:'#E5AE57',cap:'Rest by 10:45 PM · Rise at 7:00 AM',
+  sbg:STARS+'linear-gradient(120deg,#2F2B55,#5B4777 55%,#C98A5E)',
+  art:'<circle class="tw" cx="20" cy="14" r="1.6" fill="#fff"/><circle class="tw" style="animation-delay:.7s" cx="34" cy="34" r="1.3" fill="#fff"/><circle class="tw" style="animation-delay:1.3s" cx="12" cy="42" r="1.1" fill="#fff"/><path d="M60 8a18 18 0 1 0 16 27 14 14 0 0 1-16-27z" fill="#F6DFA8"/>',
+  subs:[{id:'sleep',label:'Slept by 10:45 PM, up at 7:00 AM',win:'Kept your gentle sleep rhythm'}]},
+ {id:'meals',cat:1,icon:'bowl',short:'Meals',title:'Three Meals on Time',meta:'Nourishing yourself, gently',glow:G1,cap:'9:30 AM · 1:00 PM · 7:00 PM',
+  sbg:'linear-gradient(120deg,#C9694B,#DE8E66 55%,#EDB884)',
+  art:'<path class="rise" d="M40 28c-3-4 3-6 0-11" stroke="#fff" stroke-width="2.2" fill="none" stroke-linecap="round"/><path class="rise" style="animation-delay:.8s" d="M50 28c-3-4 3-6 0-11" stroke="#fff" stroke-width="2.2" fill="none" stroke-linecap="round"/><path class="rise" style="animation-delay:1.6s" d="M60 28c-3-4 3-6 0-11" stroke="#fff" stroke-width="2.2" fill="none" stroke-linecap="round"/><path d="M28 34h44a22 22 0 0 1-44 0z" fill="#FFF3E2"/><rect x="25" y="32" width="50" height="3.5" rx="1.7" fill="#FFE0BE"/>',
+  subs:[{id:'bfast',label:'Breakfast',time:'9:30 AM',win:'Ate breakfast'},{id:'lunch',label:'Lunch',time:'1:00 PM',win:'Ate lunch'},{id:'dinner',label:'Dinner',time:'7:00 PM',win:'Ate dinner'}]},
+ {id:'water',cat:1,icon:'drop',short:'Water',title:'Hydrate',meta:'3 liters through the day',water:true,glow:G1,cap:'3 liters, sip by sip',
+  sbg:'linear-gradient(120deg,#B9674E,#D58E6C 55%,#E9C09A)',
+  art:'<circle class="rise" cx="22" cy="46" r="3" fill="#FFF3E6"/><circle class="rise" style="animation-delay:.9s" cx="32" cy="50" r="2.2" fill="#FFF3E6"/><circle class="rise" style="animation-delay:1.7s" cx="16" cy="54" r="1.8" fill="#FFF3E6"/><path class="bob" d="M58 6s13 14 13 24a13 13 0 0 1-26 0c0-10 13-24 13-24z" fill="#DDF0F5"/>',
+  subs:[]},
+ {id:'meds',cat:1,icon:'pill',short:'Medicines',title:'Medicines & Vitamins',meta:'Caring for your body’s chemistry',glow:G1,cap:'10 AM · 9 PM · B12 daily · Vitamin D on Sundays',
+  sbg:'linear-gradient(120deg,#A85A44,#C97F5C 55%,#E3AE76)',
+  art:'<g class="spin"><circle cx="28" cy="30" r="9" fill="#FFE7A3"/><path d="M28 14v4M28 42v4M12 30h4M40 30h4M17 19l3 3M36 38l3 3M17 41l3-3M36 22l3-3" stroke="#FFE7A3" stroke-width="2" stroke-linecap="round"/></g><path class="bob" d="M66 16a11 11 0 1 0 10 17 9 9 0 0 1-10-17z" fill="#FFF1DA"/>',
+  subs:[{id:'medam',label:'Escitalopram',time:'10:00 AM',win:'Took morning medicine'},
+        {id:'b12',label:'Vitamin B12',time:'Daily',win:'Took Vitamin B12'},
+        {id:'vitd',label:'Vitamin D',time:'Sundays',only:[0],win:'Took your Sunday Vitamin D'},
+        {id:'medpm',label:'Clonazepam',time:'9:00 PM',win:'Took night medicine'}]},
+ {id:'pray',cat:1,icon:'candle',short:'Prayer',title:'Prayer & Grounding',meta:'A quiet moment to feel held',glow:'#F2C46D',cap:'ॐ श्री मात्रे नमः',deva:true,
+  sbg:'radial-gradient(circle at 75% 45%,#D69A48,#7E4529 72%)',mantra:true,
+  art:'<circle class="breathe" cx="56" cy="20" r="16" fill="rgba(255,214,130,.35)"/><rect x="49" y="30" width="14" height="28" rx="2" fill="#FFF4E0"/><path d="M56 30v-4" stroke="#5a3b1f" stroke-width="1.5"/><path class="flick" d="M56 8c4 5 5 9 0 16-5-7-4-11 0-16z" fill="#FFD27A"/>',
+  subs:[{id:'pray',label:'Prayed: Om Shree Matre Namaha',win:'Prayed: Om Shree Matre Namaha'}]},
+ {id:'classes',cat:2,icon:'book',short:'Classes',title:'Attend Classes',meta:'Showing up is enough',glow:G2,cap:'Showing up is enough',
+  sbg:'repeating-linear-gradient(0deg,transparent 0 13px,rgba(255,255,255,.12) 13px 14px),linear-gradient(120deg,#4F7357,#7C9E7E)',
+  art:'<path class="shim" d="M70 6l1.6 4.4L76 12l-4.4 1.6L70 18l-1.6-4.4L64 12l4.4-1.6z" fill="#FFF0B8"/><path d="M22 26c8-4 16-4 22 0v28c-6-4-14-4-22 0z" fill="#FFFDF6"/><path d="M66 26c-8-4-16-4-22 0v28c6-4 14-4 22 0z" fill="#EDF2E6"/>',
+  subs:[{id:'classes',label:'Went to my classes',win:'Showed up for classes'}]},
+ {id:'bath',cat:2,icon:'spa',short:'Body care',title:'Body Care',meta:'Morning and night, slow hands',glow:G2,cap:'AM & PM body care',
+  sbg:'linear-gradient(120deg,#5A8670,#88AD97 55%,#C1D5C3)',
+  art:'<path class="shim" d="M58 6l2.4 6.6L67 15l-6.6 2.4L58 24l-2.4-6.6L49 15l6.6-2.4z" fill="#FFF6E0"/><path class="shim" style="animation-delay:.7s" d="M74 28l1.4 3.6L79 33l-3.6 1.4L74 38l-1.4-3.6L69 33l3.6-1.4z" fill="#FFF6E0"/><circle class="rise" cx="34" cy="48" r="4" fill="none" stroke="#fff" stroke-width="1.5"/><circle class="rise" style="animation-delay:1.1s" cx="46" cy="52" r="3" fill="none" stroke="#fff" stroke-width="1.5"/>',
+  subs:[{id:'bath',label:'AM body care',time:'Morning',win:'Did your AM body care'},{id:'skin',label:'PM body care',time:'Night',win:'Did your PM body care'}]},
+ {id:'move',cat:2,icon:'leaf',short:'Movement',title:'Movement',meta:'30 minutes, any kind',glow:G2,cap:'30 minutes, any kind',
+  sbg:'radial-gradient(ellipse 70% 60% at 22% 118%,#4F7A55 60%,transparent 61%),radial-gradient(ellipse 80% 55% at 82% 124%,#6E9868 60%,transparent 61%),linear-gradient(180deg,#8DB59E,#D6E1C2)',
+  art:'<g class="spin"><circle cx="58" cy="20" r="9" fill="#FFE9A8"/><path d="M58 5v4M58 31v4M43 20h4M69 20h4" stroke="#FFE9A8" stroke-width="2" stroke-linecap="round"/></g><path class="bob" d="M22 22q3-3 6 0q3-3 6 0" stroke="#fff" stroke-width="1.6" fill="none" stroke-linecap="round"/><path class="bob" style="animation-delay:.6s" d="M32 34q2-2 4 0q2-2 4 0" stroke="#fff" stroke-width="1.4" fill="none" stroke-linecap="round"/>',
+  tags:['Nature walk','Yoga','Stretching','Running'],subs:[{id:'move',label:'Moved my body for 30 min',win:'Moved for 30 minutes'}]},
+ {id:'mind',cat:2,icon:'wind',short:'Breathwork',title:'Breathwork & Pranayama',meta:'5 minutes of slow breath',glow:G2,cap:'Inhale · exhale',
+  sbg:'linear-gradient(120deg,#46705F,#729B88 55%,#B0CABB)',
+  art:'<circle cx="54" cy="31" r="22" fill="none" stroke="#fff" stroke-opacity=".45"/><circle class="breathe" cx="54" cy="31" r="14" fill="rgba(255,255,255,.32)"/><circle cx="54" cy="31" r="6" fill="rgba(255,255,255,.85)"/>',
+  subs:[{id:'breath',label:'Breathwork or pranayama',time:'5 min',win:'Breathed slowly for 5 minutes'}]},
+ {id:'love',cat:2,icon:'heart',short:'Joy',title:'One Thing I Love',meta:'Something just for joy',glow:G2,cap:'Something just for joy',custom:true,
+  sbg:'linear-gradient(120deg,#5F8766,#93B38A 55%,#D3DCB0)',
+  art:HEART(46,30,0)+HEART(62,18,.9)+HEART(34,14,1.7),
+  tags:['Studying','Sketching','Comfort movie','Tending plants','A hobby'],subs:[{id:'love',label:'Did something I love',win:'Made time for joy'}]}
+];
+const QUOTES=[
+ "Thank you, body, for carrying me through today.",
+ "Faith is trusting the morning while it is still dark.",
+ "Hope is the quiet voice that says: try again tomorrow.",
+ "You are held by more love than you can see right now.",
+ "Be thankful for the small mercies: a warm meal, clean water, one kind word.",
+ "Trust that what is meant for you is already on its way.",
+ "You did not have to be perfect today to deserve rest tonight.",
+ "Gratitude doesn't erase the hard parts. It reminds you they aren't the whole story.",
+ "Somebody, somewhere, is thankful you exist.",
+ "Hope isn't pretending things are fine. It is believing they can get better.",
+ "Thank yourself for showing up today. It took more strength than anyone saw.",
+ "Faith doesn't need the whole map. It only needs the next step.",
+ "There is grace for today, and new grace waiting for tomorrow.",
+ "Count one blessing before you sleep, and let it keep you company.",
+ "Appreciate the hands that fed you, the people who checked on you, and the you that kept going.",
+ "Better days are not a fantasy. You have had them before, and you will again.",
+ "You are a gift to the people who love you, even on days you can't feel it.",
+ "Whatever today was, it is done. Tomorrow is unwritten.",
+ "Be grateful for the breath in your chest. It means your story is still going.",
+ "You were looked after today. Let that be enough for tonight.",
+ "A grateful heart finds something good even in an ordinary day.",
+ "Every evening is a chance to set down what you carried.",
+ "Keep a little faith. Light always finds its way back.",
+ "Thank you for staying. The world is better with you in it."
+];
+const STEPS=[
+ "Open a window or step outside for five minutes of morning sunlight on your face.",
+ "Give your face a slow two-minute massage with your moisturizer, using gentle upward strokes.",
+ "Visit a plant. Touch the soil, and turn its leaves toward the light.",
+ "Watch ten minutes of baby animal videos. Otters holding hands absolutely count.",
+ "Make a warm drink and hold the cup in both hands until it's finished.",
+ "Choose one comfort movie for tonight and set a soft blanket ready for it.",
+ "Drink your first glass of water standing in the morning sun.",
+ "Rest a cool, damp cloth or a sheet mask on your face and lie down for ten minutes.",
+ "Look up one plant you'd love to grow someday. Just look and dream.",
+ "Stand barefoot on grass, soil, or a cool floor for one slow minute.",
+ "Send one person a simple “thinking of you.”",
+ "Tidy just one small surface, like your bedside table, and light it nicely.",
+ "Watch birds, squirrels, or clouds from a window for five minutes.",
+ "Wash your face slowly, the way you would for someone you love.",
+ "Water a plant and say something kind to it. Then say the same to yourself.",
+ "Play a song from your childhood and let it run all the way through.",
+ "Eat breakfast near a window instead of in front of a screen.",
+ "Massage lotion into your hands and give each finger a gentle squeeze.",
+ "Rewatch your favorite scene from a comfort movie.",
+ "Sketch one small thing near you for five minutes. It doesn't need to be good.",
+ "Write down three things from these 21 days that you are proud of. Small ones count most."
+];
+const FACE='<circle cx="12" cy="12" r="9"/>';
+const MOODS=[
+ {id:'cloudy',name:'Heavy',c:'#8A96A8',svg:FACE+'<path d="M8.5 10.5h2M13.5 10.5h2M8.5 16.5c2-2 5-2 7 0"/>',reply:"Heavy days are real. You don't have to do more than be gentle with yourself."},
+ {id:'misty',name:'Low',c:'#9C8BB8',svg:FACE+'<circle cx="9" cy="10" r="1" fill="currentColor"/><circle cx="15" cy="10" r="1" fill="currentColor"/><path d="M9 16c1.8-1 4.2-1 6 0"/>',reply:"Low is okay. Just the next small step is enough."},
+ {id:'sprouting',name:'Okay',c:'#B08F55',svg:FACE+'<circle cx="9" cy="10" r="1" fill="currentColor"/><circle cx="15" cy="10" r="1" fill="currentColor"/><path d="M9 15.5h6"/>',reply:"Okay is a good place to be. Steady counts."},
+ {id:'calm',name:'Calm',c:'#5E95AB',svg:FACE+'<path d="M7.8 10.5c.8.8 2 .8 2.8 0M13.4 10.5c.8.8 2 .8 2.8 0M9.5 15c1.4 1 3.6 1 5 0"/>',reply:"A still moment. Let yourself rest in it."},
+ {id:'sunlit',name:'Happy',c:'#D49A3A',svg:FACE+'<path d="M8 11c.6-1.2 2.2-1.2 2.8 0M13.2 11c.6-1.2 2.2-1.2 2.8 0M8 14.5c1.5 3 6.5 3 8 0"/>',reply:"Some light got in today. Hold onto this feeling."}
+];
+const CAPTIONS=[
+ "Look how far you've come—you are deeply loved.",
+ "This little one deserved every good thing. You still do.",
+ "You come from so much love.",
+ "The people in these moments are rooting for you.",
+ "Joy has lived in you before. It knows the way back."
+];
+
+/* ---------- storage & dates ---------- */
+function ymd(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+function parse(s){const[a,b,c]=s.split('-').map(Number);return new Date(a,b-1,c)}
+function today(){return ymd(new Date())}
+function load(){try{const s=JSON.parse(localStorage.getItem(KEY));if(s&&s.start&&s.days)return s}catch(e){}return null}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){}}
+/* Trial runs happen before FIRST in separate storage; the real 21 days begin fresh on FIRST. */
+const TRIAL=today()<FIRST, KEY=TRIAL?TRIAL_KEY:REAL_KEY;
+if(TRIAL){try{if(!localStorage.getItem('sunshine-reset-2')){localStorage.setItem(REAL_KEY,JSON.stringify({start:FIRST,days:{}}));localStorage.setItem('sunshine-reset-2','1')}}catch(e){}}
+else{try{localStorage.removeItem(TRIAL_KEY)}catch(e){}}
+let state=load()||{start:TRIAL?today():(today()<FIRST?FIRST:today()),days:{}};
+if(TRIAL&&state.start!==today())state={start:today(),days:{}};
+save();
+const trialCount=()=>{try{return Math.max(1,+localStorage.getItem('sunshine-trial-count')||1)}catch(e){return 1}};
+const rawDay=()=>Math.round((parse(today())-parse(state.start))/864e5)+1;
+const curDay=()=>Math.min(Math.max(rawDay(),1),21);
+const dateFor=n=>{const d=parse(state.start);d.setDate(d.getDate()+n-1);return d};
+const EMPTY=()=>({c:{},water:0,mood:null,note:'',step:false,tags:{},custom:{}});
+const peek=n=>state.days[n]||EMPTY();
+const rec=n=>state.days[n]||(state.days[n]=EMPTY());
+let view=curDay();
+
+const subsFor=(h,n)=>h.subs.filter(s=>!s.only||s.only.includes(dateFor(n).getDay()));
+const isDone=(h,r,n)=>h.water?r.water>=3000:subsFor(h,n).every(s=>r.c[s.id]);
+const isPart=(h,r,n)=>!isDone(h,r,n)&&(h.water?r.water>0:subsFor(h,n).some(s=>r.c[s.id]));
+const score=(r,n)=>HABITS.filter(h=>isDone(h,r,n)).length;
+const anyWin=r=>Object.values(r.c).some(Boolean)||r.water>0||!!r.mood||r.step;
+function stage(r,n){const s=score(r,n);if(s>=9)return 4;if(s>=6)return 3;if(s>=3)return 2;return anyWin(r)?1:0}
+
+function plant(st,future){
+  if(future) return '<svg viewBox="0 0 40 48" aria-hidden="true"><ellipse cx="20" cy="44" rx="13" ry="3.2" fill="none" stroke="var(--soil)" stroke-dasharray="2 2"/></svg>';
+  let g='<ellipse cx="20" cy="44" rx="13" ry="3.2" fill="var(--soil)"/>';
+  if(st===0) g+='<ellipse cx="20" cy="41.5" rx="3" ry="2" fill="var(--terra)" opacity=".7"/>';
+  const top=[0,35,27,20,17][st];
+  if(st>=1) g+=`<path d="M20 44V${top}" stroke="var(--sage)" stroke-width="1.8" stroke-linecap="round"/>`;
+  if(st===1) g+='<path d="M20 37c-4 0-6-2-6-4 3 0 6 1 6 4zM20 36c3-.5 5-2.5 5-4.5-3 0-5 2-5 4.5z" fill="var(--sage)"/>';
+  if(st>=2) g+='<path d="M20 38c-6 0-9-3-9-6 4 0 9 2 9 6zM20 33c5 0 8-3 8-6-4 0-8 2-8 6z" fill="var(--sage)"/>';
+  if(st>=3) g+='<path d="M20 29c-4 0-6-2-6-4 3 0 6 1 6 4z" fill="var(--sage)" opacity=".8"/>';
+  if(st===3) g+='<ellipse cx="20" cy="17" rx="3.5" ry="5" fill="var(--terra)"/><path d="M17 19c1 2 5 2 6 0" stroke="var(--sage)" stroke-width="1.4" fill="none"/>';
+  if(st===4){g+='<g fill="var(--terra)">';for(let i=0;i<6;i++)g+=`<ellipse cx="20" cy="8.5" rx="3.6" ry="5.5" transform="rotate(${i*60} 20 14)"/>`;g+='</g><circle cx="20" cy="14" r="3.3" fill="var(--honey)"/>'}
+  return '<svg viewBox="0 0 40 48" aria-hidden="true">'+g+'</svg>';
+}
+
+/* ---------- build habit cards ---------- */
+function cardHTML(h){
+  let x=`<article class="card" data-habit="${h.id}" style="--glow:${h.glow}">`;
+  x+=`<div class="scene" style="--sbg:${h.sbg}"><svg class="motif" viewBox="0 0 84 62" aria-hidden="true">${h.art}</svg><small${h.deva?' class="deva"':''}>${h.cap}</small></div>`;
+  x+=`<div class="card-head"><span class="ico mini c${h.cat}"><svg viewBox="0 0 24 24">${ICON[h.icon]}</svg></span><h3>${h.title}</h3><span class="badge">Done ✓</span></div><p class="meta">${h.meta}</p>`;
+  if(h.mantra) x+='<div class="mantra"><span class="dv">ॐ श्री मात्रे नमः</span><span class="tr">Om Shree Matre Namaha</span></div>';
+  if(h.water){
+    x+=`<div class="water-row"><div class="glass" aria-hidden="true"><div class="marks"></div><div class="fill" id="waterFill"><svg viewBox="0 0 120 10" preserveAspectRatio="none"><path d="M0 5 Q15 0 30 5 T60 5 T90 5 T120 5 V10 H0z"/></svg></div></div>
+    <div class="water-info"><span class="water-amt" id="waterAmt">0 L <small>of 3 L</small></span><span class="soft" id="waterMsg"></span>
+    <div class="water-btns"><button class="btn" data-water="500">+500 ml</button><button class="btn" data-water="1000">+1 L</button><button class="btn ghost" data-water="-250" aria-label="Remove 250 ml">−250</button></div></div></div>`;
+  } else {
+    x+='<div class="subs">'+h.subs.map(s=>`<label class="check" data-row="${s.id}"><input type="checkbox" class="sr" data-sub="${s.id}">${CHECK}<span class="lbl">${s.label}</span>${s.time?`<span class="time">${s.time}</span>`:''}</label>`).join('')+'</div>';
+  }
+  if(h.tags) x+='<div class="chips">'+h.tags.map(t=>`<button class="chip" data-tag="${h.id}" data-val="${t}" aria-pressed="false">${t}</button>`).join('')+'</div>';
+  if(h.custom) x+=`<input class="note" id="custom-${h.id}" data-custom="${h.id}" maxlength="60" placeholder="Or write your own…" aria-label="What did you love today?">`;
+  return x+'</article>';
+}
+$('habits').innerHTML=
+ `<section class="cat1"><div class="cat-head"><span class="pill">Basics</span><h2>Daily Foundation</h2><p>The ground everything else grows from.</p></div><div class="cards">${HABITS.filter(h=>h.cat===1).map(cardHTML).join('')}</div></section>
+  <section class="cat2"><div class="cat-head"><span class="pill">Care</span><h2>Mindful Care &amp; Living</h2><p>The softer things that make life feel like yours.</p></div><div class="cards">${HABITS.filter(h=>h.cat===2).map(cardHTML).join('')}</div></section>`;
+$('moods').innerHTML=MOODS.map(m=>`<button class="mood-btn" data-mood="${m.id}" style="--mc:${m.c}" aria-pressed="false"><svg viewBox="0 0 24 24">${m.svg}</svg>${m.name}</button>`).join('');
+
+function celebrate(el,cat){
+  if(reduce||!el)return;
+  const r=el.getBoundingClientRect(),b=document.createElement('div');
+  b.className='burst';b.style.left=(r.left+r.width/2)+'px';b.style.top=(r.top+r.height/2)+'px';
+  const cols=cat===2?['var(--sage)','var(--honey)','var(--sage-ink)']:cat===3?['var(--calm)','var(--honey)','var(--sage)']:['var(--terra)','var(--honey)','var(--sage)'];
+  for(let i=0;i<9;i++){const p=document.createElement('i');p.className=i%3===0?'spark':'leaf';
+    const a=(-Math.PI/2)+(Math.random()-.5)*2.6,d=28+Math.random()*34;
+    p.style.setProperty('--dx',Math.cos(a)*d+'px');p.style.setProperty('--dy',Math.sin(a)*d+'px');p.style.setProperty('--r',(Math.random()*360-180)+'deg');
+    p.style.background=cols[i%3];p.style.animationDelay=(Math.random()*.08)+'s';b.appendChild(p)}
+  document.body.appendChild(b);setTimeout(()=>b.remove(),1100);
+}
+
+/* ---------- render home ---------- */
+let prevWins=new Set(),prevView=null,doneMem={view:null,set:new Set()};
+const fmtL=ml=>(ml/1000).toFixed(ml%1000===0?0:ml%500===0?1:2)+' L';
+function extras(hb,r){const a=[...((hb.tags&&r.tags&&r.tags[hb.id])||[])],c=((r.custom||{})[hb.id]||'').trim();if(c)a.push(c);return a.length?` (${a.join(', ').toLowerCase()})`:''}
+function update(){
+  const r=peek(view),cd=curDay(),raw=rawDay(),isToday=view===cd&&raw>=1&&raw<=21,h=new Date().getHours();
+  const greet=h<5?'Rest gently':h<12?'Good morning':h<17?'Good afternoon':h<22?'Good evening':'Rest well';
+  const nm=profile&&profile.name?', '+esc(profile.name):'';
+  $('greet').innerHTML=raw<1?`${greet}${nm}. <em>Day 1</em> begins tomorrow.`:`${greet}${nm}. <em>Day ${view}</em> of 21.`;
+  $('dateLine').textContent=dateFor(view).toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'});
+  const sc=score(r,view);
+  $('ringNum').textContent=sc+'/10';$('ringFg').style.strokeDashoffset=213.6*(1-sc/10);
+
+  const ban=$('viewBanner');
+  $('homeView').classList.toggle('prestart',raw<1);
+  if(TRIAL){const tc=trialCount();ban.hidden=false;ban.innerHTML=`<span><b>Trial run ${tc} of 3.</b> Try everything freely today. On ${parse(FIRST).toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'})} it all resets and your real Day 1 begins.</span>`+(tc<3?`<button class="btn sage" data-act="trial">Start a fresh trial run (${3-tc} left)</button>`:'<span class="soft">That was your last trial run. See you tomorrow.</span>')}
+  else if(raw<1){ban.hidden=false;ban.innerHTML=`<span>Your 21 days begin on ${dateFor(1).toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'})}. Everything is fresh and ready. Rest well tonight.</span>`}
+  else if(raw>21){ban.hidden=false;ban.innerHTML='<span>You walked all 21 days. However they went, you showed up for them.</span><button class="btn sage" data-act="reset">Start a new 21 days</button>'}
+  else if(!isToday){ban.hidden=false;ban.innerHTML=`<span>You're looking back at Day ${view}. It's okay to fill in what you remember.</span><button class="btn terra" data-act="today">Back to today</button>`}
+  else ban.hidden=true;
+
+  $('plots').innerHTML=Array.from({length:21},(_,i)=>{const n=i+1,fut=n>raw;
+    return `<button class="plot${n===cd&&raw<=21?' today':''}${n===view?' sel':''}" data-day="${n}" ${fut?'disabled':''} aria-label="Day ${n}${fut?', not yet':''}">${plant(stage(peek(n),n),fut)}<span>${n}</span></button>`}).join('');
+  renderTracker(raw,cd);
+
+  const nowDone=new Set();
+  HABITS.forEach(hb=>{const card=document.querySelector(`[data-habit="${hb.id}"]`),d=isDone(hb,r,view);
+    card.classList.toggle('done',d);if(d)nowDone.add(hb.id);
+    if(d&&doneMem.view===view&&!doneMem.set.has(hb.id)&&!reduce){card.classList.remove('flash');void card.offsetWidth;card.classList.add('flash');setTimeout(()=>card.classList.remove('flash'),1400)}
+    const shown=subsFor(hb,view).map(s=>s.id);
+    hb.subs.forEach(s=>{card.querySelector(`[data-sub="${s.id}"]`).checked=!!r.c[s.id];card.querySelector(`[data-row="${s.id}"]`).hidden=!shown.includes(s.id)});
+    if(hb.tags)card.querySelectorAll('[data-tag]').forEach(b=>b.setAttribute('aria-pressed',((r.tags||{})[hb.id]||[]).includes(b.dataset.val)));
+    if(hb.custom){const inp=$('custom-'+hb.id);if(document.activeElement!==inp)inp.value=(r.custom||{})[hb.id]||''}
+  });
+  doneMem={view,set:nowDone};
+  $('waterFill').style.height=(Math.min(r.water/3000,1)*100)+'%';
+  $('waterAmt').innerHTML=`${fmtL(r.water)} <small>of 3 L</small>`;
+  $('waterMsg').textContent=r.water>=3000?'Fully hydrated. Well done.':r.water>=1500?'Halfway there.':r.water>0?'Every sip counts.':'Start with one glass.';
+
+  document.querySelectorAll('[data-mood]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.mood===r.mood));
+  const m=MOODS.find(m=>m.id===r.mood);$('moodReply').textContent=m?m.reply:'There is no wrong answer here.';
+  if(document.activeElement!==$('note'))$('note').value=r.note||'';
+  $('stepLabel').textContent=`Gentle healing step · Day ${view}`;
+  $('stepIdea').textContent=STEPS[view-1];
+  $('stepCheck').checked=!!r.step;
+
+  const wins=[];
+  if(isToday&&raw>=1)wins.push({k:'here',t:'Opened Sunshine today',c:'var(--honey)'});
+  HABITS.forEach(hb=>{
+    subsFor(hb,view).forEach(s=>{if(r.c[s.id])wins.push({k:s.id,t:s.win+extras(hb,r),c:hb.cat===1?'var(--terra)':'var(--sage)'})});
+    if(hb.water&&r.water>0)wins.push({k:'water'+(r.water>=3000),t:r.water>=3000?'Drank a full 3 liters of water':`Sipped ${fmtL(r.water)} of water`,c:'var(--water-deep)'});
+  });
+  if(m)wins.push({k:'mood',t:'Checked in with how you feel',c:m.c});
+  if(r.step)wins.push({k:'step',t:'Took a gentle healing step',c:'var(--sage)'});
+  const fresh=prevView===view;
+  $('winCount').textContent=wins.length;
+  $('winList').innerHTML=wins.length?wins.map(w=>`<li class="${fresh&&!prevWins.has(w.k)?'new':''}"><svg viewBox="0 0 16 16"><path d="M3 13C3 7 7 3 14 3c0 7-4 11-10 11" fill="${w.c}"/></svg>${w.t}</li>`).join(''):'<li class="soft">Your wins will gather here as the day goes on.</li>';
+  prevWins=new Set(wins.map(w=>w.k));prevView=view;
+  $('quoteLabel').textContent=(isToday&&h<18)?'Gratitude & hope for today':'To close your day';
+  $('quote').textContent=QUOTES[(view-1)%QUOTES.length];
+  $('startDate').value=state.start;
+}
+function renderTracker(raw,cd){
+  const days=Array.from({length:21},(_,i)=>i+1),sel=n=>n===view?' sel':'';
+  let h='<thead><tr><th class="rowh"><span class="eyebrow">Day</span></th>'+days.map(n=>`<th class="${sel(n)}${n===cd&&raw<=21?' tod':''}"><button data-day="${n}" ${n>raw?'disabled':''} aria-label="Open day ${n}">${n}</button></th>`).join('')+'<th class="tot">Days</th></tr></thead><tbody>';
+  HABITS.forEach((hb,i)=>{let cnt=0;
+    if(i===5)h+='<tr class="gap"><td colspan="23"></td></tr>';
+    h+=`<tr><th class="rowh"><span class="lab"><span class="mini c${hb.cat}"><svg viewBox="0 0 24 24">${ICON[hb.icon]}</svg></span>${hb.short}</span></th>`+days.map(n=>{
+      if(n>raw)return `<td class="${sel(n)}"><span class="dot fut"></span></td>`;
+      const r=peek(n),full=isDone(hb,r,n),part=isPart(hb,r,n);if(full)cnt++;
+      return `<td class="${sel(n)}" title="${hb.short}, day ${n}: ${full?'done':part?'partly done':'not yet'}"><span class="dot c${hb.cat}${full?' full':part?' half':''}"></span></td>`}).join('')+`<td class="tot">${cnt}/21</td></tr>`});
+  h+='</tbody><tfoot><tr><th class="rowh">Done</th>'+days.map(n=>`<td class="${sel(n)}">${n>raw?'':score(peek(n),n)}</td>`).join('')+'<td></td></tr></tfoot>';
+  $('tracker').innerHTML=h;
+}
+
+/* ---------- home events ---------- */
+document.addEventListener('change',e=>{
+  const t=e.target;
+  if(t.dataset.sub){rec(view).c[t.dataset.sub]=t.checked;save();if(t.checked)celebrate(t.nextElementSibling,t.closest('.cat2')?2:1);update()}
+  else if(t.id==='stepCheck'){rec(view).step=t.checked;save();if(t.checked)celebrate(t.nextElementSibling,2);update()}
+  else if(t.id==='startDate'&&t.value){state.start=t.value;save();view=curDay();update()}
+});
+$('homeView').addEventListener('click',e=>{
+  const b=e.target.closest('button');if(!b)return;
+  if(b.dataset.water){const r=rec(view),before=r.water;r.water=Math.max(0,Math.min(5000,r.water+Number(b.dataset.water)));save();if(r.water>before)celebrate(b,1);update()}
+  else if(b.dataset.tag){const r=rec(view);r.tags=r.tags||{};const arr=r.tags[b.dataset.tag]||(r.tags[b.dataset.tag]=[]),i=arr.indexOf(b.dataset.val);i>=0?arr.splice(i,1):arr.push(b.dataset.val);save();update()}
+  else if(b.dataset.mood){const r=rec(view);r.mood=r.mood===b.dataset.mood?null:b.dataset.mood;save();if(r.mood)celebrate(b,2);update()}
+  else if(b.dataset.day){view=Number(b.dataset.day);update();window.scrollTo({top:0,behavior:reduce?'auto':'smooth'})}
+  else if(b.dataset.act==='today'){view=curDay();update()}
+  else if(b.dataset.act==='reset'){askReset()}
+  else if(b.dataset.act==='trial'&&TRIAL){const tc=trialCount();if(tc>=3)return;try{localStorage.setItem('sunshine-trial-count',String(tc+1))}catch(e){}
+    state={start:today(),days:{}};save();sosLog=sosLog.filter(x=>x.date>=FIRST);saveSos();view=1;prevView=null;update();window.scrollTo({top:0,behavior:reduce?'auto':'smooth'})}
+});
+document.querySelector('footer').addEventListener('click',e=>{
+  const b=e.target.closest('button');if(!b)return;
+  if(b.id==='resetBtn')askReset();
+  else if(b.dataset.act==='doReset'){state={start:today(),days:{}};save();view=1;prevView=null;restoreReset();update();window.scrollTo({top:0})}
+  else if(b.dataset.act==='keep')restoreReset();
+});
+function askReset(){$('resetArea').innerHTML='<span class="confirm">This clears your 21-day habits (photos and SOS log stay). Begin fresh? <button class="btn sage" data-act="doReset">Yes, start fresh</button><button class="btn ghost" data-act="keep">Keep my progress</button></span>';$('resetArea').scrollIntoView({behavior:reduce?'auto':'smooth',block:'center'})}
+function restoreReset(){$('resetArea').innerHTML='<button class="btn ghost" id="resetBtn">Start a new 21 days</button>'}
+let noteT,custT;
+$('note').addEventListener('input',e=>{clearTimeout(noteT);const v=e.target.value;noteT=setTimeout(()=>{rec(view).note=v;save()},300)});
+$('note').addEventListener('blur',e=>{rec(view).note=e.target.value;save()});
+document.addEventListener('input',e=>{const t=e.target;if(!t.dataset.custom)return;const r=rec(view);(r.custom||(r.custom={}))[t.dataset.custom]=t.value;save();clearTimeout(custT);custT=setTimeout(update,600)});
+
+/* ---------- photos: resized to JPEG, stored in IndexedDB, with localStorage and in-memory fallbacks ---------- */
+let photos=[],idx=0,capIdx=0,confirmDel=false,store=null;
+const LSP='sunshine-photos';
+function idbOpen(){return new Promise((res,rej)=>{try{const q=indexedDB.open('sanctuary-memories',1);q.onupgradeneeded=()=>q.result.createObjectStore('photos',{keyPath:'id',autoIncrement:true});q.onsuccess=()=>res(q.result);q.onerror=()=>rej(q.error);q.onblocked=()=>rej(new Error('blocked'))}catch(e){rej(e)}})}
+function idbStore(db){
+  const run=(mode,fn)=>new Promise((res,rej)=>{try{const tx=db.transaction('photos',mode),os=tx.objectStore('photos'),q=fn(os);tx.oncomplete=()=>res(q&&q.result);tx.onerror=()=>rej(tx.error);tx.onabort=()=>rej(tx.error)}catch(e){rej(e)}});
+  return{name:'idb',
+    all:async()=>((await run('readonly',os=>os.getAll()))||[]).map(e=>({id:e.id,src:e.data||(e.blob?URL.createObjectURL(e.blob):null)})).filter(p=>p.src),
+    add:data=>run('readwrite',os=>os.add({data,added:Date.now()})),
+    del:id=>run('readwrite',os=>os.delete(id))};
+}
+function lsStore(){
+  const read=()=>{try{return JSON.parse(localStorage.getItem(LSP))||[]}catch(e){return[]}};
+  const write=a=>{localStorage.setItem(LSP,JSON.stringify(a))};
+  try{localStorage.setItem('sunshine-test','1');localStorage.removeItem('sunshine-test')}catch(e){return null}
+  return{name:'ls',all:async()=>read().map(p=>({id:p.id,src:p.data})),
+    add:async data=>{const a=read();a.push({id:Date.now()+Math.random(),data});write(a)},
+    del:async id=>write(read().filter(p=>p.id!==id))};
+}
+function memStore(){let a=[];return{name:'mem',all:async()=>a.slice(),add:async data=>{a.push({id:Date.now()+Math.random(),src:data})},del:async id=>{a=a.filter(p=>p.id!==id)}}}
+function fileToJpeg(file,max){return new Promise((res,rej)=>{
+  const url=URL.createObjectURL(file),img=new Image();
+  img.onload=()=>{try{const k=Math.min(1,max/Math.max(img.naturalWidth,img.naturalHeight)),c=document.createElement('canvas');
+    c.width=Math.max(1,Math.round(img.naturalWidth*k));c.height=Math.max(1,Math.round(img.naturalHeight*k));
+    c.getContext('2d').drawImage(img,0,0,c.width,c.height);URL.revokeObjectURL(url);res(c.toDataURL('image/jpeg',.85))}catch(e){URL.revokeObjectURL(url);rej(e)}};
+  img.onerror=()=>{URL.revokeObjectURL(url);rej(new Error('unreadable'))};img.src=url})}
+function hash(s){let h=7;for(const c of s)h=(h*31+c.charCodeAt(0))>>>0;return h}
+const UPLOAD='<label for="photoInput" class="btn terra" role="button" tabindex="0">Add memories</label>';
+function showPhoto(){
+  const box=$('photo'),act=$('memActions');
+  if(!photos.length){
+    box.innerHTML='<div class="empty"><svg width="54" height="54" viewBox="0 0 24 24" fill="none" stroke="#B49A82" stroke-width="1.4" stroke-linecap="round"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-5-8 8"/></svg>Add a few photos from your childhood or your family. One will greet you here each day.</div>';
+    $('photoCap').textContent=CAPTIONS[0];act.innerHTML=UPLOAD;return}
+  idx=Math.min(idx,photos.length-1);
+  box.innerHTML=`<img src="${photos[idx].src}" alt="A cherished memory">`;
+  $('photoCap').textContent=CAPTIONS[capIdx%CAPTIONS.length];
+  act.innerHTML=(photos.length>1?'<button class="btn sage" data-mem="shuffle">Show another memory ✨</button>':'')+
+    UPLOAD.replace('Add memories','Add more').replace('btn terra','btn')+
+    `<button class="btn ghost" data-mem="remove">${confirmDel?'Tap again to remove':'Remove this one'}</button>`;
+}
+$('memActions').addEventListener('keydown',e=>{if(e.target.matches('label[for]')&&(e.key==='Enter'||e.key===' ')){e.preventDefault();$('photoInput').click()}});
+$('memActions').addEventListener('click',async e=>{
+  const b=e.target.closest('button');if(!b)return;
+  if(b.dataset.mem==='shuffle'){let n=idx;while(n===idx)n=Math.floor(Math.random()*photos.length);idx=n;capIdx++;confirmDel=false;showPhoto()}
+  if(b.dataset.mem==='remove'){
+    if(!confirmDel){confirmDel=true;showPhoto();setTimeout(()=>{if(confirmDel){confirmDel=false;showPhoto()}},4000);return}
+    confirmDel=false;try{await store.del(photos[idx].id)}catch(err){}photos=await store.all().catch(()=>photos.filter((_,i)=>i!==idx));showPhoto()}
+});
+$('photoInput').addEventListener('change',async e=>{
+  const files=[...e.target.files];e.target.value='';if(!files.length)return;
+  const msg=$('memMsg');msg.textContent='Adding your memories…';
+  let ok=0,bad=0,failedSave=0;
+  for(const f of files){
+    let data;try{data=await fileToJpeg(f,1200)}catch(err){bad++;continue}
+    try{await store.add(data);ok++}
+    catch(err){ // fall back to a smaller copy in localStorage, then to this session only
+      try{const ls=lsStore();if(!ls)throw err;const small=await fileToJpeg(f,800);await ls.add(small);store=ls;ok++}
+      catch(err2){if(store.name!=='mem')store=memStore();await store.add(data);ok++;failedSave++}}
+  }
+  try{photos=await store.all()}catch(err){}
+  idx=Math.max(0,photos.length-1);capIdx=0;showPhoto();
+  msg.textContent=[ok?`Added ${ok} ${ok===1?'memory':'memories'}.`:'',bad?`${bad} photo${bad>1?'s':''} couldn't be opened. JPG or PNG works best.`:'',failedSave||store.name==='mem'?'This browser view won’t keep photos after it closes. Open Sunshine from its Claude link to keep them.':''].filter(Boolean).join(' ');
+});
+(async()=>{
+  try{store=idbStore(await idbOpen());photos=await store.all()}
+  catch(e){store=lsStore()||memStore();try{photos=await store.all()}catch(e2){photos=[]}}
+  if(store.name==='idb'){const ls=lsStore();if(ls){const extra=await ls.all();if(extra.length){photos=photos.concat(extra);store=ls}}}
+  if(photos.length)idx=hash(today())%photos.length;capIdx=curDay()%CAPTIONS.length;showPhoto();
+})();
+
+/* ---------- Gentle SOS ---------- */
+const SOSKEY='sanctuary21-sos-v1';
+let sosLog=[];try{sosLog=JSON.parse(localStorage.getItem(SOSKEY))||[]}catch(e){}
+const saveSos=()=>{try{localStorage.setItem(SOSKEY,JSON.stringify(sosLog))}catch(e){}};
+if(!TRIAL){const kept=sosLog.filter(x=>x.date>=FIRST);if(kept.length!==sosLog.length){sosLog=kept;saveSos()}}
+const BOX=[['Breathe in',4,2.1],['Hold',4,2.1],['Breathe out',4,1],['Hold',4,1]];
+const SLOW=[['Breathe in',4,2.1],['Breathe out slowly',7,1]];
+const FEEL=[
+ {id:'anx',em:'🌊',name:'Anxious or Panicky',short:'Anxious',c:'#5E95AB',sub:'Calm the nervous system',acts:[
+  {t:'Cold Water Dive Reflex',how:'Splash cold water on your face, or hold a cold glass in your hands for 30 seconds.',why:'Cold on the face triggers the dive reflex, which naturally slows your heart rate.',tool:'timer:30'},
+  {t:'Box Breathing (4-4-4-4)',how:'Inhale for 4, hold for 4, exhale for 4, hold for 4. Follow the circle.',why:'Even, paced breathing steadies the body’s alarm response.',tool:'breath:box'},
+  {t:'5-4-3-2-1 Sensory Anchor',how:'Name 5 things you see, 4 you can touch, 3 sounds you hear, 2 things you smell, and take 1 slow breath.',why:'Your senses pull attention back into the present moment.',tool:'senses'},
+  {t:'Physiological Sigh',how:'Two quick inhales through your nose (one deep, one tiny top-off), then one extra-long, slow exhale through your mouth. Repeat 3 times.',why:'A long exhale is one of the fastest ways to settle the body.'}]},
+ {id:'dep',em:'🌧️',name:'Depressed, Heavy, or Empty',short:'Depressed/Heavy',c:'#8A96A8',sub:'Gentle activation',acts:[
+  {t:'2-Minute Sunlight & Sky Check',how:'Sit right next to a bright window or step outside for 2 minutes.',why:'Natural light supports mood without asking for energy.',tool:'timer:120'},
+  {t:'Micro-Shift Your Posture',how:'If you’re lying down, sit up on the edge of the bed and plant both feet flat on the floor for 60 seconds.',why:'A tiny change in position is a real first step.',tool:'timer:60'},
+  {t:'Comfort Sensory Boost',how:'Wash your face with cool water, apply a soothing moisturizer or lip balm, or wrap up in your softest blanket.',why:'Soothing touch tells your body it is being cared for.'},
+  {t:'Low-Energy Comfort Audio',how:'Play a familiar movie soundtrack or a favorite calming song. Nothing else is required of you while it plays.',why:'Familiar sound brings comfort without effort.'}]},
+ {id:'lone',em:'🫂',name:'Lonely or Disconnected',short:'Lonely',c:'#C47E8C',sub:'Warmth, low pressure',acts:[
+  {t:'Zero-Effort Reach Out',how:'Send a single heart, a cute animal reel, or a “thinking of you” to one family member or friend. No long conversation needed.',why:'Small contact still builds connection.',tool:'text'},
+  {t:'Revisit a Happy Memory',how:'Look at a childhood or family photo for 30 seconds and remember you are deeply loved.',why:'Memories of belonging can soften loneliness.',tool:'memory'},
+  {t:'Nature & Animal Connection',how:'Look outside for birds, squirrels, or trees, or watch a 2-minute video of baby animals.',why:'Living things spark gentle warmth.'},
+  {t:'Hand-on-Heart Self-Compassion',how:'Place one warm hand over your chest and take 3 slow breaths.',why:'Warm touch and kind words calm the body’s threat system.',tool:'affirm'}]},
+ {id:'tired',em:'🪫',name:'Exhausted or Burned Out',short:'Exhausted',c:'#B08F55',sub:'Guilt-free rest',acts:[
+  {t:'Hydrate & Nourish Check',how:'Drink one full glass of water, slowly.',why:'Dehydration often disguises itself as deep fatigue.'},
+  {t:'Legs-Up or Eye Rest (3 Minutes)',how:'Close your eyes away from all screens, or rest with your legs up against the wall or bed.',why:'A short, real rest lets your body settle.',tool:'timer:180'},
+  {t:'Drop Non-Essentials Today',how:'You have full permission to focus only on your 5 basic anchors today. Everything else can wait.',why:'Lowering the load is a valid way to recover.',tool:'anchors'},
+  {t:'Gentle Neck & Shoulder Release',how:'Roll your shoulders back 5 times, then slowly tilt each ear toward its shoulder.',why:'Releases tension your body has been holding.'}]},
+ {id:'over',em:'🌀',name:'Overwhelmed or Overthinking',short:'Overwhelmed',c:'#9C8BB8',sub:'Unload and ground',acts:[
+  {t:'One-Line Brain Dump',how:'Write the single heaviest thought in the box, then release it from view.',why:'Putting a thought outside your head makes it easier to set down. Nothing you write is saved.',tool:'dump'},
+  {t:'The “Next 5 Minutes Only” Rule',how:'Forget the rest of the day. Ask only: what is one tiny, gentle thing I can do in the next 5 minutes?',why:'A smaller horizon makes action possible again.',tool:'timer:300'},
+  {t:'Temperature & Texture Focus',how:'Hold a warm mug or touch a plant leaf, and give all your attention to its warmth and texture.',why:'Full sensory focus quiets racing thoughts.'},
+  {t:'Slow Exhale Breathing',how:'Breathe in for 4 seconds and exhale slowly for 7. Follow the circle.',why:'Longer exhales help switch off the stress response.',tool:'breath:slow'}]},
+ {id:'numb',em:'😶‍🌫️',name:'Numb or Unmotivated',short:'Numb',c:'#7FA08F',sub:'A tiny spark, no pressure',acts:[
+  {t:'5-Minute Comfort Movie Scene',how:'Put on one favorite cozy scene from a movie you already love. No need to finish the film.',why:'Familiar joy can gently wake feeling.',tool:'timer:300'},
+  {t:'Tend to One Plant',how:'Check its soil, mist its leaves, or gently wipe a dusty leaf.',why:'Caring for something alive is a small, real act.'},
+  {t:'Change One Sensory Input',how:'Open a window for fresh air, turn on a warm lamp, or put on a comforting scent.',why:'A small change in surroundings shifts how a moment feels.'},
+  {t:'Celebrate Tiny Motion',how:'Do just 10% of something: 3 sips of water or 30 seconds of stretching.',why:'Momentum follows action, not the other way around.',tool:'timer:30'}]}
+];
+let sos={feel:null,chosen:null,done:false,suggest:null},sosTimers=[],timerLeft=0,timerRun=false;
+const clearSos=()=>{sosTimers.forEach(clearInterval);sosTimers=[];timerRun=false};
+const sosDay=d=>Math.round((parse(d)-parse(state.start))/864e5)+1;
+const mmss=n=>Math.floor(n/60)+':'+String(n%60).padStart(2,'0');
+const SUN='<svg class="sun" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="7" fill="#E5AE57"/><g stroke="#D9805F" stroke-width="2" stroke-linecap="round"><path d="M16 2.5v4M16 25.5v4M2.5 16h4M25.5 16h4M6.4 6.4l2.8 2.8M22.8 22.8l2.8 2.8M6.4 25.6l2.8-2.8M22.8 9.2l2.8-2.8"/></g></svg>';
+function toolHTML(tool){
+  if(!tool)return'<p class="soft">Take your time. Tap Done whenever you’re ready.</p>';
+  if(tool.startsWith('breath'))return'<div class="breather"><div class="ring2"></div><div class="orb"></div><div class="t"><span class="phase">Get comfortable</span><span class="count"></span></div></div>';
+  if(tool.startsWith('timer')){const n=+tool.split(':')[1];return`<span class="clock" id="sosClock">${mmss(n)}</span><button class="btn fc" data-sos="timer" id="sosTimerBtn">Start timer</button><span class="soft" id="sosTimerMsg"></span>`}
+  if(tool==='text')return'<div class="copyrow"><span class="msg">Thinking of you 💛</span><button class="btn" data-sos="copy">Copy</button></div><p class="soft">Paste it to anyone you trust.</p>';
+  if(tool==='memory')return'<button class="btn fc" data-sos="memory">Open my memory frame</button>';
+  if(tool==='affirm')return'<p class="affirm">This feeling is temporary, and I am not alone in feeling it.</p>';
+  if(tool==='anchors')return'<p class="soft">Today, only these:</p><div class="anchors"><span>Sleep</span><span>Meals</span><span>Water</span><span>Medicines</span><span>Prayer</span></div>';
+  if(tool==='senses')return'<div class="anchors"><span>5 see</span><span>4 touch</span><span>3 hear</span><span>2 smell</span><span>1 breath</span></div>';
+  if(tool==='dump')return'<textarea class="note dump" id="dump" rows="3" maxlength="200" placeholder="The heaviest thought right now…" aria-label="Brain dump"></textarea><button class="btn" data-sos="release">Release thought</button><span class="soft" id="dumpMsg"></span>';
+  return'';
+}
+function renderSos(){
+  clearSos();const main=$('sosMain'),f=FEEL.find(x=>x.id===sos.feel);
+  const stage=!f?0:sos.done?2:1;
+  [...$('stepper').children].forEach((li,i)=>{li.className=i===stage?'on':i<stage?'past':''});
+  if(!f){
+    main.style.removeProperty('--fc');
+    main.innerHTML='<h2>What are you feeling right now?</h2><p class="soft">Tap the one closest to this moment. There is no wrong choice.</p><div class="feelings">'+
+      FEEL.map(x=>`<button class="feel" data-feel="${x.id}" style="--fc:${x.c}"><span class="em" aria-hidden="true">${x.em}</span><b>${x.name}</b><small>${x.sub}</small></button>`).join('')+'</div>';
+    return}
+  main.style.setProperty('--fc',f.c);
+  const chip=`<div class="feeling-chip"><span class="fc"><span aria-hidden="true">${f.em}</span>${f.name}</span><button class="linkbtn" data-sos="change">Change feeling</button></div>`;
+  if(sos.done){
+    main.innerHTML=`<div class="sos-done">${SUN}<h3>You took care of yourself in a hard moment. That counts.</h3><p class="soft">Saved to your log for Day ${curDay()}.</p><div class="row"><button class="btn fc big" data-sos="okay">I'm okay for now</button><button class="btn big" data-sos="again">Try one more thing</button></div></div>`;return}
+  if(sos.chosen!==null){
+    const a=f.acts[sos.chosen];
+    main.innerHTML=`${chip}<div class="focus"><div class="info"><button class="linkbtn" data-sos="unpick">← See the other ideas</button><span class="tag-pick">Your one thing</span><h3>${a.t}</h3><p class="how">${a.how}</p><p class="soft">${a.why}</p><div class="actions"><button class="btn fc big" data-sos="done">Done ✓</button></div></div><div class="tool">${toolHTML(a.tool)}</div></div>`;
+    if(a.tool&&a.tool.startsWith('breath'))startBreath(main.querySelector('.breather'),a.tool==='breath:box'?BOX:SLOW);
+    if(a.tool&&a.tool.startsWith('timer'))timerLeft=+a.tool.split(':')[1];
+    return}
+  main.innerHTML=`${chip}<div class="pick-banner"><p>You don't have to do all of these. Just pick ONE tiny thing that feels easiest right now.</p><button class="btn" data-sos="shuffle">Give me another idea ✨</button></div>
+   <div class="acts">${f.acts.map((a,i)=>`<article class="act${sos.suggest===i?' suggest':''}">${sos.suggest===i?'<span class="tag-pick">Try this one</span>':''}<h3>${a.t}</h3><p class="how">${a.how}</p><p class="why">${a.why}</p><button class="btn${sos.suggest===i?' fc':''}" data-pick="${i}">I'll do this one</button></article>`).join('')}</div>`;
+}
+function startBreath(el,ph){let i=0,left=ph[0][1];const orb=el.querySelector('.orb'),p=el.querySelector('.phase'),c=el.querySelector('.count');
+  const set=()=>{p.textContent=ph[i][0];orb.style.transitionDuration=ph[i][1]+'s';orb.style.transform=`scale(${ph[i][2]})`;c.textContent=left};
+  requestAnimationFrame(()=>requestAnimationFrame(set));
+  sosTimers.push(setInterval(()=>{left--;if(left<=0){i=(i+1)%ph.length;left=ph[i][1];set()}else c.textContent=left},1000))}
+function renderLog(){
+  const t=today(),ev=sosLog.filter(e=>{const d=sosDay(e.date);return d>=1&&d<=21});
+  const byId=id=>FEEL.find(f=>f.id===id),cnt=list=>FEEL.map(f=>[f,list.filter(e=>e.feel===f.id).length]).filter(x=>x[1]>0);
+  const todayC=cnt(sosLog.filter(e=>e.date===t)),allC=cnt(ev).sort((a,b)=>b[1]-a[1]),max=Math.max(1,...allC.map(x=>x[1])),raw=rawDay();
+  let h='<div class="log-grid"><div class="log-card"><h3>Today</h3>';
+  h+=todayC.length?`<div class="today-chips">${todayC.map(([f,n])=>`<span style="--fc:${f.c}">${f.em} ${f.short} (${n})</span>`).join('')}</div>`:'<p class="soft">Nothing logged today. Whenever a hard moment comes, this page is here.</p>';
+  h+=`</div><div class="log-card"><h3>21-day overview</h3><div style="display:flex;align-items:baseline;gap:10px"><span class="big-total">${ev.length}</span><span class="soft">moments you showed up to comfort yourself</span></div>`;
+  h+=allC.length?allC.map(([f,n])=>`<div class="fbar" style="--fc:${f.c}"><div class="top"><span>${f.em} ${f.short}</span><span>${n} moment${n>1?'s':''} cared for</span></div><div class="track"><i style="width:${n/max*100}%"></i></div></div>`).join(''):'<p class="soft">Each time you finish a gentle action, it is counted here with care.</p>';
+  h+='</div></div><div class="log-card"><h3>Across your 21 days</h3><div class="daystrip">';
+  for(let d=1;d<=21;d++){const de=ev.filter(e=>sosDay(e.date)===d);h+=`<div class="dcell${d===raw?' tod':''}" title="Day ${d}: ${de.length} moment${de.length===1?'':'s'}"><b>${d}</b><span class="ds">${de.slice(0,8).map(e=>`<i style="background:${(byId(e.feel)||{}).c}"></i>`).join('')}</span></div>`}
+  h+='</div></div>';
+  const rec=ev.slice(-6).reverse();
+  if(rec.length)h+='<div class="log-card"><h3>Recent moments</h3><ul class="recent">'+rec.map(e=>{const f=byId(e.feel)||{};return`<li><span class="when">Day ${sosDay(e.date)} · ${new Date(e.ts).toLocaleTimeString([],{hour:'numeric',minute:'2-digit'})}</span><span>${f.em||''} ${f.short||''} · ${e.act}</span></li>`}).join('')+'</ul></div>';
+  $('sosLog').innerHTML=h;
+}
+$('sosView').addEventListener('click',e=>{
+  const b=e.target.closest('button');if(!b)return;const f=FEEL.find(x=>x.id===sos.feel);
+  const top=()=>$('stepper').scrollIntoView({behavior:reduce?'auto':'smooth',block:'start'});
+  if(b.dataset.feel){sos={feel:b.dataset.feel,chosen:null,done:false,suggest:null};renderSos();top();return}
+  if(b.dataset.pick!==undefined){sos.chosen=+b.dataset.pick;renderSos();top();return}
+  const a=b.dataset.sos;
+  if(a==='change'){sos={feel:null,chosen:null,done:false,suggest:null};renderSos()}
+  else if(a==='shuffle'){let n;do{n=Math.floor(Math.random()*4)}while(n===sos.suggest);sos.suggest=n;renderSos()}
+  else if(a==='unpick'){sos.chosen=null;renderSos()}
+  else if(a==='done'){sosLog.push({ts:Date.now(),date:today(),day:curDay(),feel:f.id,act:f.acts[sos.chosen].t});saveSos();celebrate(b,3);sos.done=true;renderSos();renderLog()}
+  else if(a==='again'){sos.done=false;sos.chosen=null;sos.suggest=null;renderSos()}
+  else if(a==='okay'){sos={feel:null,chosen:null,done:false,suggest:null};renderSos();window.scrollTo({top:0,behavior:reduce?'auto':'smooth'})}
+  else if(a==='timer'){
+    if(timerRun){clearSos();timerRun=false;b.textContent='Resume'}
+    else{if(timerLeft<=0)return;timerRun=true;b.textContent='Pause';sosTimers.push(setInterval(()=>{timerLeft--;const c=$('sosClock');if(!c)return;c.textContent=mmss(timerLeft);
+      if(timerLeft<=0){clearSos();b.hidden=true;$('sosTimerMsg').textContent='Time’s up. Gently done.'}},1000))}}
+  else if(a==='copy'){const m=b.parentElement.querySelector('.msg');
+    const sel=()=>{const r=document.createRange();r.selectNodeContents(m);getSelection().removeAllRanges();getSelection().addRange(r)};
+    try{navigator.clipboard.writeText(m.textContent).then(()=>{b.textContent='Copied'},sel)}catch(err){sel()}}
+  else if(a==='memory'){location.hash='home';setTimeout(()=>document.querySelector('.memory').scrollIntoView({behavior:reduce?'auto':'smooth',block:'center'}),80)}
+  else if(a==='release'){const d=$('dump');if(!d.value.trim())return;d.classList.add('release');setTimeout(()=>{d.value='';d.classList.remove('release');$('dumpMsg').textContent='Released. It doesn’t need your attention right now.'},650)}
+});
+
+/* ---------- page switching ---------- */
+function showView(){
+  const isSos=location.hash==='#sos';
+  $('homeView').hidden=isSos;$('sosView').hidden=!isSos;$('fab').hidden=isSos;$('settings').hidden=isSos||TRIAL;
+  document.querySelectorAll('.tab').forEach(t=>t.setAttribute('aria-selected',(t.dataset.go==='sos')===isSos));
+  if(isSos){renderSos();renderLog()}else{clearSos();update()}
+}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-go]');if(!b)return;
+  const want=b.dataset.go==='sos'?'#sos':'#home';if(location.hash===want)return;location.hash=b.dataset.go;window.scrollTo({top:0})});
+window.addEventListener('hashchange',showView);
+
+
+/* ---------- Profile, PIN lock, backup, install ---------- */
+const PKEY='sunshine-profile';
+function esc(t){return String(t).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function loadProfile(){try{return JSON.parse(localStorage.getItem(PKEY))}catch(e){return null}}
+let profile=loadProfile(),memProfile=null;
+function saveProfile(){memProfile=profile;try{localStorage.setItem(PKEY,JSON.stringify(profile))}catch(e){}}
+const hex=b=>[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('');
+async function hashPin(pin,salt){
+  try{if(crypto&&crypto.subtle){
+    const key=await crypto.subtle.importKey('raw',new TextEncoder().encode(pin),'PBKDF2',false,['deriveBits']);
+    const bits=await crypto.subtle.deriveBits({name:'PBKDF2',hash:'SHA-256',salt:new TextEncoder().encode(salt),iterations:150000},key,256);
+    return 'pbkdf2:'+hex(bits)}}catch(e){}
+  let h=2166136261;const str=salt+':'+pin;for(let r=0;r<5000;r++)for(let i=0;i<str.length;i++){h^=str.charCodeAt(i)+r;h=Math.imul(h,16777619)>>>0}
+  return 'fnv:'+h.toString(16);
+}
+const newSalt=()=>{try{const a=new Uint8Array(16);crypto.getRandomValues(a);return hex(a)}catch(e){return String(Math.random()).slice(2)+Date.now()}};
+const validPin=p=>/^\d{4,6}$/.test(p);
+let fails=0,coolUntil=0,hiddenAt=0;
+const LOCK_AFTER=5*60*1000;
+function setLocked(on){
+  $('lock').hidden=!on;
+  document.querySelector('.wrap').inert=on;$('fab').inert=on;
+  document.body.style.overflow=on?'hidden':'';
+  if(on)renderLock();else{update();renderPerson()}
+}
+function renderLock(mode){
+  const c=$('lockCard'),sun=`<div class="lock-logo">${SUN_SVG}<h1>Sunshine</h1>`;
+  if(!profile||!profile.hash){
+    c.innerHTML=`${sun}<p>A gentle space for your 21 days. Let's set it up. It takes a minute.</p></div>
+    <form id="regForm" class="field" style="gap:12px" autocomplete="off">
+      <div class="field"><label for="rName">Your name</label><input id="rName" maxlength="40" required autocomplete="given-name" placeholder="What should Sunshine call you?"></div>
+      <div class="row2">
+        <div class="field"><label for="rCName">Trusted person</label><input id="rCName" maxlength="40" placeholder="e.g. Amma"></div>
+        <div class="field"><label for="rCPhone">Their phone</label><input id="rCPhone" type="tel" inputmode="tel" maxlength="20" placeholder="+91 …"></div>
+      </div>
+      <p class="hint" style="margin-top:-6px">Optional. They'll appear as a "Call" button on the SOS page.</p>
+      <div class="row2">
+        <div class="field"><label for="rPin">Create a PIN</label><input id="rPin" class="pin" type="password" inputmode="numeric" maxlength="6" autocomplete="new-password" placeholder="••••"></div>
+        <div class="field"><label for="rPin2">Confirm PIN</label><input id="rPin2" class="pin" type="password" inputmode="numeric" maxlength="6" autocomplete="new-password" placeholder="••••"></div>
+      </div>
+      <p class="lock-msg" id="lockMsg" aria-live="polite"></p>
+      <button class="btn sage wide" type="submit">Create my space</button>
+      <p class="lock-note">Your details and PIN stay on this phone only. There's no online account, so a forgotten PIN can't be recovered. Export a backup from Profile &amp; backup now and then.</p>
+    </form>`;
+    setTimeout(()=>{try{$('rName').focus()}catch(e){}},50);return}
+  if(mode==='forgot'){
+    c.innerHTML=`${sun}<p>Forgot your PIN?</p></div>
+    <p class="soft" style="text-align:center">Your PIN only lives on this phone, so it can't be recovered. The only way back in is to erase Sunshine on this phone and start again. If you exported a backup, you can import it afterwards.</p>
+    <button class="btn danger wide" data-lock="erase1">Erase and start over</button>
+    <button class="linkc" data-lock="back">Go back</button>`;return}
+  if(mode==='erase2'){
+    c.innerHTML=`${sun}<p>Are you sure?</p></div>
+    <p class="soft" style="text-align:center">This removes your profile, habits, SOS log and photos from this phone. It can't be undone.</p>
+    <button class="btn danger wide" data-lock="erase2">Yes, erase everything</button>
+    <button class="linkc" data-lock="back">Keep my data</button>`;return}
+  c.innerHTML=`${sun}<p>Welcome back, ${esc(profile.name)}.</p></div>
+  <form id="loginForm" class="field" style="gap:12px">
+    <div class="field"><label for="lPin" style="text-align:center">Enter your PIN</label><input id="lPin" class="pin" type="password" inputmode="numeric" maxlength="6" autocomplete="current-password" placeholder="••••"></div>
+    <p class="lock-msg" id="lockMsg" aria-live="polite"></p>
+    <button class="btn sage wide" type="submit">Unlock</button>
+  </form>
+  <button class="linkc" data-lock="forgot">Forgot PIN?</button>`;
+  setTimeout(()=>{try{$('lPin').focus()}catch(e){}},50);
+}
+const SUN_SVG='<svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="7" fill="#E5AE57"/><g stroke="#D9805F" stroke-width="2.2" stroke-linecap="round"><path d="M16 2.5v4M16 25.5v4M2.5 16h4M25.5 16h4M6.4 6.4l2.8 2.8M22.8 22.8l2.8 2.8M6.4 25.6l2.8-2.8M22.8 9.2l2.8-2.8"/></g></svg>';
+$('lock').addEventListener('submit',async e=>{
+  e.preventDefault();const msg=$('lockMsg');
+  if(e.target.id==='regForm'){
+    const name=$('rName').value.trim(),p1=$('rPin').value,p2=$('rPin2').value;
+    if(!name){msg.textContent='Please add your name.';return}
+    if(!validPin(p1)){msg.textContent='Your PIN needs 4 to 6 digits.';return}
+    if(p1!==p2){msg.textContent='The two PINs don’t match. Please try again.';return}
+    const salt=newSalt();
+    profile={name,contactName:$('rCName').value.trim(),contactPhone:$('rCPhone').value.trim(),salt,hash:await hashPin(p1,salt),created:new Date().toISOString()};
+    saveProfile();setLocked(false);celebrate(document.querySelector('.brand'),1);return}
+  if(e.target.id==='loginForm'){
+    const now=Date.now();if(now<coolUntil){msg.textContent=`Please wait ${Math.ceil((coolUntil-now)/1000)} seconds and try again.`;return}
+    const pin=$('lPin').value;
+    if(await hashPin(pin,profile.salt)===profile.hash){fails=0;setLocked(false)}
+    else{fails++;$('lPin').value='';
+      if(fails>=5){coolUntil=Date.now()+30000;fails=0;msg.textContent='That PIN didn’t match 5 times. Please wait 30 seconds.'}
+      else msg.textContent='That PIN didn’t match. Try again.'}
+  }
+});
+$('lock').addEventListener('input',e=>{if(e.target.classList.contains('pin'))e.target.value=e.target.value.replace(/\D/g,'').slice(0,6)});
+$('lock').addEventListener('click',async e=>{
+  const b=e.target.closest('[data-lock]');if(!b)return;const a=b.dataset.lock;
+  if(a==='forgot')renderLock('forgot');else if(a==='back')renderLock();else if(a==='erase1')renderLock('erase2');
+  else if(a==='erase2'){await eraseAll();location.reload()}
+});
+async function eraseAll(){
+  try{[PKEY,REAL_KEY,TRIAL_KEY,SOSKEY,'sunshine-photos','sunshine-trial-count'].forEach(k=>localStorage.removeItem(k))}catch(e){}
+  try{for(const p of (await store.all()))await store.del(p.id)}catch(e){}
+}
+document.addEventListener('visibilitychange',()=>{
+  if(!profile||!profile.hash)return;
+  if(document.hidden)hiddenAt=Date.now();
+  else if(hiddenAt&&Date.now()-hiddenAt>LOCK_AFTER&&$('lock').hidden)setLocked(true);
+});
+$('lockNow').addEventListener('click',()=>{$('profilePanel').hidden=true;setLocked(true)});
+
+/* Trusted person on the SOS page */
+function renderPerson(){
+  const box=$('myPerson');if(!profile||!profile.contactPhone){box.hidden=true;return}
+  const who=esc(profile.contactName||'my person'),num=esc(profile.contactPhone),tel=profile.contactPhone.replace(/[^\d+]/g,'');
+  box.innerHTML=`<a class="ln me" href="tel:${tel}">📞 Call ${who}</a><span class="ln">${num}</span>`;box.hidden=false;
+}
+
+/* Profile panel */
+$('profileBtn').addEventListener('click',()=>{
+  const p=$('profilePanel');p.hidden=!p.hidden;
+  if(!p.hidden){$('pName').value=profile?profile.name:'';$('pCName').value=profile?profile.contactName||'':'';$('pCPhone').value=profile?profile.contactPhone||'':'';
+    ['profileMsg','pinMsg','backupMsg'].forEach(i=>$(i).textContent='');p.scrollIntoView({behavior:reduce?'auto':'smooth',block:'start'})}
+});
+$('closeProfile').addEventListener('click',()=>{$('profilePanel').hidden=true});
+$('profileForm').addEventListener('submit',e=>{e.preventDefault();if(!profile)return;
+  const n=$('pName').value.trim();if(!n){$('profileMsg').textContent='Please add your name.';return}
+  profile.name=n;profile.contactName=$('pCName').value.trim();profile.contactPhone=$('pCPhone').value.trim();saveProfile();update();renderPerson();$('profileMsg').textContent='Saved.'});
+$('pinForm').addEventListener('input',e=>{if(e.target.classList.contains('pin'))e.target.value=e.target.value.replace(/\D/g,'').slice(0,6)});
+$('pinForm').addEventListener('submit',async e=>{e.preventDefault();const m=$('pinMsg');
+  if(await hashPin($('pinOld').value,profile.salt)!==profile.hash){m.textContent='Your current PIN didn’t match.';return}
+  const a=$('pinNew').value,b=$('pinNew2').value;
+  if(!validPin(a)){m.textContent='The new PIN needs 4 to 6 digits.';return}
+  if(a!==b){m.textContent='The new PINs don’t match.';return}
+  profile.salt=newSalt();profile.hash=await hashPin(a,profile.salt);saveProfile();e.target.reset();m.textContent='PIN updated.'});
+
+/* Backup export / import */
+const toDataURL=src=>src.startsWith('data:')?Promise.resolve(src):fetch(src).then(r=>r.blob()).then(b=>new Promise(res=>{const f=new FileReader();f.onload=()=>res(f.result);f.readAsDataURL(b)}));
+$('exportBtn').addEventListener('click',async()=>{
+  const m=$('backupMsg');m.textContent='Preparing your backup…';
+  try{
+    const get=k=>{try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}};
+    let pics=[];try{pics=await Promise.all((await store.all()).map(p=>toDataURL(p.src)))}catch(e){}
+    const data={app:'sunshine',version:1,exported:new Date().toISOString(),
+      profile:profile?{name:profile.name,contactName:profile.contactName,contactPhone:profile.contactPhone}:null,
+      journey:get(REAL_KEY),sos:get(SOSKEY)||[],photos:pics};
+    const blob=new Blob([JSON.stringify(data)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');
+    a.href=url;a.download=`sunshine-backup-${today()}.json`;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),4000);
+    m.textContent=`Backup saved to your downloads (${pics.length} photo${pics.length===1?'':'s'} included).`;
+  }catch(err){m.textContent='The backup couldn’t be created here. Try again from the installed app.'}
+});
+$('importLabel').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();$('importInput').click()}});
+let pendingImport=null;
+$('importInput').addEventListener('change',async e=>{
+  const f=e.target.files[0];e.target.value='';if(!f)return;const m=$('backupMsg');
+  try{const d=JSON.parse(await f.text());if(!d||d.app!=='sunshine')throw 0;pendingImport=d;
+    $('importConfirm').innerHTML=`<p class="soft">This backup is from ${new Date(d.exported).toLocaleDateString()}. Importing replaces your current habits and SOS log and adds ${(d.photos||[]).length} photo(s). Your PIN stays the same.</p><div class="btns"><button class="btn terra" data-imp="yes">Import now</button><button class="btn ghost" data-imp="no">Cancel</button></div>`;m.textContent=''}
+  catch(err){m.textContent='That file isn’t a Sunshine backup.'}
+});
+$('importConfirm').addEventListener('click',async e=>{
+  const b=e.target.closest('[data-imp]');if(!b)return;
+  if(b.dataset.imp==='no'||!pendingImport){$('importConfirm').innerHTML='';pendingImport=null;return}
+  const d=pendingImport;$('importConfirm').innerHTML='';$('backupMsg').textContent='Importing…';
+  try{
+    if(d.journey)localStorage.setItem(REAL_KEY,JSON.stringify(d.journey));
+    localStorage.setItem(SOSKEY,JSON.stringify(d.sos||[]));
+    if(d.profile&&profile){profile.name=d.profile.name||profile.name;profile.contactName=d.profile.contactName||'';profile.contactPhone=d.profile.contactPhone||'';saveProfile()}
+    for(const src of (d.photos||[]))try{await store.add(src)}catch(err){}
+    $('backupMsg').textContent='Imported. Reloading…';setTimeout(()=>location.reload(),700);
+  }catch(err){$('backupMsg').textContent='Import didn’t finish. Please try again.'}
+});
+
+/* Install prompt (Android Chrome) and offline support */
+let deferredInstall=null;
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredInstall=e;$('installBtn').hidden=false});
+$('installBtn').addEventListener('click',async()=>{if(!deferredInstall)return;deferredInstall.prompt();try{await deferredInstall.userChoice}catch(e){}deferredInstall=null;$('installBtn').hidden=true});
+window.addEventListener('appinstalled',()=>{$('installBtn').hidden=true});
+if('serviceWorker' in navigator&&location.protocol==='https:')navigator.serviceWorker.register('./sw.js').catch(()=>{});
+
+renderPerson();
+setLocked(true);
+showView();
+let lastDate=today();setInterval(()=>{if(TRIAL&&today()>=FIRST){location.reload();return}if(today()!==lastDate){lastDate=today();view=curDay();if(location.hash!=='#sos')update()}},60000);
+})();
+</script>
+
+</body>
+</html>

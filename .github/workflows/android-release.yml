@@ -1,0 +1,87 @@
+name: Android release
+
+# Builds the Sunshine Android app (APK) and publishes it on the Releases page.
+# Runs when a version tag like v1.0.0 is pushed, or manually from the Actions tab.
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Check signing password
+        env:
+          KEY_PASSWORD: ${{ secrets.SUNSHINE_KEY_PASSWORD }}
+        run: |
+          if [ -z "$KEY_PASSWORD" ]; then
+            echo "::error::Add the SUNSHINE_KEY_PASSWORD secret under Settings > Secrets and variables > Actions, then run this workflow again."
+            exit 1
+          fi
+
+      - name: Install Capacitor
+        working-directory: app
+        run: npm install --no-audit --no-fund
+
+      - name: Copy the web app
+        working-directory: app
+        run: npm run prepare-web
+
+      - name: Create the Android project
+        working-directory: app
+        run: |
+          npx cap add android
+          npx cap sync android
+
+      - name: Apply Sunshine icons, splash and permissions
+        working-directory: app
+        run: npm run customize
+
+      - name: Build release APK
+        working-directory: app/android
+        run: |
+          chmod +x gradlew
+          ./gradlew assembleRelease --no-daemon --stacktrace
+
+      - name: Sign APK
+        env:
+          KEY_PASSWORD: ${{ secrets.SUNSHINE_KEY_PASSWORD }}
+        run: |
+          BT="$ANDROID_HOME/build-tools/$(ls "$ANDROID_HOME/build-tools" | sort -V | tail -1)"
+          VERSION=$(node -p "require('./app/package.json').version")
+          IN=app/android/app/build/outputs/apk/release/app-release-unsigned.apk
+          "$BT/zipalign" -p -f 4 "$IN" aligned.apk
+          "$BT/apksigner" sign --ks app/signing/sunshine-release.p12 --ks-type PKCS12 \
+            --ks-key-alias sunshine --ks-pass env:KEY_PASSWORD --key-pass env:KEY_PASSWORD \
+            --out "Sunshine-$VERSION.apk" aligned.apk
+          "$BT/apksigner" verify --print-certs "Sunshine-$VERSION.apk"
+          echo "VERSION=$VERSION" >> "$GITHUB_ENV"
+
+      - name: Publish release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_type == 'tag' && github.ref_name || format('v{0}', env.VERSION) }}
+          name: Sunshine ${{ env.VERSION }}
+          files: Sunshine-${{ env.VERSION }}.apk
+          body: |
+            **Install on Android**
+            1. Download `Sunshine-${{ env.VERSION }}.apk` below on your phone.
+            2. Open it. If Android asks, allow your browser or Files app to install unknown apps.
+            3. Open Sunshine, set up your name and PIN, then allow notifications for reminders.
+
+            Updating: install the new APK over the old one. Your data stays on your phone.

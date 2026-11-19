@@ -413,6 +413,14 @@ footer{display:flex;flex-direction:column;gap:14px;align-items:center;text-align
 .pbox h3{font-size:1rem}
 .pbox .btns{display:flex;flex-wrap:wrap;gap:8px}
 .pmsg{font-size:.84rem;color:var(--sage-ink);min-height:1.2em}
+.rem-list{display:flex;flex-direction:column;gap:6px}
+.rem-row{display:flex;align-items:center;gap:10px;background:var(--surface);border-radius:12px;padding:6px 10px}
+.rem-row label{flex:1;min-width:0;font-size:.9rem;display:flex;align-items:center;gap:8px;cursor:pointer}
+.rem-row input[type=checkbox]{width:18px;height:18px;accent-color:var(--sage)}
+.rem-row input[type=time]{border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);padding:4px 6px;font:inherit;font-size:.86rem}
+.rem-row .fixed{font-size:.78rem;color:var(--muted);white-space:nowrap}
+.toggle-row{display:flex;align-items:center;gap:10px;font-weight:800;font-size:.92rem}
+.toggle-row input{width:20px;height:20px;accent-color:var(--sage)}
 .footer-actions{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
 .lifeline .ln.me{background:var(--sage);color:#fff;text-decoration:none}
 .install-btn{border:0;border-radius:999px;padding:8px 14px;font-weight:800;font-size:.84rem;background:var(--terra);color:#fff}
@@ -555,6 +563,11 @@ footer{display:flex;flex-direction:column;gap:14px;align-items:center;text-align
           <div class="btns"><button class="btn sage" type="submit">Update PIN</button></div>
           <p class="pmsg" id="pinMsg" aria-live="polite"></p>
         </form>
+        <div class="pbox" id="remBox">
+          <h3>Reminders</h3>
+          <div id="remBody"></div>
+          <p class="pmsg" id="remMsg" aria-live="polite"></p>
+        </div>
         <div class="pbox">
           <h3>Backup</h3>
           <p class="soft">Save a backup file now and then. If you change phones or forget your PIN, you can bring everything back.</p>
@@ -1123,7 +1136,7 @@ function setLocked(on){
   $('lock').hidden=!on;
   document.querySelector('.wrap').inert=on;$('fab').inert=on;
   document.body.style.overflow=on?'hidden':'';
-  if(on)renderLock();else{update();renderPerson()}
+  if(on)renderLock();else{update();renderPerson();if(CAP)scheduleReminders()}
 }
 function renderLock(mode){
   const c=$('lockCard'),sun=`<div class="lock-logo">${SUN_SVG}<h1>Sunshine</h1>`;
@@ -1174,7 +1187,7 @@ $('lock').addEventListener('submit',async e=>{
     if(p1!==p2){msg.textContent='The two PINs don’t match. Please try again.';return}
     const salt=newSalt();
     profile={name,contactName:$('rCName').value.trim(),contactPhone:$('rCPhone').value.trim(),salt,hash:await hashPin(p1,salt),created:new Date().toISOString()};
-    saveProfile();setLocked(false);celebrate(document.querySelector('.brand'),1);return}
+    saveProfile();setLocked(false);celebrate(document.querySelector('.brand'),1);if(CAP)askNotify().then(ok=>{if(ok)scheduleReminders()});return}
   if(e.target.id==='loginForm'){
     const now=Date.now();if(now<coolUntil){msg.textContent=`Please wait ${Math.ceil((coolUntil-now)/1000)} seconds and try again.`;return}
     const pin=$('lPin').value;
@@ -1212,12 +1225,12 @@ function renderPerson(){
 $('profileBtn').addEventListener('click',()=>{
   const p=$('profilePanel');p.hidden=!p.hidden;
   if(!p.hidden){$('pName').value=profile?profile.name:'';$('pCName').value=profile?profile.contactName||'':'';$('pCPhone').value=profile?profile.contactPhone||'':'';
-    ['profileMsg','pinMsg','backupMsg'].forEach(i=>$(i).textContent='');p.scrollIntoView({behavior:reduce?'auto':'smooth',block:'start'})}
+    ['profileMsg','pinMsg','backupMsg','remMsg'].forEach(i=>$(i).textContent='');renderRem();p.scrollIntoView({behavior:reduce?'auto':'smooth',block:'start'})}
 });
 $('closeProfile').addEventListener('click',()=>{$('profilePanel').hidden=true});
 $('profileForm').addEventListener('submit',e=>{e.preventDefault();if(!profile)return;
   const n=$('pName').value.trim();if(!n){$('profileMsg').textContent='Please add your name.';return}
-  profile.name=n;profile.contactName=$('pCName').value.trim();profile.contactPhone=$('pCPhone').value.trim();saveProfile();update();renderPerson();$('profileMsg').textContent='Saved.'});
+  profile.name=n;profile.contactName=$('pCName').value.trim();profile.contactPhone=$('pCPhone').value.trim();saveProfile();update();renderPerson();if(CAP)scheduleReminders();$('profileMsg').textContent='Saved.'});
 $('pinForm').addEventListener('input',e=>{if(e.target.classList.contains('pin'))e.target.value=e.target.value.replace(/\D/g,'').slice(0,6)});
 $('pinForm').addEventListener('submit',async e=>{e.preventDefault();const m=$('pinMsg');
   if(await hashPin($('pinOld').value,profile.salt)!==profile.hash){m.textContent='Your current PIN didn’t match.';return}
@@ -1236,6 +1249,11 @@ $('exportBtn').addEventListener('click',async()=>{
     const data={app:'sunshine',version:1,exported:new Date().toISOString(),
       profile:profile?{name:profile.name,contactName:profile.contactName,contactPhone:profile.contactPhone}:null,
       journey:get(REAL_KEY),sos:get(SOSKEY)||[],photos:pics};
+    const fname=`sunshine-backup-${today()}.json`;
+    if(CAP){const FS=plug('Filesystem'),SH=plug('Share');
+      const w=await FS.writeFile({path:fname,data:JSON.stringify(data),directory:'CACHE',encoding:'utf8'});
+      await SH.share({title:'Sunshine backup',text:'My Sunshine backup',files:[w.uri],dialogTitle:'Save your Sunshine backup'});
+      m.textContent=`Backup ready (${pics.length} photo${pics.length===1?'':'s'} included). Save it to Drive, Files or anywhere safe.`;return}
     const blob=new Blob([JSON.stringify(data)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');
     a.href=url;a.download=`sunshine-backup-${today()}.json`;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),4000);
     m.textContent=`Backup saved to your downloads (${pics.length} photo${pics.length===1?'':'s'} included).`;
@@ -1267,7 +1285,128 @@ let deferredInstall=null;
 window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredInstall=e;$('installBtn').hidden=false});
 $('installBtn').addEventListener('click',async()=>{if(!deferredInstall)return;deferredInstall.prompt();try{await deferredInstall.userChoice}catch(e){}deferredInstall=null;$('installBtn').hidden=true});
 window.addEventListener('appinstalled',()=>{$('installBtn').hidden=true});
-if('serviceWorker' in navigator&&location.protocol==='https:')navigator.serviceWorker.register('./sw.js').catch(()=>{});
+if(!(window.Capacitor&&window.Capacitor.isNativePlatform&&window.Capacitor.isNativePlatform())&&'serviceWorker' in navigator&&location.protocol==='https:')navigator.serviceWorker.register('./sw.js').catch(()=>{});
+
+/* ---------- Phone reminders (Android app) ---------- */
+const CAP=window.Capacitor&&window.Capacitor.isNativePlatform&&window.Capacitor.isNativePlatform();
+const plug=name=>{try{const C=window.Capacitor;return(C.Plugins&&C.Plugins[name])||(C.registerPlugin&&C.registerPlugin(name))||null}catch(e){return null}};
+const LN=CAP?plug('LocalNotifications'):null;
+const REMKEY='sunshine-reminders';
+const REMINDERS=[
+ {id:'wake',label:'Wake up',time:'07:00',card:'sleep',
+  t:['Good morning, {n} ☀️','Rise and shine, {n} 🌤️','Hello, sunshine ☀️'],
+  b:['A brand new day is here. Open a window and let the light in.','Take one slow breath before you get up. You’ve got this.','Today is a fresh page. Start gently.','Stretch, smile, and step into the morning.']},
+ {id:'bfast',label:'Breakfast',time:'09:30',card:'meals',
+  t:['Breakfast time, {n} 🍳','Time to fuel up, {n} 🥣'],
+  b:['Your body has been waiting for you. Something warm would be lovely.','A good breakfast is a kind gift to yourself.','Sit down, eat slowly, and enjoy every bite.']},
+ {id:'b12',label:'Vitamin B12',time:'09:45',card:'meds',
+  t:['Vitamin B12 time, {n} 💊'],
+  b:['A tiny step that keeps your energy steady. Take it with breakfast.','Quick one: your Vitamin B12. Small things add up.']},
+ {id:'medam',label:'Morning medicine',time:'10:00',card:'meds',
+  t:['Morning medicine, {n} 🌼'],
+  b:['Time for your 10 AM medicine. Looking after yourself is strength.','Your morning medicine is due. You’re doing so well staying on track.']},
+ {id:'vitd',label:'Vitamin D (Sundays)',time:'10:30',card:'meds',sunday:true,
+  t:['Sunday Vitamin D, {n} ☀️'],
+  b:['It’s Sunday, so it’s Vitamin D day. Maybe take it by a sunny window.']},
+ {id:'lunch',label:'Lunch',time:'13:00',card:'meals',
+  t:['Lunch break, {n} 🍲','Time for lunch, {n} 🥗'],
+  b:['Pause whatever you’re doing. You deserve a proper meal.','Eat something nourishing and give your mind a little rest.']},
+ {id:'water',label:'Water nudges',fixed:'Every 2 hours, 8 AM to 8 PM',hours:[8,10,12,14,16,18,20],card:'water',
+  t:['Sip sip, {n} 💧','Water break, {n} 💧','Hydration check 💧'],
+  b:['A glass of water now. Your body will thank you.','Little sips add up to 3 liters. Keep going!','Refill your bottle and take a few sips.']},
+ {id:'dinner',label:'Dinner',time:'19:00',card:'meals',
+  t:['Dinner time, {n} 🍛'],
+  b:['Wind down with a warm dinner. You’ve earned it.','Time to eat. Let the day’s rush settle.']},
+ {id:'checkin',label:'Evening check-in',time:'20:30',card:'wins',
+  t:['How was today, {n}? 🌙','Your wins are waiting, {n} ✨'],
+  b:['Take a minute to tick off what you did and check in with your mood.','Every small thing you did today counts. Come and see them.']},
+ {id:'medpm',label:'Night medicine',time:'21:00',card:'meds',
+  t:['Night medicine, {n} 🌙'],
+  b:['Time for your 9 PM medicine. Rest is on its way.','Your night medicine is due. You did well today.']},
+ {id:'wind',label:'Wind down for sleep',time:'22:30',card:'sleep',
+  t:['Time to wind down, {n} 🌌'],
+  b:['Screens down soon. Lights low by 10:45 for a good night’s sleep.','Your bed is calling. Rest well. Tomorrow is a fresh start.']}
+];
+const DAYS_AHEAD=14;
+function remSettings(){let s=null;try{s=JSON.parse(localStorage.getItem(REMKEY))}catch(e){}
+  s=s||{on:true,items:{}};REMINDERS.forEach(r=>{s.items[r.id]=Object.assign({on:true,time:r.time||null},s.items[r.id]||{})});return s}
+function saveRem(s){try{localStorage.setItem(REMKEY,JSON.stringify(s))}catch(e){}}
+const fill=(t,n)=>t.replace('{n}',n);
+function buildNotifications(){
+  const s=remSettings(),n=(profile&&profile.name)||'friend',now=Date.now(),list=[];let id=1;
+  if(!s.on)return list;
+  for(let d=0;d<DAYS_AHEAD;d++){
+    const day=new Date();day.setHours(0,0,0,0);day.setDate(day.getDate()+d);
+    REMINDERS.forEach((r,ri)=>{
+      const it=s.items[r.id];if(!it.on)return;
+      if(r.sunday&&day.getDay()!==0)return;
+      const times=r.hours?r.hours.map(h=>[h,0]):[it.time.split(':').map(Number)];
+      times.forEach(([hh,mm],k)=>{
+        const at=new Date(day);at.setHours(hh,mm,0,0);if(at.getTime()<=now+30000)return;
+        const pick=(arr,o)=>arr[(d+ri+k+o)%arr.length];
+        const title=fill(pick(r.t,0),n),body=fill(pick(r.b,1),n);
+        list.push({id:id++,title,body,largeBody:body,summaryText:'Sunshine',channelId:'sunshine',smallIcon:'ic_stat_sunshine',iconColor:'#D9805F',
+          schedule:{at,allowWhileIdle:true},extra:{card:r.card}});
+      });
+    });
+  }
+  return list;
+}
+let remBusy=false;
+async function scheduleReminders(){
+  if(!LN||remBusy)return;remBusy=true;
+  try{
+    const pend=await LN.getPending();const ids=((pend&&pend.notifications)||[]).map(x=>({id:x.id}));
+    if(ids.length)await LN.cancel({notifications:ids});
+    const perm=await LN.checkPermissions();if(perm.display!=='granted'){remBusy=false;return}
+    const list=buildNotifications();
+    for(let i=0;i<list.length;i+=60)await LN.schedule({notifications:list.slice(i,i+60)});
+  }catch(e){}
+  remBusy=false;
+}
+async function setupNative(){
+  if(!LN)return;
+  try{await LN.createChannel({id:'sunshine',name:'Gentle reminders',description:'Friendly reminders for your Sunshine habits',importance:4,visibility:0,lights:true,lightColor:'#E5AE57',vibration:true})}catch(e){}
+  try{await LN.addListener('localNotificationActionPerformed',ev=>{
+    const card=ev&&ev.notification&&ev.notification.extra&&ev.notification.extra.card;
+    if(location.hash==='#sos')location.hash='home';
+    setTimeout(()=>{const el=card==='wins'?document.querySelector('.wins'):document.querySelector(`[data-habit="${card}"]`);if(el)el.scrollIntoView({behavior:'smooth',block:'center'})},400);
+  })}catch(e){}
+}
+async function askNotify(){
+  if(!LN)return false;
+  try{let p=await LN.checkPermissions();if(p.display!=='granted')p=await LN.requestPermissions();
+    try{const ex=await LN.checkExactNotificationSetting();if(ex&&ex.exact_alarm&&ex.exact_alarm!=='granted')$('remMsg').textContent='For on-time reminders, allow "Alarms & reminders" for Sunshine in your phone settings.'}catch(e){}
+    return p.display==='granted'}catch(e){return false}
+}
+function renderRem(){
+  const box=$('remBody');
+  if(!CAP){box.innerHTML='<p class="soft">Timed reminders work in the Sunshine Android app. Download it from the <a href="https://github.com/msja1729/sunshine/releases/latest" target="_blank" rel="noopener">Releases page</a>.</p>';return}
+  const s=remSettings();
+  box.innerHTML=`<label class="toggle-row"><input type="checkbox" id="remOn" ${s.on?'checked':''}> Send me gentle reminders</label>
+   <div class="rem-list" ${s.on?'':'hidden'}>${REMINDERS.map(r=>{const it=s.items[r.id];return`<div class="rem-row"><label><input type="checkbox" data-rem="${r.id}" ${it.on?'checked':''}>${r.label}</label>${r.fixed?`<span class="fixed">${r.fixed}</span>`:`<input type="time" data-remt="${r.id}" value="${it.time}" aria-label="${r.label} time">`}</div>`}).join('')}</div>
+   <div class="btns"><button class="btn sage" id="remSave">Save reminders</button><button class="btn" id="remTest">Send a test</button></div>`;
+}
+$('remBox').addEventListener('change',e=>{if(e.target.id==='remOn')e.target.closest('.pbox').querySelector('.rem-list').hidden=!e.target.checked});
+$('remBox').addEventListener('click',async e=>{
+  const b=e.target.closest('button');if(!b)return;const m=$('remMsg');
+  if(b.id==='remSave'){
+    const s=remSettings();s.on=$('remOn').checked;
+    document.querySelectorAll('[data-rem]').forEach(c=>{s.items[c.dataset.rem].on=c.checked});
+    document.querySelectorAll('[data-remt]').forEach(t=>{if(t.value)s.items[t.dataset.remt].time=t.value});
+    saveRem(s);
+    if(s.on&&!(await askNotify())){m.textContent='Notifications are turned off for Sunshine. Turn them on in your phone’s app settings.';return}
+    await scheduleReminders();if(!m.textContent.includes('Alarms'))m.textContent=s.on?'Reminders saved.':'Reminders turned off.'}
+  if(b.id==='remTest'){
+    if(!(await askNotify())){m.textContent='Notifications are turned off for Sunshine. Turn them on in your phone’s app settings.';return}
+    const n=(profile&&profile.name)||'friend';
+    try{await LN.schedule({notifications:[{id:99999,title:`Hello, ${n} ☀️`,body:'This is how your Sunshine reminders will look. You’re doing beautifully.',largeBody:'This is how your Sunshine reminders will look. You’re doing beautifully.',summaryText:'Sunshine',channelId:'sunshine',smallIcon:'ic_stat_sunshine',iconColor:'#D9805F',schedule:{at:new Date(Date.now()+5000),allowWhileIdle:true},extra:{card:'wins'}}]});m.textContent='A test reminder will arrive in about 5 seconds.'}
+    catch(err){m.textContent='The test couldn’t be sent.'}}
+});
+if(CAP){
+  setupNative();
+  document.addEventListener('visibilitychange',()=>{if(!document.hidden)scheduleReminders()});
+}
 
 renderPerson();
 setLocked(true);

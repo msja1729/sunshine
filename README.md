@@ -5,11 +5,19 @@ It installs on Android as an app and keeps working offline.
 
 **Open it:** https://msja1729.github.io/sunshine/
 
-## Install on Android
+## Android app (with reminders)
+
+Download the latest **Sunshine APK** from the [Releases page](https://github.com/msja1729/sunshine/releases/latest), open it on your phone and allow installing from your browser or Files app if Android asks.
+
+The Android app adds friendly, on-time reminders that show up outside the app: wake-up, meals, Vitamin B12, morning and night medicine, Vitamin D on Sundays, water every 2 hours (8 AM–8 PM), an evening check-in and a wind-down before bed. Each one can be switched off or moved under **Profile & backup → Reminders**. Reminders are planned two weeks ahead and refreshed every time you open the app.
+
+To update, install the new APK over the old one. Your data stays.
+
+## Web version
 
 1. Open the link above in **Chrome**.
-2. Tap **Install app** at the top of Sunshine, or Chrome's **⋮ menu → Install app** (or **Add to Home screen**).
-3. Sunshine gets its own icon and opens full-screen, like any other app.
+2. Tap **Install app** at the top of Sunshine, or Chrome's **⋮ menu → Install app**.
+3. The web version has every feature except timed reminders.
 
 ## Privacy
 
@@ -35,5 +43,11 @@ It installs on Android as an app and keeps working offline.
 | `manifest.webmanifest` | Name, icons and colours for installing |
 | `sw.js` | Offline support |
 | `icons/` | App icons |
+| `app/` | Android wrapper (Capacitor), icons, splash and reminder setup |
+| `.github/workflows/android-release.yml` | Builds and publishes the signed APK |
+
+### Building a new Android release
+
+The workflow runs when a tag like `v1.0.1` is pushed, or from **Actions → Android release → Run workflow**. Bump `version` in `app/package.json` first. Signing uses `app/signing/sunshine-release.p12`, whose password lives only in the `SUNSHINE_KEY_PASSWORD` repository secret.
 
 If a day feels too heavy: Tele-MANAS (India, free, 24/7) **14416** or **1-800-891-4416**. Emergency: **112**.

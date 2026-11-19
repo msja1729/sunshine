@@ -1,0 +1,14 @@
+{
+  "appId": "com.msja1729.sunshine",
+  "appName": "Sunshine",
+  "webDir": "www",
+  "android": {
+    "backgroundColor": "#FAF7F2"
+  },
+  "plugins": {
+    "LocalNotifications": {
+      "smallIcon": "ic_stat_sunshine",
+      "iconColor": "#D9805F"
+    }
+  }
+}

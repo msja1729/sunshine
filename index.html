@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#1A120D">
+<meta name="theme-color" content="#16140D">
 <meta name="description" content="Sunshine: a gentle 21-day habit, mood and grounding companion. Private to your phone.">
 <link rel="manifest" href="manifest.webmanifest">
 <script>try{var t=localStorage.getItem("sunshine-theme")||"dark";if(t!=="system")document.documentElement.setAttribute("data-theme",t)}catch(e){document.documentElement.setAttribute("data-theme","dark")}</script>
@@ -20,13 +20,13 @@ body{margin:0}img{max-width:100%}
 /* Layout: top bar (brand + page tabs) → greeting with progress ring → 21-day garden → habits (left) beside a care column (right) → 21-day tracker. Phones stack in a fixed, calm order. */
 :root{
   /* Two moods of one sunrise: light "morning ashram" and dark "dusk temple". Habits each carry their own meaning colour (--hc). */
-  --bg:#FFF8EF; --surface:#FFFFFF; --ink:#3A2A20; --muted:#7A6656; --line:#F0E1CF;
-  --terra-bg:#FFF0E2; --terra:#E8772E; --terra-ink:#A9501A; --honey:#E9A93B;
-  --sage-bg:#EEF6EE; --sage:#5F9A68; --sage-ink:#3F7348;
-  --calm-bg:#EEF0FA; --calm:#7483C7; --calm-ink:#4A5799;
-  --soil:#E6CDB3; --water:#5EAFC9; --water-deep:#2F86A6;
-  --paper:#FFFFFF; --shadow:rgba(140,80,30,.16); --quote:#6B3F1F;
-  --glow1:rgba(255,166,77,.34); --glow2:rgba(255,214,120,.32); --top:#FFE9D2; --leaf:#5F9A68; --leaf-op:.22; --card-mix:8%; --em:#C25E1F;
+  --bg:#EEE8D6; --surface:#F9F5EA; --ink:#33291F; --muted:#6F6250; --line:#DCD2BA;
+  --terra-bg:#F4E3CB; --terra:#E0712A; --terra-ink:#9E4A16; --honey:#D99A2B;
+  --sage-bg:#E1ECD9; --sage:#5A9562; --sage-ink:#3C6E44;
+  --calm-bg:#E6E9F5; --calm:#6E7DC0; --calm-ink:#45528F;
+  --soil:#D9C2A5; --water:#5EAFC9; --water-deep:#2F86A6;
+  --paper:#FFFDF8; --shadow:rgba(90,70,30,.18); --quote:#4E3A22;
+  --glow1:rgba(244,160,80,.30); --glow2:rgba(110,165,95,.34); --top:#DCE8CF; --leaf:#4F8A58; --leaf-op:.34; --card-mix:11%; --em:#B9561B;
   color-scheme:light;
   --f-display:"Fraunces", Georgia, "Times New Roman", serif;
   --f-body:"Nunito", "Segoe UI", system-ui, sans-serif;
@@ -34,22 +34,22 @@ body{margin:0}img{max-width:100%}
   --f-deva:"Tiro Devanagari Sanskrit", "Noto Serif Devanagari", "Mangal", serif;
 }
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
-  --bg:#1A120D; --surface:#241913; --ink:#F6E9DA; --muted:#C4AE98; --line:#3A2A1F;
-  --terra-bg:#2F1D13; --terra:#F08A3C; --terra-ink:#FFB46B; --honey:#F4C25B;
-  --sage-bg:#1D2A20; --sage:#8DB98F; --sage-ink:#B5D8B4;
+  --bg:#16140D; --surface:#221F15; --ink:#F4EAD8; --muted:#BDB096; --line:#363121;
+  --terra-bg:#2E2013; --terra:#F08A3C; --terra-ink:#FFB46B; --honey:#F4C25B;
+  --sage-bg:#1B2A1C; --sage:#8DB98F; --sage-ink:#B5D8B4;
   --calm-bg:#222538; --calm:#9EA9E0; --calm-ink:#CDD3F5;
   --soil:#5C4433; --water:#6FB3C8; --water-deep:#9AD3E3;
   --paper:#FBF3E6; --shadow:rgba(0,0,0,.55); --quote:#FBE3BF;
-  --glow1:rgba(240,138,60,.32); --glow2:rgba(244,194,91,.14); --top:#24150D; --leaf:#8DB98F; --leaf-op:.16; --card-mix:13%; --em:#F4C25B;
+  --glow1:rgba(240,138,60,.28); --glow2:rgba(120,175,105,.22); --top:#1D2214; --leaf:#8DB98F; --leaf-op:.26; --card-mix:13%; --em:#F4C25B;
   color-scheme:dark;}}
 :root[data-theme="dark"]{
-  --bg:#1A120D; --surface:#241913; --ink:#F6E9DA; --muted:#C4AE98; --line:#3A2A1F;
-  --terra-bg:#2F1D13; --terra:#F08A3C; --terra-ink:#FFB46B; --honey:#F4C25B;
-  --sage-bg:#1D2A20; --sage:#8DB98F; --sage-ink:#B5D8B4;
+  --bg:#16140D; --surface:#221F15; --ink:#F4EAD8; --muted:#BDB096; --line:#363121;
+  --terra-bg:#2E2013; --terra:#F08A3C; --terra-ink:#FFB46B; --honey:#F4C25B;
+  --sage-bg:#1B2A1C; --sage:#8DB98F; --sage-ink:#B5D8B4;
   --calm-bg:#222538; --calm:#9EA9E0; --calm-ink:#CDD3F5;
   --soil:#5C4433; --water:#6FB3C8; --water-deep:#9AD3E3;
   --paper:#FBF3E6; --shadow:rgba(0,0,0,.55); --quote:#FBE3BF;
-  --glow1:rgba(240,138,60,.32); --glow2:rgba(244,194,91,.14); --top:#24150D; --leaf:#8DB98F; --leaf-op:.16; --card-mix:13%; --em:#F4C25B;
+  --glow1:rgba(240,138,60,.28); --glow2:rgba(120,175,105,.22); --top:#1D2214; --leaf:#8DB98F; --leaf-op:.26; --card-mix:13%; --em:#F4C25B;
   color-scheme:dark;}
 *{box-sizing:border-box}
 [hidden]{display:none!important}
@@ -549,7 +549,7 @@ footer{display:flex;flex-direction:column;gap:14px;align-items:center;text-align
 }
 
 /* ---------- Warm sunlit background and photo first ---------- */
-body{background-color:var(--bg);background-image:radial-gradient(120% 50% at 50% -12%,var(--glow1),transparent 70%),radial-gradient(60% 30% at 85% 0%,var(--glow2),transparent 70%),linear-gradient(180deg,var(--top) 0%,var(--bg) 40%);background-repeat:no-repeat;min-height:100vh}
+body{background-color:var(--bg);background-image:radial-gradient(120% 50% at 50% -12%,var(--glow1),transparent 70%),radial-gradient(70% 40% at 0% 6%,var(--glow2),transparent 72%),radial-gradient(60% 30% at 100% 0%,var(--glow2),transparent 70%),linear-gradient(180deg,var(--top) 0%,var(--bg) 40%);background-repeat:no-repeat;min-height:100vh}
 .mandala-clip{position:absolute;top:0;left:0;right:0;height:520px;overflow:hidden;pointer-events:none;z-index:0}
 .botanical{position:absolute;top:-10px;width:300px;max-width:none;opacity:var(--leaf-op);color:var(--leaf);transform-origin:top center;animation:sway 9s ease-in-out infinite}
 .botanical.l{left:-60px}
@@ -617,6 +617,18 @@ body{background-color:var(--bg);background-image:radial-gradient(120% 50% at 50%
 .topbar{flex-wrap:nowrap}
 .topbar .nav{margin-left:auto}
 @media (max-width:759px){.scene{padding:12px 84px 11px 14px;min-height:78px}.scene h3{font-size:1.06rem}}
+
+/* ---------- Green, plant-like touches ---------- */
+.mood,.wins,.step,.garden,.tracker,.sos-log,.memory{position:relative;overflow:hidden}
+.mood::after,.wins::after,.step::after,.garden::after,.tracker::after,.sos-log::after{content:"";position:absolute;top:0;right:0;width:96px;height:72px;background:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2080%2060%22%3E%3Cg%20fill%3D%22%236FA06F%22%3E%3Cpath%20d%3D%22M78%202C60%2010%2044%2024%2034%2044%22%20stroke%3D%22%236FA06F%22%20stroke-width%3D%221.6%22%20fill%3D%22none%22/%3E%3Cellipse%20cx%3D%2266%22%20cy%3D%2210%22%20rx%3D%227%22%20ry%3D%223.2%22%20transform%3D%22rotate%28-30%2066%2010%29%22/%3E%3Cellipse%20cx%3D%2258%22%20cy%3D%2220%22%20rx%3D%227%22%20ry%3D%223.2%22%20transform%3D%22rotate%2830%2058%2020%29%22/%3E%3Cellipse%20cx%3D%2250%22%20cy%3D%2224%22%20rx%3D%227%22%20ry%3D%223.2%22%20transform%3D%22rotate%28-40%2050%2024%29%22/%3E%3Cellipse%20cx%3D%2244%22%20cy%3D%2234%22%20rx%3D%226.5%22%20ry%3D%223%22%20transform%3D%22rotate%2825%2044%2034%29%22/%3E%3Cellipse%20cx%3D%2238%22%20cy%3D%2240%22%20rx%3D%226%22%20ry%3D%222.8%22%20transform%3D%22rotate%28-50%2038%2040%29%22/%3E%3C/g%3E%3C/svg%3E") no-repeat top right/contain;opacity:var(--leaf-op);pointer-events:none}
+.wins::after{top:auto;bottom:0;transform:scaleY(-1)}
+.wins-count{position:relative;z-index:1}
+.eyebrow{color:var(--sage-ink)}
+.panel{border-color:color-mix(in srgb,var(--sage) 22%,var(--line))}
+.step{background:linear-gradient(165deg,var(--sage-bg),var(--surface) 70%)}
+.mood{background:linear-gradient(165deg,color-mix(in srgb,var(--sage-bg) 70%,var(--surface)),var(--surface) 75%)}
+.quote-box{border-top-color:color-mix(in srgb,var(--sage) 45%,transparent)}
+.bottomnav{border-top-color:color-mix(in srgb,var(--sage) 25%,var(--line))}
 @media (prefers-reduced-motion: reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 </style>
 </head>
@@ -1663,7 +1675,7 @@ const isDark=()=>{const t=themePref();return t==='dark'||(t==='system'&&matchMed
 function applyTheme(t){
   try{localStorage.setItem(THEMEKEY,t)}catch(e){}
   if(t==='system')document.documentElement.removeAttribute('data-theme');else document.documentElement.setAttribute('data-theme',t);
-  const m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute('content',isDark()?'#1A120D':'#FFF8EF');
+  const m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute('content',isDark()?'#16140D':'#EEE8D6');
   document.querySelectorAll('[data-theme-set]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.themeSet===t));
   const st=$('sumTheme');if(st)st.textContent={light:'Light and uplifting',dark:'Dark and calm',system:'Follows your phone'}[t];
 }

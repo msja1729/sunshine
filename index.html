@@ -424,6 +424,63 @@ footer{display:flex;flex-direction:column;gap:14px;align-items:center;text-align
 .footer-actions{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
 .lifeline .ln.me{background:var(--sage);color:#fff;text-decoration:none}
 .install-btn{border:0;border-radius:999px;padding:8px 14px;font-weight:800;font-size:.84rem;background:var(--terra);color:#fff}
+
+/* ---------- Page heads, bottom navigation and phone layout ---------- */
+.page-head{display:flex;flex-direction:column;gap:4px;padding:6px 0}
+.page-head h1{font-size:clamp(1.7rem,4vw,2.4rem)}
+.small-care{font-size:.82rem;color:var(--muted);text-align:center;max-width:560px;margin:4px auto 0;background:none;border:0;padding:0}
+#meView .care{margin:0 auto;text-align:center;color:var(--muted);font-size:.88rem}
+.profile-panel{max-width:none}
+.bottomnav{display:none}
+@media (max-width:759px){
+  body{padding-block:10px calc(88px + env(safe-area-inset-bottom,0px))}
+  .wrap{gap:14px}
+  .topbar{justify-content:space-between}
+  .topbar .nav{display:none}
+  .brand{font-size:1.25rem}.brand svg{width:26px;height:26px}
+  .bottomnav{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:45;gap:4px;
+    background:color-mix(in srgb,var(--surface) 94%,transparent);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border-top:1px solid var(--line);
+    padding:6px max(10px,env(safe-area-inset-right,0px)) calc(8px + env(safe-area-inset-bottom,0px)) max(10px,env(safe-area-inset-left,0px))}
+  .bottomnav button{flex:1;border:0;background:none;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:.72rem;font-weight:800;color:var(--muted);padding:7px 0 5px;border-radius:14px;transition:background .2s,color .2s}
+  .bottomnav svg{width:23px;height:23px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+  .bottomnav button[aria-selected="true"]{color:var(--terra-ink);background:var(--terra-bg)}
+  .bottomnav button[data-go="progress"][aria-selected="true"]{color:var(--sage-ink);background:var(--sage-bg)}
+  .bottomnav button[data-go="sos"]{color:var(--calm-ink)}
+  .bottomnav button[data-go="sos"][aria-selected="true"]{background:var(--calm-bg)}
+  .banner{font-size:.88rem;padding:10px 12px;gap:8px}
+  .banner .btn{padding:7px 12px;font-size:.84rem}
+  .focus{gap:14px}
+  .focus .tool{min-height:0}
+  .hero{flex-wrap:nowrap;align-items:center;gap:12px;padding:0}
+  .hero-text{flex:1 1 auto}
+  .hero h1{font-size:1.42rem}
+  .hero .sub{display:none}
+  .ring{flex-direction:column;gap:2px}
+  .ring svg{width:58px;height:58px}
+  .ring-text{align-items:center}
+  .ring-text b{font-size:1rem}
+  .ring-text .soft{font-size:.68rem}
+  .layout{gap:14px}
+  .habits{gap:18px}
+  .cat-head{margin-bottom:8px;flex-wrap:nowrap}
+  .cat-head h2{font-size:1.15rem}
+  .cat-head p{display:none}
+  .cards{grid-template-columns:1fr;gap:10px}
+  .card{padding:0 14px 14px;gap:9px;border-radius:18px}
+  .scene{margin:0 -14px;height:56px}
+  .scene .motif{width:66px;height:48px;top:4px;right:8px}
+  .scene small{bottom:7px;left:14px;right:84px}
+  .card .meta{display:none}
+  .check{padding:11px 12px;font-size:.96rem}
+  .mantra{padding:8px}
+  .panel{padding:15px;border-radius:18px}
+  .moods{gap:5px}
+  .mood-btn{padding:9px 2px 7px}
+  .page-head h1{font-size:1.7rem}
+  .profile-grid{grid-template-columns:1fr;gap:12px}
+  .sos-hero{padding:20px 18px}
+  .amb{width:84px;height:84px}.amb i:nth-child(1){width:84px;height:84px}.amb i:nth-child(2){width:58px;height:58px}.amb i:nth-child(3){width:32px;height:32px}
+}
 @media (prefers-reduced-motion: reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 </style>
 </head>
@@ -436,12 +493,14 @@ footer{display:flex;flex-direction:column;gap:14px;align-items:center;text-align
     <div class="brand"><svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="7" fill="#E5AE57"/><g stroke="#D9805F" stroke-width="2.2" stroke-linecap="round"><path d="M16 2.5v4M16 25.5v4M2.5 16h4M25.5 16h4M6.4 6.4l2.8 2.8M22.8 22.8l2.8 2.8M6.4 25.6l2.8-2.8M22.8 9.2l2.8-2.8"/></g></svg>Sunshine</div>
     <nav class="nav" aria-label="Pages">
       <button class="tab" data-go="home" aria-selected="true">🌿 Daily Sunshine (Home)</button>
+      <button class="tab" data-go="progress" aria-selected="false">🌱 Progress</button>
       <button class="tab" data-go="sos" aria-selected="false">🫂 Gentle SOS &amp; Grounding</button>
+      <button class="tab" data-go="me" aria-selected="false">👤 Me</button>
     </nav>
     <button class="install-btn" id="installBtn" hidden>Install app</button>
   </header>
 
-  <!-- ================= HOME ================= -->
+  <!-- ================= TODAY ================= -->
   <div id="homeView" class="view">
     <section class="hero">
       <div class="hero-text">
@@ -456,11 +515,6 @@ footer{display:flex;flex-direction:column;gap:14px;align-items:center;text-align
     </section>
 
     <div class="banner" id="viewBanner" hidden></div>
-
-    <section class="panel garden" aria-label="21-day garden">
-      <div class="panel-head"><h2>Your 21-Day Garden</h2><span class="legend">Each day grows with what you do. Tap a past day to revisit it.</span></div>
-      <div class="plots" id="plots"></div>
-    </section>
 
     <div class="layout">
       <main class="habits" id="habits"></main>
@@ -500,6 +554,17 @@ footer{display:flex;flex-direction:column;gap:14px;align-items:center;text-align
       </div>
     </div>
 
+    <p class="care small-care">If a day feels too heavy, you don't have to carry it alone. Reach out to someone you trust or your doctor. In India, Tele-MANAS offers free support any time: <b>14416</b> or <b>1-800-891-4416</b>.</p>
+  </div>
+
+  <!-- ================= PROGRESS ================= -->
+  <div id="progressView" class="view" hidden>
+    <section class="page-head"><span class="eyebrow">Your journey</span><h1>Progress</h1><p class="soft">Every circle is a day you showed up for yourself. Tap a day to open it.</p></section>
+    <section class="panel garden" aria-label="21-day garden">
+      <div class="panel-head"><h2>Your 21-Day Garden</h2><span class="legend">Each day grows with what you do. Tap a past day to revisit it.</span></div>
+      <div class="plots" id="plots"></div>
+    </section>
+
     <section class="panel tracker" aria-label="21-day habit tracker">
       <div class="panel-head"><h2>21-Day Habit Tracker</h2><span class="legend">Filled: done · half: partly done · tap a day number to open it</span></div>
       <div class="tracker-wrap"><table id="tracker"></table></div>
@@ -538,14 +603,10 @@ footer{display:flex;flex-direction:column;gap:14px;align-items:center;text-align
     </section>
   </div>
 
-  <footer>
-    <div class="footer-actions" id="footerActions">
-      <button class="btn" id="profileBtn">Profile &amp; backup</button>
-      <button class="btn ghost" id="lockNow">Lock now</button>
-    </div>
-    <section class="panel profile-panel" id="profilePanel" hidden aria-label="Profile and backup">
-      <div class="panel-head"><h2>Profile &amp; backup</h2><button class="linkc" id="closeProfile">Close</button></div>
-      <p class="soft">Everything here is stored only on this phone.</p>
+  <!-- ================= ME ================= -->
+  <div id="meView" class="view" hidden>
+    <section class="page-head"><span class="eyebrow">Profile &amp; backup</span><h1 id="meTitle">Me</h1><p class="soft">Everything here is stored only on this phone.</p></section>
+    <section class="panel profile-panel" id="profilePanel" aria-label="Profile and backup">
       <div class="profile-grid">
         <form class="pbox" id="profileForm">
           <h3>About you</h3>
@@ -569,6 +630,16 @@ footer{display:flex;flex-direction:column;gap:14px;align-items:center;text-align
           <p class="pmsg" id="remMsg" aria-live="polite"></p>
         </div>
         <div class="pbox">
+          <h3>App lock</h3>
+          <p class="soft">Sunshine locks itself after 5 minutes away. Lock it now if someone else is about to use your phone.</p>
+          <div class="btns"><button class="btn" id="lockNow">Lock now</button></div>
+        </div>
+        <div class="pbox" id="settings">
+          <h3>Your 21-day journey</h3>
+          <div class="field"><label for="startDate">Journey began on</label><input type="date" id="startDate"></div>
+          <span id="resetArea"><button class="btn ghost" id="resetBtn">Start a new 21 days</button></span>
+        </div>
+        <div class="pbox">
           <h3>Backup</h3>
           <p class="soft">Save a backup file now and then. If you change phones or forget your PIN, you can bring everything back.</p>
           <div class="btns"><button class="btn terra" id="exportBtn">Export backup</button><label class="btn" for="importInput" role="button" tabindex="0" id="importLabel">Import backup</label></div>
@@ -579,14 +650,15 @@ footer{display:flex;flex-direction:column;gap:14px;align-items:center;text-align
       </div>
     </section>
     <div class="care">If a day feels too heavy, you don't have to carry it alone. Reach out to someone you trust or your doctor. In India, Tele-MANAS offers free support any time: <b>14416</b> or <b>1-800-891-4416</b>.</div>
-    <div class="settings" id="settings">
-      <label for="startDate">Journey began on</label>
-      <input type="date" id="startDate">
-      <span id="resetArea"><button class="btn ghost" id="resetBtn">Start a new 21 days</button></span>
-    </div>
-  </footer>
+  </div>
 </div>
-<button class="sos-fab" id="fab" data-go="sos">🫂 Need support?</button>
+
+<nav class="bottomnav" id="bnav" aria-label="Pages">
+  <button data-go="home" aria-selected="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2.5M12 19v2.5M2.5 12H5M19 12h2.5M5.3 5.3l1.8 1.8M16.9 16.9l1.8 1.8M5.3 18.7l1.8-1.8M16.9 7.1l1.8-1.8"/></svg>Today</button>
+  <button data-go="progress" aria-selected="false"><svg viewBox="0 0 24 24"><path d="M12 21v-8"/><path d="M12 13c0-4 3-6 7-6 0 4-3 6-7 6z"/><path d="M12 15.5c0-3-2-5-6-5 0 3 2 5 6 5z"/><path d="M6 21h12"/></svg>Progress</button>
+  <button data-go="sos" aria-selected="false"><svg viewBox="0 0 24 24"><path d="M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.5-7 10-7 10z"/></svg>SOS</button>
+  <button data-go="me" aria-selected="false"><svg viewBox="0 0 24 24"><circle cx="12" cy="8.5" r="3.5"/><path d="M5 20c1.2-3.6 4-5.5 7-5.5s5.8 1.9 7 5.5"/></svg>Me</button>
+</nav>
 <div class="lock" id="lock" hidden>
   <div class="lock-card" id="lockCard"></div>
 </div>
@@ -887,6 +959,7 @@ document.addEventListener('change',e=>{
   else if(t.id==='stepCheck'){rec(view).step=t.checked;save();if(t.checked)celebrate(t.nextElementSibling,2);update()}
   else if(t.id==='startDate'&&t.value){state.start=t.value;save();view=curDay();update()}
 });
+$('progressView').addEventListener('click',e=>{const b=e.target.closest('button[data-day]');if(!b)return;view=Number(b.dataset.day);location.hash='home';update();window.scrollTo({top:0})});
 $('homeView').addEventListener('click',e=>{
   const b=e.target.closest('button');if(!b)return;
   if(b.dataset.water){const r=rec(view),before=r.water;r.water=Math.max(0,Math.min(5000,r.water+Number(b.dataset.water)));save();if(r.water>before)celebrate(b,1);update()}
@@ -898,7 +971,7 @@ $('homeView').addEventListener('click',e=>{
   else if(b.dataset.act==='trial'&&TRIAL){const tc=trialCount();if(tc>=3)return;try{localStorage.setItem('sunshine-trial-count',String(tc+1))}catch(e){}
     state={start:today(),days:{}};save();sosLog=sosLog.filter(x=>x.date>=FIRST);saveSos();view=1;prevView=null;update();window.scrollTo({top:0,behavior:reduce?'auto':'smooth'})}
 });
-document.querySelector('footer').addEventListener('click',e=>{
+$('meView').addEventListener('click',e=>{
   const b=e.target.closest('button');if(!b)return;
   if(b.id==='resetBtn')askReset();
   else if(b.dataset.act==='doReset'){state={start:today(),days:{}};save();view=1;prevView=null;restoreReset();update();window.scrollTo({top:0})}
@@ -1102,14 +1175,18 @@ $('sosView').addEventListener('click',e=>{
 });
 
 /* ---------- page switching ---------- */
+const VIEWS=['home','progress','sos','me'];
 function showView(){
-  const isSos=location.hash==='#sos';
-  $('homeView').hidden=isSos;$('sosView').hidden=!isSos;$('fab').hidden=isSos;$('settings').hidden=isSos||TRIAL;
-  document.querySelectorAll('.tab').forEach(t=>t.setAttribute('aria-selected',(t.dataset.go==='sos')===isSos));
-  if(isSos){renderSos();renderLog()}else{clearSos();update()}
+  let v=(location.hash||'#home').slice(1);if(!VIEWS.includes(v))v='home';
+  VIEWS.forEach(n=>{$(n+'View').hidden=n!==v});
+  document.querySelectorAll('[data-go]').forEach(t=>{if(t.closest('.nav,.bottomnav'))t.setAttribute('aria-selected',t.dataset.go===v)});
+  $('settings').hidden=TRIAL;
+  if(v==='sos'){renderSos();renderLog()}else clearSos();
+  if(v==='home'||v==='progress')update();
+  if(v==='me'&&typeof openMe==='function')openMe();
 }
 document.addEventListener('click',e=>{const b=e.target.closest('[data-go]');if(!b)return;
-  const want=b.dataset.go==='sos'?'#sos':'#home';if(location.hash===want)return;location.hash=b.dataset.go;window.scrollTo({top:0})});
+  const want='#'+b.dataset.go;if(location.hash===want||(!location.hash&&want==='#home'))return;location.hash=b.dataset.go;window.scrollTo({top:0})});
 window.addEventListener('hashchange',showView);
 
 
@@ -1134,7 +1211,7 @@ let fails=0,coolUntil=0,hiddenAt=0;
 const LOCK_AFTER=5*60*1000;
 function setLocked(on){
   $('lock').hidden=!on;
-  document.querySelector('.wrap').inert=on;$('fab').inert=on;
+  document.querySelector('.wrap').inert=on;$('bnav').inert=on;
   document.body.style.overflow=on?'hidden':'';
   if(on)renderLock();else{update();renderPerson();if(CAP)scheduleReminders()}
 }
@@ -1212,7 +1289,7 @@ document.addEventListener('visibilitychange',()=>{
   if(document.hidden)hiddenAt=Date.now();
   else if(hiddenAt&&Date.now()-hiddenAt>LOCK_AFTER&&$('lock').hidden)setLocked(true);
 });
-$('lockNow').addEventListener('click',()=>{$('profilePanel').hidden=true;setLocked(true)});
+$('lockNow').addEventListener('click',()=>{setLocked(true)});
 
 /* Trusted person on the SOS page */
 function renderPerson(){
@@ -1222,12 +1299,10 @@ function renderPerson(){
 }
 
 /* Profile panel */
-$('profileBtn').addEventListener('click',()=>{
-  const p=$('profilePanel');p.hidden=!p.hidden;
-  if(!p.hidden){$('pName').value=profile?profile.name:'';$('pCName').value=profile?profile.contactName||'':'';$('pCPhone').value=profile?profile.contactPhone||'':'';
-    ['profileMsg','pinMsg','backupMsg','remMsg'].forEach(i=>$(i).textContent='');renderRem();p.scrollIntoView({behavior:reduce?'auto':'smooth',block:'start'})}
-});
-$('closeProfile').addEventListener('click',()=>{$('profilePanel').hidden=true});
+function openMe(){
+  {$('pName').value=profile?profile.name:'';$('pCName').value=profile?profile.contactName||'':'';$('pCPhone').value=profile?profile.contactPhone||'':'';
+    ['profileMsg','pinMsg','backupMsg','remMsg'].forEach(i=>$(i).textContent='');renderRem();$('meTitle').textContent=profile&&profile.name?profile.name:'Me'}
+}
 $('profileForm').addEventListener('submit',e=>{e.preventDefault();if(!profile)return;
   const n=$('pName').value.trim();if(!n){$('profileMsg').textContent='Please add your name.';return}
   profile.name=n;profile.contactName=$('pCName').value.trim();profile.contactPhone=$('pCPhone').value.trim();saveProfile();update();renderPerson();if(CAP)scheduleReminders();$('profileMsg').textContent='Saved.'});
@@ -1369,7 +1444,7 @@ async function setupNative(){
   try{await LN.createChannel({id:'sunshine',name:'Gentle reminders',description:'Friendly reminders for your Sunshine habits',importance:4,visibility:0,lights:true,lightColor:'#E5AE57',vibration:true})}catch(e){}
   try{await LN.addListener('localNotificationActionPerformed',ev=>{
     const card=ev&&ev.notification&&ev.notification.extra&&ev.notification.extra.card;
-    if(location.hash==='#sos')location.hash='home';
+    if(location.hash!=='#home')location.hash='home';
     setTimeout(()=>{const el=card==='wins'?document.querySelector('.wins'):document.querySelector(`[data-habit="${card}"]`);if(el)el.scrollIntoView({behavior:'smooth',block:'center'})},400);
   })}catch(e){}
 }
@@ -1411,7 +1486,7 @@ if(CAP){
 renderPerson();
 setLocked(true);
 showView();
-let lastDate=today();setInterval(()=>{if(TRIAL&&today()>=FIRST){location.reload();return}if(today()!==lastDate){lastDate=today();view=curDay();if(location.hash!=='#sos')update()}},60000);
+let lastDate=today();setInterval(()=>{if(TRIAL&&today()>=FIRST){location.reload();return}if(today()!==lastDate){lastDate=today();view=curDay();update()}},60000);
 })();
 </script>
 

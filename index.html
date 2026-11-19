@@ -114,12 +114,12 @@ button{font:inherit;color:inherit;cursor:pointer}
 /* Main layout */
 .layout{display:flex;flex-direction:column;gap:20px}
 .side{display:contents}
-.mood{order:1}.habits{order:2}.wins{order:3}.step{order:4}.memory{order:5}
+.memory{order:0}.mood{order:1}.habits{order:2}.wins{order:3}.step{order:4}
 @media (min-width:940px){
   .layout{display:grid;grid-template-columns:minmax(0,1fr) 340px;align-items:start;gap:24px}
   .habits{order:0}
   .side{display:flex;flex-direction:column;gap:20px}
-  .mood{order:1}.wins{order:2}.step{order:3}.memory{order:4}
+  .memory{order:0}.mood{order:1}.wins{order:2}.step{order:3}
 }
 .habits{display:flex;flex-direction:column;gap:24px;min-width:0}
 .cat-head{display:flex;align-items:center;gap:10px;margin-bottom:12px}
@@ -540,6 +540,18 @@ footer{display:flex;flex-direction:column;gap:14px;align-items:center;text-align
   .focus{grid-template-areas:"info" "tool" "act"}
   .focus .actions .btn{width:100%}
   .acc summary{padding:13px}
+}
+
+/* ---------- Warm sunlit background and photo first ---------- */
+body{background-color:var(--bg);background-image:radial-gradient(130% 55% at 50% -8%,color-mix(in srgb,var(--honey) 30%,transparent),transparent 70%),linear-gradient(180deg,var(--terra-bg) 0%,var(--bg) 45%);background-repeat:no-repeat;min-height:100vh}
+.garden{background:linear-gradient(160deg,var(--terra-bg),var(--surface) 78%)}
+.wins{background:linear-gradient(170deg,var(--terra-bg),var(--surface) 62%)}
+.memory{background:linear-gradient(170deg,color-mix(in srgb,var(--honey) 14%,var(--surface)),var(--surface) 70%)}
+.memory > .eyebrow{display:none}
+@media (max-width:759px){
+  .memory{padding-top:20px}
+  .polaroid{max-width:270px}
+  .memory .soft{font-size:.78rem}
 }
 @media (prefers-reduced-motion: reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 </style>

@@ -28,6 +28,8 @@ To update, install the new APK over the old one. Your data stays.
 
 ## What's inside
 
+- Welcome music: gentle built-in chimes, or your own song file, starts softly when you tap Unlock and fades out on its own (♪ button to pause; settings under Me → Welcome music).
+- Living motion: plants sway in their pots, leaves flutter, the moon rocks, steam rises, birds fly, the candle flickers.
 - Register and PIN unlock screen; the app locks again after 5 minutes away.
 - 10 daily habits in two groups (Basics and Care), a 21-day garden and a 21-day tracker.
 - Daily wins, a gratitude and hope quote, mood check-in and a gentle healing step.

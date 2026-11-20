@@ -683,6 +683,95 @@ body{background-color:var(--bg);background-image:radial-gradient(120% 50% at 50%
   .feel small{display:none}
   .acts{grid-template-columns:1fr}
 }
+
+/* ---------- Living motion: everything breathes gently, like a garden in a breeze ---------- */
+.card:not(.done) .scene .tw{animation:tw 3.4s ease-in-out infinite}
+.card:not(.done) .scene .rise{animation:rise 3.6s ease-in-out infinite}
+.card:not(.done) .scene .bob{animation:bob 3.8s ease-in-out infinite}
+.card:not(.done) .scene .spin{animation:spin 28s linear infinite}
+.card:not(.done) .scene .flick{transform-origin:50% 100%;animation:flicker 2.2s ease-in-out infinite}
+.card:not(.done) .scene .shim{animation:shimmer 3s ease-in-out infinite}
+.card:not(.done) .scene .breathe{animation:breathe 6s ease-in-out infinite}
+.scene .tw:nth-of-type(2){animation-delay:-1.1s!important}.scene .tw:nth-of-type(3){animation-delay:-2.3s!important}
+[data-habit="sleep"] .motif path{transform-box:fill-box;transform-origin:50% 50%;animation:moonRock 7s ease-in-out infinite,moonGlow 5s ease-in-out infinite}
+@keyframes moonRock{0%,100%{transform:rotate(-7deg) translateY(1px)}50%{transform:rotate(5deg) translateY(-2px)}}
+@keyframes moonGlow{50%{filter:drop-shadow(0 0 6px rgba(255,230,160,.9))}}
+[data-habit="sleep"] .scene::before{content:"";position:absolute;top:16px;left:-40px;width:38px;height:1.5px;border-radius:2px;background:linear-gradient(90deg,transparent,#fff);opacity:0;animation:shoot 9s ease-in 3s infinite;z-index:0}
+@keyframes shoot{0%{opacity:0;transform:translate(0,0) rotate(-14deg)}3%{opacity:.9}12%{opacity:0;transform:translate(230px,-50px) rotate(-14deg)}100%{opacity:0;transform:translate(230px,-50px) rotate(-14deg)}}
+[data-habit="move"] .scene .bob{animation:birdFly 10s linear infinite!important}
+[data-habit="move"] .scene .bob + .bob{animation-delay:-4s!important;animation-duration:12s!important}
+@keyframes birdFly{0%{transform:translateX(-26px) translateY(2px);opacity:0}10%{opacity:1}50%{transform:translateX(6px) translateY(-3px)}90%{opacity:1}100%{transform:translateX(40px) translateY(1px);opacity:0}}
+[data-habit="water"] .motif .bob{animation:dropBob 3.2s ease-in-out infinite!important}
+@keyframes dropBob{0%,100%{transform:translateY(0) scale(1,1)}45%{transform:translateY(-4px) scale(.96,1.05)}60%{transform:translateY(0) scale(1.05,.95)}}
+[data-habit="meals"] .motif > path:not(.rise),[data-habit="meals"] .motif rect{transform-box:fill-box;transform-origin:50% 100%;animation:bowlRock 5s ease-in-out infinite}
+@keyframes bowlRock{50%{transform:rotate(1.8deg)}}
+[data-habit="classes"] .motif path:last-child{transform-box:fill-box;transform-origin:0% 50%;animation:pageTurn 6s ease-in-out infinite}
+@keyframes pageTurn{0%,80%,100%{transform:scaleX(1)}88%{transform:scaleX(.8) skewY(-3deg)}}
+[data-habit="love"] .motif g:nth-child(2) path{animation-delay:-1.2s!important}
+[data-habit="love"] .motif g:nth-child(3) path{animation-delay:-2.4s!important}
+.card .scene{background-image:linear-gradient(110deg,transparent 35%,rgba(255,255,255,.16) 50%,transparent 65%),var(--sbg);background-size:250% 100%,auto;background-repeat:no-repeat;animation:sheen 10s ease-in-out infinite;animation-delay:calc(var(--i,0) * 1.1s)}
+@keyframes sheen{0%,70%{background-position:180% 0,0 0}100%{background-position:-80% 0,0 0}}
+.plot .sway{transform-box:view-box;transform-origin:20px 39px;animation:plantSway 4s ease-in-out infinite}
+@keyframes plantSway{0%,100%{transform:rotate(-3.5deg)}50%{transform:rotate(3.5deg)}}
+.plot .petals{transform-box:fill-box;transform-origin:50% 50%;animation:spin 26s linear infinite}
+.plot.today .sway{animation-name:plantSwayBig}
+@keyframes plantSwayBig{0%,100%{transform:rotate(-5deg)}50%{transform:rotate(5deg)}}
+.botanical > *:not(:first-child){transform-box:fill-box;transform-origin:50% 0%;animation:flutter 5s ease-in-out infinite}
+.botanical > *:nth-child(3n){animation-duration:6.2s;animation-delay:-1.7s}
+.botanical > *:nth-child(3n+1){animation-duration:4.4s;animation-delay:-3.1s}
+.botanical > *:nth-child(4n){animation-duration:7s;animation-delay:-.6s}
+@keyframes flutter{0%,100%{transform:rotate(0) translate(0,0)}35%{transform:rotate(8deg) translate(1px,1px)}70%{transform:rotate(-5deg) translate(-1px,0)}}
+.mood::after,.step::after,.garden::after,.tracker::after,.sos-log::after{transform-origin:100% 0;animation:sprig 6.5s ease-in-out infinite}
+.wins::after{transform-origin:100% 100%;animation:sprigFlip 7s ease-in-out infinite}
+@keyframes sprig{0%,100%{transform:rotate(0)}50%{transform:rotate(-6deg)}}
+@keyframes sprigFlip{0%,100%{transform:scaleY(-1) rotate(0)}50%{transform:scaleY(-1) rotate(6deg)}}
+.brand svg{animation:spin 40s linear infinite,sunPulse 4s ease-in-out infinite}
+@keyframes sunPulse{0%,100%{filter:drop-shadow(0 0 5px rgba(244,194,91,.45))}50%{filter:drop-shadow(0 0 12px rgba(244,194,91,.9))}}
+.theme-btn .i-sun{animation:spin 24s linear infinite}
+.theme-btn .i-moon{animation:moonRock 6s ease-in-out infinite}
+.ring svg{animation:ringGlow 4.5s ease-in-out infinite}
+@keyframes ringGlow{50%{filter:drop-shadow(0 0 7px rgba(244,194,91,.5))}}
+.wins-chip .spark{display:inline-block;animation:twinkle 2.4s ease-in-out infinite}
+@keyframes twinkle{0%,100%{transform:scale(1) rotate(0)}50%{transform:scale(1.25) rotate(18deg)}}
+.win-list li svg{transform-origin:20% 80%;animation:leafSway 3.8s ease-in-out infinite}
+.win-list li:nth-child(2n) svg{animation-delay:-1.4s}.win-list li:nth-child(3n) svg{animation-delay:-2.6s}
+@keyframes leafSway{50%{transform:rotate(14deg)}}
+.polaroid{animation:floaty 7s ease-in-out infinite}
+.polaroid:hover{transform:none}
+@keyframes floaty{0%,100%{transform:rotate(-1.6deg) translateY(0)}50%{transform:rotate(-.4deg) translateY(-5px)}}
+.mood-btn[aria-pressed="true"] svg{animation:faceBreathe 3s ease-in-out infinite}
+@keyframes faceBreathe{50%{transform:scale(1.14)}}
+.mood-btn:active svg,.chip:active,.btn:active{transform:scale(.94)}
+.mantra .dv{animation:mantraGlow 4s ease-in-out infinite}
+@keyframes mantraGlow{50%{text-shadow:0 0 20px rgba(244,194,91,.75)}}
+.glass.splash{animation:splash .6s cubic-bezier(.3,1.6,.5,1)}
+@keyframes splash{30%{transform:scale(1.06,.95)}60%{transform:scale(.97,1.03)}}
+.feel .em{animation:bob 3.4s ease-in-out infinite}
+.feel:nth-child(3n+2) .em{animation-delay:-1.1s}.feel:nth-child(3n) .em{animation-delay:-2.2s}
+.bottomnav button[aria-selected="true"] svg{animation:navPop .5s cubic-bezier(.3,1.6,.5,1)}
+@keyframes navPop{40%{transform:scale(1.25) translateY(-2px)}}
+.bottomnav button[data-go="sos"] svg{animation:heartbeat 3s ease-in-out infinite}
+@keyframes heartbeat{0%,70%,100%{transform:scale(1)}78%{transform:scale(1.14)}86%{transform:scale(.98)}92%{transform:scale(1.08)}}
+.bottomnav button[data-go="home"][aria-selected="true"] svg{animation:navPop .5s,spin 30s linear .5s infinite}
+.lock-logo svg{animation:spin 40s linear infinite,sunPulse 4s ease-in-out infinite}
+.view:not([hidden]) > *{animation:riseIn .55s ease both}
+.view:not([hidden]) > *:nth-child(2){animation-delay:.06s}.view:not([hidden]) > *:nth-child(3){animation-delay:.12s}.view:not([hidden]) > *:nth-child(4){animation-delay:.18s}.view:not([hidden]) > *:nth-child(5){animation-delay:.24s}
+@keyframes riseIn{from{opacity:0;transform:translateY(12px)}}
+.cards .card:not(.done){animation:riseIn .5s ease both}
+.cards .card:nth-child(2){animation-delay:.05s}.cards .card:nth-child(3){animation-delay:.1s}.cards .card:nth-child(4){animation-delay:.15s}.cards .card:nth-child(5){animation-delay:.2s}
+.music-btn{border:1px solid var(--line);background:var(--surface);color:var(--sage);width:40px;height:40px;border-radius:50%;display:grid;place-items:center;flex:none;position:relative}
+.music-btn svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.music-btn .eq{display:none;align-items:flex-end;gap:2px;height:16px}
+.music-btn .eq i{width:3px;border-radius:2px;background:currentColor;animation:eq 1s ease-in-out infinite}
+.music-btn .eq i:nth-child(2){animation-delay:-.3s}.music-btn .eq i:nth-child(3){animation-delay:-.6s}.music-btn .eq i:nth-child(4){animation-delay:-.15s}
+@keyframes eq{0%,100%{height:4px}50%{height:15px}}
+.music-btn.playing{color:var(--terra);border-color:color-mix(in srgb,var(--terra) 50%,var(--line));box-shadow:0 0 14px -2px color-mix(in srgb,var(--terra) 60%,transparent)}
+.music-btn.playing .i-note{display:none}.music-btn.playing .eq{display:flex}
+.topbar{gap:8px}
+.topbar .brand{margin-right:auto}
+.seg2.four{flex-wrap:wrap}.seg2.four button{flex:1 1 40%}
+.vol{width:100%;accent-color:var(--terra)}
+.flabel{font-size:.84rem;font-weight:800}
 @media (prefers-reduced-motion: reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 </style>
 </head>
@@ -701,6 +790,7 @@ body{background-color:var(--bg);background-image:radial-gradient(120% 50% at 50%
       <button class="tab" data-go="me" aria-selected="false">👤 Me</button>
     </nav>
     <button class="install-btn" id="installBtn" hidden>Install app</button>
+    <button class="music-btn" id="musicBtn" aria-label="Play music" aria-pressed="false"><svg class="i-note" viewBox="0 0 24 24"><path d="M9 18V5l11-2v13"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="17.5" cy="16" r="2.5"/></svg><span class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i></span></button>
     <button class="theme-btn" id="themeBtn" aria-label="Switch light or dark"><svg class="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2.5M12 19v2.5M2.5 12H5M19 12h2.5M5.3 5.3l1.8 1.8M16.9 16.9l1.8 1.8M5.3 18.7l1.8-1.8M16.9 7.1l1.8-1.8"/></svg><svg class="i-moon" viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></svg></button>
   </header>
 
@@ -710,7 +800,7 @@ body{background-color:var(--bg);background-image:radial-gradient(120% 50% at 50%
       <div class="hero-text">
         <span class="eyebrow" id="dateLine"></span>
         <h1 id="greet">Good morning. <em>Day 1</em> of 21.</h1>
-        <button class="wins-chip" id="winsChip">✨ <b id="winsChipN">0</b> <span id="winsChipW">wins</span> today</button>
+        <button class="wins-chip" id="winsChip"><span class="spark">✨</span> <b id="winsChipN">0</b> <span id="winsChipW">wins</span> today</button>
         <p class="sub">A quiet place to look after yourself, one small kindness at a time. Nothing here is a test.</p>
       </div>
       <div class="ring" aria-live="polite">
@@ -840,6 +930,22 @@ body{background-color:var(--bg);background-image:radial-gradient(120% 50% at 50%
         </details>
         <details class="pbox acc"><summary><span class="acc-ico t"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 0 0 18z" fill="currentColor"/></svg></span><span class="acc-t"><b>Appearance</b><small id="sumTheme">Light, dark or follow your phone</small></span><svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary>
           <div class="acc-body"><div class="seg2" id="themeSeg"><button data-theme-set="light">☀️ Light</button><button data-theme-set="dark">🌙 Dark</button><button data-theme-set="system">📱 Phone</button></div></div>
+        </details>
+        <details class="pbox acc" id="musicBox"><summary><span class="acc-ico s"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18V5l11-2v13"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="17.5" cy="16" r="2.5"/></svg></span><span class="acc-t"><b>Welcome music</b><small id="sumMusic">Gentle chimes</small></span><svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary>
+          <div class="acc-body">
+            <label class="toggle-row"><input type="checkbox" id="mOn"> Play soft music when I open Sunshine</label>
+            <div class="seg2"><button data-msrc="chimes">🎐 Gentle chimes</button><button data-msrc="mine">🎵 My own song</button></div>
+            <div id="mMine" hidden>
+              <p class="soft" id="mName">No song added yet.</p>
+              <div class="btns"><label class="btn terra" for="mFile" id="mFileLabel" role="button" tabindex="0">Choose a song</label><button class="btn ghost" id="mRemove" hidden>Remove</button></div>
+              <input type="file" id="mFile" class="sr" accept="audio/*,.mp3,.m4a,.aac,.wav,.ogg">
+            </div>
+            <div class="field"><label for="mVol">Volume</label><input type="range" id="mVol" min="5" max="100" class="vol"></div>
+            <div class="field"><span class="flabel">Play for</span><div class="seg2 four"><button data-mlen="1">1 min</button><button data-mlen="3">3 min</button><button data-mlen="full">Whole song</button><button data-mlen="loop">Keep playing</button></div></div>
+            <div class="btns"><button class="btn sage" id="mPreview">▶ Play now</button><button class="btn" id="mStop">Stop</button></div>
+            <p class="soft">Music starts softly when you tap Unlock and fades out on its own. Tap the ♪ button at the top any time to pause. Spotify and YouTube songs can't play inside Sunshine, so to use a favourite song, choose its audio file (MP3 or M4A) from your phone.</p>
+            <p class="pmsg" id="mMsg" aria-live="polite"></p>
+          </div>
         </details>
         <details class="pbox acc"><summary><span class="acc-ico c"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="8" cy="14" r="4"/><path d="M11 11l8-8M16 6l2 2M14 8l2 2"/></svg></span><span class="acc-t"><b>Change PIN</b><small>Pick a new 4–6 digit PIN</small></span><svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary>
           <form class="acc-body" id="pinForm">
@@ -1045,7 +1151,8 @@ const anyWin=r=>Object.values(r.c).some(Boolean)||r.water>0||!!r.mood||r.step;
 function stage(r,n){const s=score(r,n);if(s>=9)return 4;if(s>=6)return 3;if(s>=3)return 2;return anyWin(r)?1:0}
 
 const POT='<path d="M10.5 40h19l-2.4 7.2h-14.2z" fill="var(--terra)" opacity=".55"/><rect x="9" y="37.5" width="22" height="3.6" rx="1.6" fill="var(--terra)" opacity=".8"/>';
-function plant(st,future){
+function plant(st,future,n){
+  n=n||1;
   if(future) return '<svg viewBox="0 0 40 48" aria-hidden="true"><g opacity=".4">'+POT+'</g></svg>';
   let g='';
   if(st===0) g+='<ellipse cx="20" cy="36.5" rx="2.6" ry="1.8" fill="var(--honey)"/>';
@@ -1055,13 +1162,13 @@ function plant(st,future){
   if(st>=2) g+='<path d="M20 34c-6 0-9-3-9-6 4 0 9 2 9 6zM20 29c5 0 8-3 8-6-4 0-8 2-8 6z" fill="var(--sage)"/>';
   if(st>=3) g+='<path d="M20 25c-4 0-6-2-6-4 3 0 6 1 6 4z" fill="var(--sage)" opacity=".8"/>';
   if(st===3) g+='<ellipse cx="20" cy="15" rx="3.5" ry="5" fill="var(--terra)"/><path d="M17 17c1 2 5 2 6 0" stroke="var(--sage)" stroke-width="1.4" fill="none"/>';
-  if(st===4){g+='<g fill="var(--terra)">';for(let k=0;k<6;k++)g+=`<ellipse cx="20" cy="6.5" rx="3.6" ry="5.5" transform="rotate(${k*60} 20 12)"/>`;g+='</g><circle cx="20" cy="12" r="3.3" fill="var(--honey)"/>'}
-  return '<svg viewBox="0 0 40 48" aria-hidden="true">'+g+POT+'</svg>';
+  if(st===4){g+='<g class="petals" fill="var(--terra)">';for(let k=0;k<6;k++)g+=`<ellipse cx="20" cy="6.5" rx="3.6" ry="5.5" transform="rotate(${k*60} 20 12)"/>`;g+='</g><circle cx="20" cy="12" r="3.3" fill="var(--honey)"/>'}
+  return '<svg viewBox="0 0 40 48" aria-hidden="true"><g class="sway" style="animation-duration:'+(3.6+(n%5)*.45)+'s;animation-delay:-'+((n*.73)%4).toFixed(2)+'s">'+g+'</g>'+POT+'</svg>';
 }
 
 /* ---------- build habit cards ---------- */
 function cardHTML(h){
-  let x=`<article class="card" data-habit="${h.id}" style="--glow:${h.glow};--hc:${h.hc}">`;
+  let x=`<article class="card" data-habit="${h.id}" style="--glow:${h.glow};--hc:${h.hc};--i:${HABITS.indexOf(h)}">`;
   x+=`<div class="scene" style="--sbg:${h.sbg}"><svg class="motif" viewBox="0 0 84 62" aria-hidden="true">${h.art}</svg>
     <div class="scene-text"><div class="st-row"><span class="sico"><svg viewBox="0 0 24 24">${ICON[h.icon]}</svg></span><h3>${h.title}</h3><span class="badge">Done ✓</span></div><small${h.deva?' class="deva"':''}>${h.cap}</small></div>
     <svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></div>`;
@@ -1120,7 +1227,7 @@ function update(){
   else ban.hidden=true;
 
   $('plots').innerHTML=Array.from({length:21},(_,i)=>{const n=i+1,fut=n>raw;
-    return `<button class="plot${n===cd&&raw<=21?' today':''}${n===view?' sel':''}" data-day="${n}" ${fut?'disabled':''} aria-label="Day ${n}${fut?', not yet':''}">${plant(stage(peek(n),n),fut)}<span>${n}</span></button>`}).join('');
+    return `<button class="plot${n===cd&&raw<=21?' today':''}${n===view?' sel':''}" data-day="${n}" ${fut?'disabled':''} aria-label="Day ${n}${fut?', not yet':''}">${plant(stage(peek(n),n),fut,n)}<span>${n}</span></button>`}).join('');
   renderTracker(raw,cd);
 
   const nowDone=new Set();
@@ -1201,7 +1308,7 @@ $('homeView').addEventListener('click',e=>{
   const sg=e.target.closest('button[data-seg]');if(sg){setSeg(sg.dataset.seg);return}
   if(e.target.closest('#winsChip')){document.querySelector('.wins').scrollIntoView({behavior:reduce?'auto':'smooth',block:'start'});return}
   const b=e.target.closest('button');if(!b)return;
-  if(b.dataset.water){const r=rec(view),before=r.water;r.water=Math.max(0,Math.min(5000,r.water+Number(b.dataset.water)));save();if(r.water>before)celebrate(b,1);update()}
+  if(b.dataset.water){const gl=document.querySelector('.glass');if(gl){gl.classList.remove('splash');void gl.offsetWidth;gl.classList.add('splash')}const r=rec(view),before=r.water;r.water=Math.max(0,Math.min(5000,r.water+Number(b.dataset.water)));save();if(r.water>before)celebrate(b,1);update()}
   else if(b.dataset.tag){const r=rec(view);r.tags=r.tags||{};const arr=r.tags[b.dataset.tag]||(r.tags[b.dataset.tag]=[]),i=arr.indexOf(b.dataset.val);i>=0?arr.splice(i,1):arr.push(b.dataset.val);save();update()}
   else if(b.dataset.mood){const r=rec(view);r.mood=r.mood===b.dataset.mood?null:b.dataset.mood;save();if(r.mood)celebrate(b,2);update()}
   else if(b.dataset.day){view=Number(b.dataset.day);update();window.scrollTo({top:0,behavior:reduce?'auto':'smooth'})}
@@ -1573,7 +1680,7 @@ function setLocked(on){
   $('lock').hidden=!on;
   document.querySelector('.wrap').inert=on;$('bnav').inert=on;
   document.body.style.overflow=on?'hidden':'';
-  if(on)renderLock();else{update();renderPerson();if(CAP)scheduleReminders()}
+  if(on)renderLock();else{update();renderPerson();if(CAP)scheduleReminders();if(typeof musicBegin==='function')musicBegin()}
 }
 function renderLock(mode){
   const c=$('lockCard'),sun=`<div class="lock-logo">${SUN_SVG}<h1>Sunshine</h1>`;
@@ -1615,7 +1722,7 @@ function renderLock(mode){
   setTimeout(()=>{try{$('lPin').focus()}catch(e){}},50);
 }
 const SUN_SVG='<svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="7" fill="#F4C25B"/><g stroke="#F08A3C" stroke-width="2.2" stroke-linecap="round"><path d="M16 2.5v4M16 25.5v4M2.5 16h4M25.5 16h4M6.4 6.4l2.8 2.8M22.8 22.8l2.8 2.8M6.4 25.6l2.8-2.8M22.8 9.2l2.8-2.8"/></g></svg>';
-$('lock').addEventListener('submit',async e=>{
+async function lockSubmit(e){
   e.preventDefault();const msg=$('lockMsg');
   if(e.target.id==='regForm'){
     const name=$('rName').value.trim(),p1=$('rPin').value,p2=$('rPin2').value;
@@ -1633,7 +1740,8 @@ $('lock').addEventListener('submit',async e=>{
       if(fails>=5){coolUntil=Date.now()+30000;fails=0;msg.textContent='That PIN didn’t match 5 times. Please wait 30 seconds.'}
       else msg.textContent='That PIN didn’t match. Try again.'}
   }
-});
+}
+$('lock').addEventListener('submit',async e=>{e.preventDefault();if(typeof musicPrime==='function')musicPrime();try{await lockSubmit(e)}finally{if(!$('lock').hidden&&typeof musicAbort==='function')musicAbort()}});
 $('lock').addEventListener('input',e=>{if(e.target.classList.contains('pin'))e.target.value=e.target.value.replace(/\D/g,'').slice(0,6)});
 $('lock').addEventListener('click',async e=>{
   const b=e.target.closest('[data-lock]');if(!b)return;const a=b.dataset.lock;
@@ -1661,7 +1769,7 @@ function renderPerson(){
 /* Profile panel */
 function openMe(){
   {$('pName').value=profile?profile.name:'';$('pCName').value=profile?profile.contactName||'':'';$('pCPhone').value=profile?profile.contactPhone||'':'';
-    ['profileMsg','pinMsg','backupMsg','remMsg'].forEach(i=>$(i).textContent='');renderRem();$('meTitle').textContent=profile&&profile.name?profile.name:'Me';$('sumAbout').textContent=profile?(profile.name+(profile.contactName?' · trusted person: '+profile.contactName:'')):'Your name and trusted person'}
+    ['profileMsg','pinMsg','backupMsg','remMsg'].forEach(i=>$(i).textContent='');renderRem();if(typeof renderMusicSettings==='function')renderMusicSettings();$('meTitle').textContent=profile&&profile.name?profile.name:'Me';$('sumAbout').textContent=profile?(profile.name+(profile.contactName?' · trusted person: '+profile.contactName:'')):'Your name and trusted person'}
 }
 $('profileForm').addEventListener('submit',e=>{e.preventDefault();if(!profile)return;
   const n=$('pName').value.trim();if(!n){$('profileMsg').textContent='Please add your name.';return}
@@ -1858,6 +1966,102 @@ $('themeBtn').addEventListener('click',()=>applyTheme(isDark()?'light':'dark'));
 $('themeSeg').addEventListener('click',e=>{const b=e.target.closest('[data-theme-set]');if(b)applyTheme(b.dataset.themeSet)});
 matchMedia('(prefers-color-scheme: dark)').addEventListener('change',()=>{if(themePref()==='system')applyTheme('system')});
 applyTheme(themePref());
+
+/* ---------- Welcome music (starts on the Unlock tap; phones only allow sound after a tap) ---------- */
+const MUSICKEY='sunshine-music';
+const musicCfg=()=>{let c={};try{c=JSON.parse(localStorage.getItem(MUSICKEY))||{}}catch(e){}return Object.assign({on:true,source:'chimes',vol:.45,len:'3',name:''},c)};
+const saveMusicCfg=c=>{try{localStorage.setItem(MUSICKEY,JSON.stringify(c))}catch(e){}};
+let actx=null,master=null,chimesStop=null,audioEl=null,trackBlob=null,trackUrl=null,playing=false,primed=null,curSource=null,stopTimer=null,lastStart=0,fadeIv=null,musicTok=0;
+function mdb(){return new Promise((res,rej)=>{try{const q=indexedDB.open('sunshine-music',1);q.onupgradeneeded=()=>q.result.createObjectStore('tracks');q.onsuccess=()=>res(q.result);q.onerror=()=>rej(q.error)}catch(e){rej(e)}})}
+async function loadTrack(){try{const db=await mdb();trackBlob=await new Promise(res=>{const r=db.transaction('tracks').objectStore('tracks').get('welcome');r.onsuccess=()=>res(r.result||null);r.onerror=()=>res(null)})}catch(e){trackBlob=null}prepAudio()}
+async function storeTrack(blob){const db=await mdb();await new Promise((res,rej)=>{const tx=db.transaction('tracks','readwrite');tx.objectStore('tracks').put(blob,'welcome');tx.oncomplete=res;tx.onerror=()=>rej(tx.error);tx.onabort=()=>rej(tx.error)})}
+async function deleteTrack(){try{const db=await mdb();await new Promise(res=>{const tx=db.transaction('tracks','readwrite');tx.objectStore('tracks').delete('welcome');tx.oncomplete=res;tx.onerror=res})}catch(e){}}
+function prepAudio(){if(audioEl){try{audioEl.pause()}catch(e){}}if(trackUrl){URL.revokeObjectURL(trackUrl);trackUrl=null}
+  if(!trackBlob){audioEl=null;return}trackUrl=URL.createObjectURL(trackBlob);audioEl=new Audio(trackUrl);audioEl.preload='auto';
+  audioEl.addEventListener('ended',()=>{if(curSource==='mine'&&!audioEl.loop){playing=false;renderMusicBtn()}})}
+function ensureCtx(){if(!actx){const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return null;actx=new AC();master=actx.createGain();master.gain.value=0;master.connect(actx.destination)}
+  if(actx.state==='suspended')actx.resume();return actx}
+/* "Gentle chimes": a soft pad drifting through D, Bm, G, A with pentatonic bells and a warm reverb, generated on the phone */
+function startChimes(){
+  const c=actx,out=master,nodes=[];let alive=true;
+  const len=Math.floor(c.sampleRate*3.2),ir=c.createBuffer(2,len,c.sampleRate);
+  for(let ch=0;ch<2;ch++){const d=ir.getChannelData(ch);for(let i=0;i<len;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/len,2.8)}
+  const rev=c.createConvolver();rev.buffer=ir;const wet=c.createGain();wet.gain.value=.5;rev.connect(wet);wet.connect(out);
+  const bus=c.createGain();bus.gain.value=.75;bus.connect(out);bus.connect(rev);
+  const lp=c.createBiquadFilter();lp.type='lowpass';lp.frequency.value=1000;lp.connect(bus);
+  const CH=[[146.83,220,293.66,369.99],[123.47,185,293.66,369.99],[98,196,293.66,392],[110,220,277.18,329.63]];
+  const pads=CH[0].map(f=>{const o=c.createOscillator();o.type='triangle';o.frequency.value=f;const g=c.createGain();g.gain.value=.03;
+    const l=c.createOscillator();l.frequency.value=.06+Math.random()*.07;const lg=c.createGain();lg.gain.value=.013;l.connect(lg);lg.connect(g.gain);
+    o.connect(g);g.connect(lp);o.start();l.start();nodes.push(o,l);return o});
+  let ci=0;const chord=setInterval(()=>{ci=(ci+1)%CH.length;pads.forEach((o,i)=>o.frequency.setTargetAtTime(CH[ci][i],c.currentTime,1.8))},12000);
+  const PENTA=[587.33,659.25,739.99,880,987.77,1174.66,1318.51];let t=null;
+  const bell=()=>{if(!alive)return;const now=c.currentTime,f=PENTA[Math.floor(Math.random()*PENTA.length)];
+    [[1,.05],[2.01,.013],[3.02,.005]].forEach(([m,a])=>{const o=c.createOscillator();o.type='sine';o.frequency.value=f*m;const g=c.createGain();
+      g.gain.setValueAtTime(0,now);g.gain.linearRampToValueAtTime(a,now+.02);g.gain.exponentialRampToValueAtTime(.0001,now+1+3.6/m);o.connect(g);g.connect(bus);o.start(now);o.stop(now+5.2)});
+    t=setTimeout(bell,1500+Math.random()*2700)};
+  t=setTimeout(bell,1200);
+  return()=>{alive=false;clearTimeout(t);clearInterval(chord);nodes.forEach(n=>{try{n.stop()}catch(e){}})};
+}
+function fadeTo(v,sec,done){
+  if(curSource==='chimes'&&actx){master.gain.cancelScheduledValues(actx.currentTime);master.gain.setValueAtTime(master.gain.value,actx.currentTime);master.gain.linearRampToValueAtTime(v,actx.currentTime+sec);if(done)setTimeout(done,sec*1000+50)}
+  else if(audioEl){clearInterval(fadeIv);const start=audioEl.volume,steps=Math.max(1,Math.round(sec*10));let k=0;
+    fadeIv=setInterval(()=>{k++;audioEl.volume=Math.max(0,Math.min(1,start+(v-start)*k/steps));if(k>=steps){clearInterval(fadeIv);done&&done()}},100)}
+  else if(done)done();
+}
+function primeSource(c){
+  if(c.source==='mine'&&audioEl){audioEl.volume=0;try{audioEl.currentTime=0}catch(e){}audioEl.loop=c.len==='loop';const p=audioEl.play();if(p&&p.catch)p.catch(()=>{});primed='mine'}
+  else if(ensureCtx())primed='chimes';
+}
+function musicPrime(){const c=musicCfg();if(!c.on||playing||(lastStart&&Date.now()-lastStart<30*60*1000))return;primeSource(c)}
+function musicAbort(){if(primed==='mine'&&audioEl&&!playing)audioEl.pause();primed=null}
+function musicBegin(){
+  if(!primed)return;const c=musicCfg();curSource=primed;primed=null;playing=true;lastStart=Date.now();musicTok++;
+  if(curSource==='chimes'){if(chimesStop)chimesStop();master.gain.value=0;chimesStop=startChimes();fadeTo(c.vol*.6,4)}
+  else fadeTo(c.vol,4);
+  clearTimeout(stopTimer);const mins=c.len==='1'?1:c.len==='3'?3:(c.len==='full'&&curSource==='chimes')?5:0;
+  if(mins)stopTimer=setTimeout(()=>musicStop(6),mins*60000);
+  renderMusicBtn();
+}
+function musicStop(sec=1.5){
+  if(!playing)return;playing=false;clearTimeout(stopTimer);const tok=musicTok,src=curSource,stopFn=chimesStop;
+  fadeTo(0,sec,()=>{if(tok!==musicTok)return;if(src==='chimes'){if(stopFn)stopFn();if(chimesStop===stopFn)chimesStop=null}else if(audioEl)audioEl.pause()});
+  renderMusicBtn();
+}
+function musicPlayNow(){if(playing)return;const c=musicCfg();primeSource(c);musicBegin()}
+function renderMusicBtn(){const b=$('musicBtn');if(!b)return;b.classList.toggle('playing',playing);b.setAttribute('aria-label',playing?'Pause music':'Play music');b.setAttribute('aria-pressed',playing)}
+$('musicBtn').addEventListener('click',()=>{playing?musicStop(1.2):musicPlayNow()});
+document.addEventListener('visibilitychange',()=>{if(document.hidden)musicStop(.4)});
+document.addEventListener('click',e=>{if(e.target.closest('.mbtn'))musicStop(.6)});
+function renderMusicSettings(){
+  const c=musicCfg();$('mOn').checked=c.on;
+  document.querySelectorAll('[data-msrc]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.msrc===c.source));
+  document.querySelectorAll('[data-mlen]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.mlen===c.len));
+  $('mVol').value=Math.round(c.vol*100);$('mMine').hidden=c.source!=='mine';
+  $('mName').textContent=trackBlob?('🎵 '+(c.name||'Your song')):'No song added yet. Choose one from your phone.';$('mRemove').hidden=!trackBlob;
+  $('sumMusic').textContent=!c.on?'Off':c.source==='mine'&&trackBlob?(c.name||'Your song'):'Gentle chimes';
+}
+$('musicBox').addEventListener('click',e=>{
+  const b=e.target.closest('button');if(!b)return;const c=musicCfg(),m=$('mMsg');
+  if(b.dataset.msrc){c.source=b.dataset.msrc;saveMusicCfg(c);if(playing)musicStop(.8);renderMusicSettings()}
+  else if(b.dataset.mlen){c.len=b.dataset.mlen;saveMusicCfg(c);if(audioEl)audioEl.loop=c.len==='loop';renderMusicSettings()}
+  else if(b.id==='mPreview'){if(c.source==='mine'&&!trackBlob){m.textContent='Choose a song first, or pick Gentle chimes.';return}m.textContent='';musicPlayNow()}
+  else if(b.id==='mStop')musicStop(1)
+  else if(b.id==='mRemove'){musicStop(.4);deleteTrack().then(()=>{trackBlob=null;prepAudio();const k=musicCfg();k.source='chimes';k.name='';saveMusicCfg(k);renderMusicSettings();m.textContent='Song removed. Gentle chimes will play instead.'})}
+});
+$('mOn').addEventListener('change',e=>{const c=musicCfg();c.on=e.target.checked;saveMusicCfg(c);renderMusicSettings()});
+$('mVol').addEventListener('input',e=>{const c=musicCfg();c.vol=+e.target.value/100;saveMusicCfg(c);if(playing)fadeTo(curSource==='chimes'?c.vol*.6:c.vol,.25)});
+$('mFileLabel').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();$('mFile').click()}});
+$('mFile').addEventListener('change',async e=>{
+  const f=e.target.files[0];e.target.value='';if(!f)return;const m=$('mMsg');
+  if(!/^audio\//.test(f.type)&&!/\.(mp3|m4a|aac|wav|ogg|opus|flac)$/i.test(f.name)){m.textContent='That file isn’t a song. Choose an MP3 or M4A file.';return}
+  if(f.size>30*1024*1024){m.textContent='That song is over 30 MB. Please choose a smaller file.';return}
+  m.textContent='Saving your song…';musicStop(.3);
+  try{await storeTrack(f)}catch(err){m.textContent='The song couldn’t be saved on this phone. It will play until you close Sunshine.'}
+  trackBlob=f;prepAudio();const c=musicCfg();c.source='mine';c.name=f.name.replace(/\.[^.]+$/,'');saveMusicCfg(c);renderMusicSettings();
+  if(!m.textContent.includes('couldn'))m.textContent='Saved. It will play softly each time you open Sunshine.';
+});
+loadTrack();
+window.sunshineMusicStatus=()=>({playing,source:curSource,songPaused:audioEl?audioEl.paused:null,songVolume:audioEl?+audioEl.volume.toFixed(2):null,chimes:actx?actx.state:null});
 
 renderPerson();
 setLocked(true);

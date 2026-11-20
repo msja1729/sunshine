@@ -26,6 +26,7 @@ if (clientId) {
   cfg.plugins.GoogleAuth = {
     scopes: ['profile', 'email', 'https://www.googleapis.com/auth/drive.appdata'],
     serverClientId: clientId,
+    clientId: clientId,
     forceCodeForRefreshToken: false
   };
   console.log('Google sign-in is ON for the Android app.');

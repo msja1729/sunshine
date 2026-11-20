@@ -44,7 +44,77 @@ if (fs.existsSync(stringsPath)) {
   fs.writeFileSync(stringsPath, strings);
 }
 
-// 5. Version: name from package.json, code from the CI run number so updates install over older ones.
+// 5. Focus lock: a tiny native plugin that pins Sunshine on screen during a study sitting
+//    (Android "app pinning": no other apps or notification shade until the sitting ends) and keeps the screen awake.
+const javaDir = path.join(main, 'java', 'com', 'msja1729', 'sunshine');
+fs.mkdirSync(javaDir, { recursive: true });
+fs.writeFileSync(path.join(javaDir, 'FocusLockPlugin.java'), `package com.msja1729.sunshine;
+
+import android.app.Activity;
+import android.app.ActivityManager;
+import android.content.Context;
+import android.os.Build;
+import android.view.WindowManager;
+import com.getcapacitor.JSObject;
+import com.getcapacitor.Plugin;
+import com.getcapacitor.PluginCall;
+import com.getcapacitor.PluginMethod;
+import com.getcapacitor.annotation.CapacitorPlugin;
+
+@CapacitorPlugin(name = "FocusLock")
+public class FocusLockPlugin extends Plugin {
+    @PluginMethod
+    public void start(PluginCall call) {
+        Activity a = getActivity();
+        a.runOnUiThread(() -> {
+            try {
+                a.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+                a.startLockTask();
+                call.resolve();
+            } catch (Exception e) {
+                call.reject(e.getMessage());
+            }
+        });
+    }
+
+    @PluginMethod
+    public void stop(PluginCall call) {
+        Activity a = getActivity();
+        a.runOnUiThread(() -> {
+            a.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+            try { a.stopLockTask(); } catch (Exception e) { }
+            call.resolve();
+        });
+    }
+
+    @PluginMethod
+    public void status(PluginCall call) {
+        boolean pinned = false;
+        if (Build.VERSION.SDK_INT >= 23) {
+            ActivityManager am = (ActivityManager) getContext().getSystemService(Context.ACTIVITY_SERVICE);
+            pinned = am != null && am.getLockTaskModeState() != ActivityManager.LOCK_TASK_MODE_NONE;
+        }
+        JSObject r = new JSObject();
+        r.put("pinned", pinned);
+        call.resolve(r);
+    }
+}
+`);
+fs.writeFileSync(path.join(javaDir, 'MainActivity.java'), `package com.msja1729.sunshine;
+
+import android.os.Bundle;
+import com.getcapacitor.BridgeActivity;
+
+public class MainActivity extends BridgeActivity {
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        registerPlugin(FocusLockPlugin.class);
+        super.onCreate(savedInstanceState);
+    }
+}
+`);
+
+// 6. Version: name from package.json, code from the CI run number so updates install over older ones.
 const pkg = JSON.parse(fs.readFileSync(path.join(appDir, 'package.json'), 'utf8'));
 const code = parseInt(process.env.GITHUB_RUN_NUMBER || '1', 10) + 100;
 const gradlePath = path.join(appDir, 'android', 'app', 'build.gradle');

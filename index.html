@@ -514,6 +514,7 @@ footer{display:flex;flex-direction:column;gap:14px;align-items:center;text-align
 .acc .chev{width:20px;height:20px;fill:none;stroke:var(--muted);stroke-width:2;stroke-linecap:round;transition:transform .25s;flex:none}
 .acc[open] .chev{transform:rotate(180deg)}
 .acc-body{padding:0 14px 16px;display:flex;flex-direction:column;gap:10px}
+.rem-snd{flex-wrap:wrap;border-radius:18px}.rem-snd button{flex:1 1 30%;min-width:96px}
 .profile-grid{align-items:start}
 .focus{grid-template-areas:"info tool" "act tool"}
 .focus .info{grid-area:info}.focus .tool{grid-area:tool}.focus .actions{grid-area:act;align-self:start}
@@ -794,6 +795,14 @@ body{background-color:var(--bg);background-image:radial-gradient(120% 50% at 50%
 .lock input[type=time],.acc-body input[type=time],.med-row input[type=time]{width:100%;border:1.5px solid var(--line);border-radius:12px;background:var(--bg);color:var(--ink);padding:10px 8px;font:inherit;font-size:.95rem}
 .acc-body .field input:not([type=checkbox]):not([type=range]){width:100%;border:1.5px solid var(--line);border-radius:12px;background:var(--bg);color:var(--ink);padding:10px 12px;font:inherit}
 .med-list{display:flex;flex-direction:column;gap:10px}
+.ct-list{display:flex;flex-direction:column;gap:8px}
+.ct-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) 36px;gap:6px;align-items:center}
+@media (max-width:380px){.ct-row{grid-template-columns:minmax(0,1fr) 36px}.ct-row [data-c=phone]{grid-column:1;grid-row:2}}
+.ct-add{align-self:flex-start}
+#myPerson{display:flex;flex-direction:column;gap:8px}#myPerson[hidden]{display:none}
+.ct-call{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:16px;background:color-mix(in srgb,var(--calm) 10%,var(--surface));border:1px solid var(--line)}
+.ct-who{flex:1;min-width:0;display:flex;flex-direction:column}.ct-who b{font-size:.98rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.ct-who small{color:var(--muted);font-size:.8rem}
+.ct-btn{text-decoration:none;padding:9px 14px;flex:none}
 .med-row{background:var(--bg);border:1px solid var(--line);border-radius:16px;padding:10px;display:flex;flex-direction:column;gap:8px}
 .med-top{display:grid;grid-template-columns:minmax(0,1fr) 136px 36px;gap:6px;align-items:center}
 @media (max-width:560px){.row3{grid-template-columns:1fr 1fr}.row3 .field:last-child{grid-column:1/-1}}
@@ -847,6 +856,7 @@ body{background-color:var(--bg);background-image:radial-gradient(120% 50% at 50%
 .st-begin span{display:inline-block;animation:treeSway 2.4s ease-in-out infinite}
 @keyframes beginGlow{0%,100%{box-shadow:0 10px 26px -14px #2F9A6B}50%{box-shadow:0 10px 34px -8px #4FB28A}}
 .amb-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+@media (max-width:380px){.amb-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
 .amb-grid button{display:flex;flex-direction:column;align-items:center;gap:3px;border:1px solid var(--line);background:var(--bg);border-radius:16px;padding:10px 4px;font-weight:800;font-size:.78rem;color:var(--ink);transition:all .2s}
 .amb-grid button span{font-size:1.45rem;line-height:1}
 .amb-grid button[aria-pressed="true"]{border-color:var(--sage);background:var(--sage-bg);box-shadow:0 0 0 2px color-mix(in srgb,var(--sage) 35%,transparent)}
@@ -857,6 +867,8 @@ body{background-color:var(--bg);background-image:radial-gradient(120% 50% at 50%
 .beat-list button[aria-pressed="true"]{border-color:var(--calm);background:var(--calm-bg)}
 .f-range{display:flex;flex-direction:column;gap:4px;font-weight:800;font-size:.86rem}
 .f-range input{width:100%;accent-color:var(--sage)}
+.st-mine{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;padding:10px 12px;border-radius:14px;background:var(--bg);font-weight:700;font-size:.88rem}
+.st-silence{margin:0}
 .st-sess{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
 .st-sess li{display:flex;gap:10px;align-items:baseline;padding:8px 12px;border-radius:12px;background:var(--bg)}
 .st-sess li span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.st-sess time{font-size:.8rem;color:var(--muted)}
@@ -1138,8 +1150,7 @@ body.focusing{overflow:hidden}
         <details class="pbox acc"><summary><span class="acc-ico t"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8.5" r="3.5"/><path d="M5 20c1.2-3.6 4-5.5 7-5.5s5.8 1.9 7 5.5"/></svg></span><span class="acc-t"><b>About you</b><small id="sumAbout">Your name and trusted person</small></span><svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary>
           <form class="acc-body" id="profileForm">
             <div class="field"><label for="pName">Your name</label><input id="pName" maxlength="40" autocomplete="given-name" required></div>
-            <div class="field"><label for="pCName">Trusted person</label><input id="pCName" maxlength="40" placeholder="e.g. Amma"></div>
-            <div class="field"><label for="pCPhone">Their phone number</label><input id="pCPhone" type="tel" maxlength="20" inputmode="tel" placeholder="+91 …"></div>
+            <div class="field"><label>Trusted people <span class="hint">(shown on the SOS page)</span></label><div id="pContacts"></div></div>
             <div class="btns"><button class="btn sage" type="submit">Save</button></div>
             <p class="pmsg" id="profileMsg" aria-live="polite"></p>
           </form>
@@ -2121,7 +2132,7 @@ const WART={
  pin:'<svg class="wart" viewBox="0 0 120 74"><path class="wa-shackle" d="M48 36V26a12 12 0 0 1 24 0v10" stroke="var(--terra)" stroke-width="5" fill="none" stroke-linecap="round"/><rect x="40" y="34" width="40" height="32" rx="8" fill="var(--honey)"/><circle cx="60" cy="48" r="4" fill="var(--terra)"/><path d="M60 50v7" stroke="var(--terra)" stroke-width="3" stroke-linecap="round"/><path class="wa-vine" d="M80 62c8 0 10-8 18-8M40 62c-8 0-10-8-18-8" stroke="var(--sage)" stroke-width="2.4" fill="none" stroke-linecap="round" pathLength="1"/><path class="wa-spark" d="M92 18l1.4 3.6L97 23l-3.6 1.4L92 28l-1.4-3.6L87 23l3.6-1.4z" fill="var(--honey)"/></svg>',
  restore:'<svg class="wart" viewBox="0 0 120 74"><path d="M34 44h52a14 14 0 0 0-3-27 18 18 0 0 0-33-3 14 14 0 0 0-24 8 12 12 0 0 0 8 22z" fill="var(--calm-bg)" stroke="var(--calm)" stroke-width="2"/><g class="wa-down"><path d="M60 30v22M52 45l8 8 8-8" stroke="var(--sage)" stroke-width="3.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g><path d="M44 68h32" stroke="var(--sage)" stroke-width="3" stroke-linecap="round"/></svg>'};
 function renderWizard(){
-  if(!wiz)wiz={step:0,cfg:normCfg(DEF_CFG),name:'',cName:'',cPhone:'',start:'today',rem:true,restored:false,offer:null};
+  if(!wiz)wiz={step:0,cfg:normCfg(DEF_CFG),name:'',contacts:[],start:'today',rem:true,restored:false,offer:null};
   const c=$('lockCard');c.classList.add('wiz');
   const steps=wiz.restored?['welcome','pin']:WSTEPS,key=wiz.offer?'restore':steps[wiz.step],total=steps.length-1;
   const head=key==='welcome'||key==='restore'?'':`<div class="whead"><div class="wdots">${steps.slice(1).map((s,i)=>`<i class="${i+1<wiz.step?'past':i+1===wiz.step?'on':''}"></i>`).join('')}</div><span class="eyebrow">Step ${wiz.step} of ${total}</span></div>`;
@@ -2137,7 +2148,7 @@ function renderWizard(){
     <p class="lock-note">Starting fresh will replace the copy in your Drive once you finish setting up.</p>`}
   if(key==='about')body=`<h2>About you</h2><p class="soft">What should Sunshine call you?</p>
     <div class="field"><label for="wName">Your name</label><input id="wName" maxlength="40" autocomplete="given-name" value="${esc(wiz.name)}" placeholder="Your first name"></div>
-    <div class="row2"><div class="field"><label for="wCName">Trusted person</label><input id="wCName" maxlength="40" value="${esc(wiz.cName)}" placeholder="e.g. Amma"></div><div class="field"><label for="wCPhone">Their phone</label><input id="wCPhone" type="tel" inputmode="tel" maxlength="20" value="${esc(wiz.cPhone)}" placeholder="+91 …"></div></div>
+    <div class="field"><label>Trusted people <span class="hint">(optional)</span></label>${contactsHTML(wiz.contacts)}</div>
     <p class="hint">Optional. They’ll appear as a “Call” button on the SOS page.</p>`;
   if(key==='day')body=`<h2>Your day</h2><p class="soft">These shape your habit cards and gentle reminders. You can change them any time in Me.</p>${dayHTML(wiz.cfg)}
     <div class="field"><label>Start my 21 days</label><div class="seg2" id="wStart"><button type="button" data-start="today" aria-pressed="${wiz.start==='today'}">Today</button><button type="button" data-start="tomorrow" aria-pressed="${wiz.start==='tomorrow'}">Tomorrow</button></div></div>`;
@@ -2159,11 +2170,11 @@ function renderWizard(){
   const dir=wiz.dir||'fwd';wiz.dir='fwd';
   c.innerHTML=`<div class="wiz-body ${dir}">${head}${WART[key]||''}${body}</div><p class="lock-msg" id="wizMsg" aria-live="polite"></p>${nav}`;
   c.scrollTop=0;$('lock').scrollTop=0;
-  setTimeout(()=>{const f=c.querySelector('#wName,#rPin');if(f)try{f.focus()}catch(e){}},60);
+  setTimeout(()=>{const f=c.querySelector('#wName,#rPin'),ae=document.activeElement;if(f&&(!ae||ae===document.body||!c.contains(ae)||ae.tagName==='BUTTON'))try{f.focus()}catch(e){}},60);
 }
 function wizCollect(){
   const key=(wiz.restored?['welcome','pin']:WSTEPS)[wiz.step],c=$('lockCard');
-  if(key==='about'){wiz.name=$('wName').value.trim();wiz.cName=$('wCName').value.trim();wiz.cPhone=$('wCPhone').value.trim()}
+  if(key==='about'){wiz.name=$('wName').value.trim();wiz.contacts=readContacts(c)}
   if(key==='day'||key==='meds'||key==='habits')wiz.cfg=readRoutine(c,wiz.cfg);
   if(key==='day'){const s=c.querySelector('[data-start][aria-pressed="true"]');wiz.start=s?s.dataset.start:'today'}
   if(key==='look'&&$('wRem'))wiz.rem=$('wRem').checked;
@@ -2187,7 +2198,7 @@ $('lock').addEventListener('click',async e=>{
     catch(err){m.textContent='Google sign-in didn’t finish. You can try again, or set up on this phone.'}
     return}
   if(a==='restore'){m.textContent='Bringing your Sunshine back…';
-    try{const d=await driveGet(wiz.offer.id);await applySnapshot(d,false);const p=d.profile||{};wiz.name=p.name||wiz.name;wiz.cName=p.contactName||'';wiz.cPhone=p.contactPhone||'';
+    try{const d=await driveGet(wiz.offer.id);await applySnapshot(d,false);const p=d.profile||{};wiz.name=p.name||wiz.name;wiz.contacts=contactsOf(p);
       wiz.restored=true;wiz.restoredAt=wiz.offer.updated;wiz.offer=null;wiz.step=1;renderWizard()}
     catch(err){m.textContent='Your data couldn’t be restored just now. Please check your connection and try again.'}
     return}
@@ -2207,7 +2218,7 @@ $('lock').addEventListener('change',async e=>{
 });
 async function finishWizard(p1){
   const salt=newSalt();
-  profile={name:wiz.name||'friend',contactName:wiz.cName,contactPhone:wiz.cPhone,salt,hash:await hashPin(p1,salt),created:new Date().toISOString()};
+  profile={name:wiz.name||'friend',salt,hash:await hashPin(p1,salt),created:new Date().toISOString()};setContacts(profile,wiz.contacts||[]);
   if(!wiz.restored){saveCfg(wiz.cfg);const d=new Date();if(wiz.start==='tomorrow')d.setDate(d.getDate()+1);state={start:ymd(d),days:{}};save();
     const rs=remSettings();rs.on=!!wiz.rem;saveRem(rs)}
   saveProfile();
@@ -2251,21 +2262,32 @@ document.addEventListener('visibilitychange',()=>{
 });
 $('lockNow').addEventListener('click',()=>{setLocked(true)});
 
-/* Trusted person on the SOS page */
+/* Trusted people (up to 6) */
+function contactsOf(p){if(!p)return[];let a=Array.isArray(p.contacts)?p.contacts:(p.contactName||p.contactPhone?[{name:p.contactName||'',phone:p.contactPhone||''}]:[]);
+  return a.map(c=>({name:String(c.name||'').slice(0,40),phone:String(c.phone||'').slice(0,20)})).filter(c=>c.name||c.phone).slice(0,6)}
+function setContacts(p,list){p.contacts=list;p.contactName=list[0]?list[0].name:'';p.contactPhone=list[0]?list[0].phone:''}
+const ctRow=c=>`<div class="ct-row"><input class="note" data-c="name" maxlength="40" value="${esc(c.name)}" placeholder="Name, e.g. Amma" aria-label="Name"><input class="note" data-c="phone" type="tel" inputmode="tel" maxlength="20" value="${esc(c.phone)}" placeholder="+91 …" aria-label="Phone number"><button type="button" class="mdel" data-act="delCt" aria-label="Remove">×</button></div>`;
+function contactsHTML(list){const l=list.length?list:[{name:'',phone:''}];return`<div class="ct-list">${l.map(ctRow).join('')}</div><button type="button" class="btn ct-add" data-act="addCt">+ Add another person</button>`}
+function readContacts(root){return[...root.querySelectorAll('.ct-row')].map(r=>({name:r.querySelector('[data-c=name]').value.trim(),phone:r.querySelector('[data-c=phone]').value.trim()})).filter(c=>c.name||c.phone).slice(0,6)}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-act="addCt"],[data-act="delCt"]');if(!b)return;e.preventDefault();
+  if(b.dataset.act==='addCt'){const list=b.parentElement.querySelector('.ct-list');if(list.children.length>=6){b.hidden=true;return}const t=document.createElement('div');t.innerHTML=ctRow({name:'',phone:''});list.appendChild(t.firstElementChild);list.lastElementChild.querySelector('input').focus();if(list.children.length>=6)b.hidden=true}
+  else{const list=b.closest('.ct-list'),row=b.closest('.ct-row');if(list.children.length>1)row.remove();else row.querySelectorAll('input').forEach(i=>i.value='');const add=list.parentElement.querySelector('[data-act="addCt"]');if(add)add.hidden=false}});
+/* Trusted people on the SOS page */
 function renderPerson(){
-  const box=$('myPerson');if(!profile||!profile.contactPhone){box.hidden=true;return}
-  const who=esc(profile.contactName||'my person'),num=esc(profile.contactPhone),tel=profile.contactPhone.replace(/[^\d+]/g,'');
+  const box=$('myPerson'),cs=contactsOf(profile).filter(c=>c.phone);if(!cs.length){box.hidden=true;return}
+  box.innerHTML=cs.map(c=>{const tel=c.phone.replace(/[^\d+]/g,''),who=esc(c.name||c.phone);return`<div class="ct-call"><span class="ct-who"><b>${who}</b><small>${esc(c.phone)}</small></span><a class="btn sage ct-btn" href="tel:${tel}">📞 Call</a><a class="btn ct-btn" href="sms:${tel}" aria-label="Message ${who}">💬</a></div>`}).join('');box.hidden=false;return;
+  const who='',num='',tel='';
   box.innerHTML=`<a class="ln me" href="tel:${tel}">📞 Call ${who}</a><span class="ln">${num}</span>`;box.hidden=false;
 }
 
 /* Profile panel */
 function openMe(){
-  {$('pName').value=profile?profile.name:'';$('pCName').value=profile?profile.contactName||'':'';$('pCPhone').value=profile?profile.contactPhone||'':'';
-    ['profileMsg','pinMsg','backupMsg','remMsg'].forEach(i=>$(i).textContent='');renderRem();renderRoutine();if(typeof renderG==='function')renderG();if(typeof renderMusicSettings==='function')renderMusicSettings();$('meTitle').textContent=profile&&profile.name?profile.name:'Me';$('sumAbout').textContent=profile?(profile.name+(profile.contactName?' · trusted person: '+profile.contactName:'')):'Your name and trusted person'}
+  {$('pName').value=profile?profile.name:'';$('pContacts').innerHTML=contactsHTML(contactsOf(profile));
+    ['profileMsg','pinMsg','backupMsg','remMsg'].forEach(i=>$(i).textContent='');renderRem();renderRoutine();if(typeof renderG==='function')renderG();if(typeof renderMusicSettings==='function')renderMusicSettings();$('meTitle').textContent=profile&&profile.name?profile.name:'Me';$('sumAbout').textContent=profile?(profile.name+(contactsOf(profile).length?' · trusted: '+contactsOf(profile).map(c=>c.name||c.phone).join(', '):'')):'Your name and trusted people'}
 }
 $('profileForm').addEventListener('submit',e=>{e.preventDefault();if(!profile)return;
   const n=$('pName').value.trim();if(!n){$('profileMsg').textContent='Please add your name.';return}
-  profile.name=n;profile.contactName=$('pCName').value.trim();profile.contactPhone=$('pCPhone').value.trim();saveProfile();update();renderPerson();if(CAP)scheduleReminders();$('profileMsg').textContent='Saved.'});
+  profile.name=n;setContacts(profile,readContacts($('pContacts')));saveProfile();openMe();$('profileMsg').textContent='Saved.';update();renderPerson();if(CAP)scheduleReminders();$('profileMsg').textContent='Saved.'});
 $('pinForm').addEventListener('input',e=>{if(e.target.classList.contains('pin'))e.target.value=e.target.value.replace(/\D/g,'').slice(0,6)});
 $('pinForm').addEventListener('submit',async e=>{e.preventDefault();const m=$('pinMsg');
   if(await hashPin($('pinOld').value,profile.salt)!==profile.hash){m.textContent='Your current PIN didn’t match.';return}
@@ -2289,7 +2311,7 @@ $('exportBtn').addEventListener('click',async()=>{
     const get=k=>{try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}};
     let pics=[];try{pics=await Promise.all((await store.all()).map(p=>toDataURL(p.src)))}catch(e){}
     const data={app:'sunshine',version:1,exported:new Date().toISOString(),
-      profile:profile?{name:profile.name,contactName:profile.contactName,contactPhone:profile.contactPhone}:null,
+      profile:profile?{name:profile.name,contactName:profile.contactName,contactPhone:profile.contactPhone,contacts:contactsOf(profile)}:null,
       journey:get(REAL_KEY),sos:get(SOSKEY)||[],config:CFG,photos:pics};
     const fname=`sunshine-backup-${today()}.json`;
     if(CAP){const FS=plug('Filesystem'),SH=plug('Share');
@@ -2317,7 +2339,7 @@ $('importConfirm').addEventListener('click',async e=>{
     if(d.journey)localStorage.setItem(REAL_KEY,JSON.stringify(d.journey));
     if(d.config)saveCfg(d.config);
     localStorage.setItem(SOSKEY,JSON.stringify(d.sos||[]));
-    if(d.profile&&profile){profile.name=d.profile.name||profile.name;profile.contactName=d.profile.contactName||'';profile.contactPhone=d.profile.contactPhone||'';saveProfile()}
+    if(d.profile&&profile){profile.name=d.profile.name||profile.name;setContacts(profile,contactsOf(d.profile));saveProfile()}
     for(const src of (d.photos||[]))try{await store.add(src)}catch(err){}
     $('backupMsg').textContent='Imported. Reloading…';setTimeout(()=>location.reload(),700);
   }catch(err){$('backupMsg').textContent='Import didn’t finish. Please try again.'}
@@ -2392,7 +2414,7 @@ async function photoList(){try{return await Promise.all((await store.all()).map(
 const photoHash=pics=>pics.length?fnv(pics.map(p=>p.length+':'+p.slice(-48)).join('|')):'none';
 /* Photos live in their own Drive file, so everyday syncs stay tiny and fast */
 async function makeSnapshot(){const pics=await photoList();
-  const snap={app:'sunshine',version:3,profile:profile?{name:profile.name,contactName:profile.contactName||'',contactPhone:profile.contactPhone||''}:null,
+  const snap={app:'sunshine',version:3,profile:profile?{name:profile.name,contactName:profile.contactName||'',contactPhone:profile.contactPhone||'',contacts:contactsOf(profile)}:null,
     config:CFG,journey:LSGET(KEY),sos:LSGET(SOSKEY)||[],music:musicCfg(),comfort:loadMedia(),reminders:LSGET(REMKEY),theme:themePref(),study:Object.assign({},study,{run:null}),photosHash:photoHash(pics)};
   Object.defineProperty(snap,'_pics',{value:pics,enumerable:false});return snap}
 function snapHash(d){const x=Object.assign({},d,{updated:0});if(Array.isArray(x.photos))x.photos=x.photos.map(p=>p.length+':'+p.slice(-24));return fnv(JSON.stringify(x))}
@@ -2413,7 +2435,7 @@ async function applySnapshot(d,withProfile){
   if(!pics&&d.photosHash){if(d.photosHash==='none')pics=[];else if(d.photosHash!==photoHash(await photoList())){try{const pf=await driveFind(DRIVE_PHOTOS);if(pf){const pd=await driveGet(pf.id);if(pd&&Array.isArray(pd.photos))pics=pd.photos}}catch(e){}}}
   if(pics){if(photoHash(pics)!==photoHash(await photoList())){try{for(const p of (await store.all()))await store.del(p.id)}catch(e){}
     for(const src of pics)try{await store.add(src)}catch(e){}try{photos=await store.all()}catch(e){}idx=0;showPhoto()}gSave({photosUp:photoHash(pics)})}
-  if(withProfile&&d.profile&&profile){profile.name=d.profile.name||profile.name;profile.contactName=d.profile.contactName||'';profile.contactPhone=d.profile.contactPhone||'';saveProfile()}
+  if(withProfile&&d.profile&&profile){profile.name=d.profile.name||profile.name;setContacts(profile,contactsOf(d.profile));saveProfile()}
   state=load()||state;sosLog=LSGET(SOSKEY)||[];view=curDay();renderHabitCards();renderPerson();
   }finally{applying=false}
 }
@@ -2512,6 +2534,10 @@ function remSettings(){let s=null;try{s=JSON.parse(localStorage.getItem(REMKEY))
   s=s||{on:true,items:{}};s.items=s.items||{};getReminders().forEach(r=>{s.items[r.id]=Object.assign({on:true},s.items[r.id]||{})});return s}
 function saveRem(s){try{localStorage.setItem(REMKEY,JSON.stringify(s))}catch(e){}}
 const fill=(t,n)=>t.replace('{n}',n);
+const REM_SOUNDS=[['chime','🔔 Gentle chime'],['phone','📱 Phone sound'],['quiet','🔕 Silent']];
+const remSound=()=>{const s=remSettings();return['chime','phone','quiet'].includes(s.sound)?s.sound:'chime'};
+const chan=()=>'sun-'+remSound();
+const sndOpt=()=>remSound()==='chime'?{sound:'sunshine_chime.wav'}:{};
 function buildNotifications(){
   const s=remSettings(),n=(profile&&profile.name)||'friend',now=Date.now(),list=[];let id=1;
   if(!s.on)return list;
@@ -2526,7 +2552,7 @@ function buildNotifications(){
         const at=new Date(day);at.setHours(hh,mm,0,0);if(at.getTime()<=now+30000)return;
         const pick=(arr,o)=>arr[(d+ri+k+o)%arr.length];
         const title=fill(pick(r.t,0),n),body=fill(pick(r.b,1),n);
-        list.push({id:id++,title,body,largeBody:body,summaryText:'Sunshine',channelId:'sunshine',smallIcon:'ic_stat_sunshine',iconColor:'#F08A3C',
+        list.push({id:id++,title,body,largeBody:body,summaryText:'Sunshine',channelId:chan(),...sndOpt(),smallIcon:'ic_stat_sunshine',iconColor:'#F08A3C',
           schedule:{at,allowWhileIdle:true},actionTypeId:r.water?'WATER':r.sub?'HABIT':undefined,extra:{card:r.card,sub:r.sub||'',kind:r.kind||'',label:r.kind==='meds'?'':(r.done||r.label)}});
       });
     });
@@ -2548,7 +2574,11 @@ async function scheduleReminders(){
 }
 async function setupNative(){
   if(!LN)return;
-  try{await LN.createChannel({id:'sunshine',name:'Gentle reminders',description:'Friendly reminders for your Sunshine habits',importance:4,visibility:0,lights:true,lightColor:'#F4C25B',vibration:true})}catch(e){}
+  /* Android fixes a channel's sound when it is created, so each sound choice has its own channel */
+  try{await LN.createChannel({id:'sun-chime',name:'Reminders · gentle chime',description:'Sunshine reminders with a soft chime',importance:4,visibility:0,sound:'sunshine_chime.wav',lights:true,lightColor:'#F4C25B',vibration:true})}catch(e){}
+  try{await LN.createChannel({id:'sun-phone',name:'Reminders · phone sound',description:'Sunshine reminders with your phone’s notification sound',importance:4,visibility:0,lights:true,lightColor:'#F4C25B',vibration:true})}catch(e){}
+  try{await LN.createChannel({id:'sun-quiet',name:'Reminders · silent',description:'Sunshine reminders without sound',importance:2,visibility:0,vibration:false})}catch(e){}
+  try{await LN.deleteChannel({id:'sunshine'})}catch(e){}
   try{await LN.registerActionTypes({types:[{id:'HABIT',actions:[{id:'done',title:'✓ Done'},{id:'snooze',title:'In 10 min'}]},{id:'WATER',actions:[{id:'w250',title:'+250 ml'},{id:'w500',title:'+500 ml'}]}]})}catch(e){}
   try{await LN.addListener('localNotificationActionPerformed',ev=>{
     const nf=ev&&ev.notification,ex=(nf&&nf.extra)||{},act=ev&&ev.actionId;
@@ -2566,11 +2596,15 @@ async function askNotify(){
     try{const ex=await LN.checkExactNotificationSetting();if(ex&&ex.exact_alarm&&ex.exact_alarm!=='granted')$('remMsg').textContent='For on-time reminders, allow "Alarms & reminders" for Sunshine in your phone settings.'}catch(e){}
     return p.display==='granted'}catch(e){return false}
 }
+function previewChime(){const c=ensureCtx();if(!c)return;const now=c.currentTime,o2=c.createGain();o2.gain.value=.5;o2.connect(c.destination);
+  [[659.25,0,.42],[987.77,.16,.36],[1318.51,.32,.22],[493.88,.32,.14]].forEach(([f,d,a])=>[[1,1],[2,.32],[3.01,.12]].forEach(([m,k])=>{const o=c.createOscillator(),g=c.createGain();o.frequency.value=f*m;
+    g.gain.setValueAtTime(0,now+d);g.gain.linearRampToValueAtTime(a*k*.5,now+d+.005);g.gain.exponentialRampToValueAtTime(.0001,now+d+1.8);o.connect(g);g.connect(o2);o.start(now+d);o.stop(now+d+2)}))}
 function renderRem(){
   const box=$('remBody');
   if(!CAP){box.innerHTML='<p class="soft">Timed reminders work in the Sunshine Android app. Download it from the <a href="https://github.com/msja1729/sunshine/releases/latest" target="_blank" rel="noopener">Releases page</a>.</p>';return}
   const s=remSettings();
   box.innerHTML=`<label class="toggle-row"><input type="checkbox" id="remOn" ${s.on?'checked':''}> Send me gentle reminders</label>
+   <div class="field"><label>Reminder sound</label><div class="seg2 rem-snd">${REM_SOUNDS.map(([k,l])=>`<button type="button" data-rsnd="${k}" aria-pressed="${remSound()===k}">${l}</button>`).join('')}</div></div>
    <div class="rem-list" ${s.on?'':'hidden'}>${getReminders().map(r=>{const it=s.items[r.id]||{on:true};return`<div class="rem-row"><label><input type="checkbox" data-rem="${esc(r.id)}" ${it.on?'checked':''}>${esc(r.label)}</label><span class="fixed">${r.fixed?esc(r.fixed):fmtT(r.time)+(r.days&&r.days!=='daily'?' · '+daysLabel(r.days):'')}</span></div>`}).join('')}</div>
    <p class="soft">Times follow your routine. Change them in My routine.</p>
    <div class="btns"><button class="btn sage" id="remSave">Save reminders</button><button class="btn" id="remTest">Send a test</button></div>`;
@@ -2578,6 +2612,8 @@ function renderRem(){
 $('remBox').addEventListener('change',e=>{if(e.target.id==='remOn')e.target.closest('.pbox').querySelector('.rem-list').hidden=!e.target.checked});
 $('remBox').addEventListener('click',async e=>{
   const b=e.target.closest('button');if(!b)return;const m=$('remMsg');
+  if(b.dataset.rsnd){const s=remSettings();s.sound=b.dataset.rsnd;saveRem(s);b.parentElement.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b));
+    if(b.dataset.rsnd==='chime')previewChime();await scheduleReminders();m.textContent=b.dataset.rsnd==='quiet'?'Reminders will arrive quietly, without sound.':'Saved. Tap “Send a test” to hear it.';return}
   if(b.id==='remSave'){
     const s=remSettings();s.on=$('remOn').checked;
     document.querySelectorAll('[data-rem]').forEach(c=>{s.items[c.dataset.rem].on=c.checked});
@@ -2588,7 +2624,7 @@ $('remBox').addEventListener('click',async e=>{
   if(b.id==='remTest'){
     if(!(await askNotify())){m.textContent='Notifications are turned off for Sunshine. Turn them on in your phone’s app settings.';return}
     const n=(profile&&profile.name)||'friend';
-    try{await LN.schedule({notifications:[{id:99999,title:`Hello, ${n} ☀️`,body:'This is how your Sunshine reminders will look. You’re doing beautifully.',largeBody:'This is how your Sunshine reminders will look. You’re doing beautifully.',summaryText:'Sunshine',channelId:'sunshine',smallIcon:'ic_stat_sunshine',iconColor:'#F08A3C',schedule:{at:new Date(Date.now()+5000),allowWhileIdle:true},extra:{card:'wins'}}]});m.textContent='A test reminder will arrive in about 5 seconds.'}
+    try{await LN.schedule({notifications:[{id:99999,title:`Hello, ${n} ☀️`,body:'This is how your Sunshine reminders will look. You’re doing beautifully.',largeBody:'This is how your Sunshine reminders will look. You’re doing beautifully.',summaryText:'Sunshine',channelId:chan(),...sndOpt(),smallIcon:'ic_stat_sunshine',iconColor:'#F08A3C',schedule:{at:new Date(Date.now()+5000),allowWhileIdle:true},extra:{card:'wins'}}]});m.textContent='A test reminder will arrive in about 5 seconds.'}
     catch(err){m.textContent='The test couldn’t be sent.'}}
 });
 if(CAP){
@@ -2706,7 +2742,8 @@ $('mFile').addEventListener('change',async e=>{
   if(!m.textContent.includes('couldn'))m.textContent='Saved. It will play softly each time you open Sunshine.';
 });
 loadTrack();
-window.sunshineDebug={notifDone:(ex,a)=>notifDone(ex,a),growth:()=>growth(),run:()=>run&&{phase:run.phase,left:run.left,done:run.doneMs,cycle:run.cycle}};
+window.sunshineDebug={record:ms=>new Promise(res=>{const d=actx.createMediaStreamDestination();SND.out.connect(d);const r=new MediaRecorder(d.stream),ch=[];r.ondataavailable=e=>ch.push(e.data);
+  r.onstop=()=>{SND.out.disconnect(d);const f=new FileReader();f.onload=()=>res(f.result.split(',')[1]);f.readAsDataURL(new Blob(ch,{type:'audio/webm'}))};r.start();setTimeout(()=>r.stop(),ms)}),level:()=>{if(!SND.out||!actx)return null;if(!SND.an){SND.an=actx.createAnalyser();SND.an.fftSize=2048;SND.out.connect(SND.an)}const d=new Float32Array(2048);SND.an.getFloatTimeDomainData(d);let r=0;for(const x of d)r+=x*x;return Math.sqrt(r/d.length)},snd:()=>({amb:SND.ambKind,trick:!!SND.trick,beat:SND.beatKind,mine:!!studyTrack}),notifDone:(ex,a)=>notifDone(ex,a),growth:()=>growth(),run:()=>run&&{phase:run.phase,left:run.left,done:run.doneMs,cycle:run.cycle}};
 window.sunshineMusicStatus=()=>({playing,source:curSource,songPaused:audioEl?audioEl.paused:null,songVolume:audioEl?+audioEl.volume.toFixed(2):null,chimes:actx?actx.state:null});
 
 /* ================= Tree of Knowledge: a living, procedurally grown tree ================= */
@@ -3034,12 +3071,12 @@ function notifDone(ex,action){
   update();showJoy({eyebrow:'Lovely',title,kind,color:col,sub});
 }
 async function snoozeNotif(nf){if(!LN||!nf)return;const at=new Date(Date.now()+10*60000);
-  try{await LN.schedule({notifications:[{id:90000+Math.floor(Math.random()*9000),title:nf.title,body:nf.body,largeBody:nf.body,summaryText:'Sunshine',channelId:'sunshine',smallIcon:'ic_stat_sunshine',iconColor:'#F08A3C',actionTypeId:nf.actionTypeId||'HABIT',extra:nf.extra||{},schedule:{at,allowWhileIdle:true}}]})}catch(e){}
+  try{await LN.schedule({notifications:[{id:90000+Math.floor(Math.random()*9000),title:nf.title,body:nf.body,largeBody:nf.body,summaryText:'Sunshine',channelId:chan(),...sndOpt(),smallIcon:'ic_stat_sunshine',iconColor:'#F08A3C',actionTypeId:nf.actionTypeId||'HABIT',extra:nf.extra||{},schedule:{at,allowWhileIdle:true}}]})}catch(e){}
   toast(`Okay. I’ll remind you again at ${at.toLocaleTimeString([],{hour:'numeric',minute:'2-digit'})}.`)}
 
 /* ================= Study garden ================= */
 const STUDYKEY='sunshine-study';
-const SDEF={focus:25,brk:5,longBrk:15,longEvery:4,plan:50,label:'',sound:'rain',beat:'off',vol:.6,beatVol:.35,bells:true,water:true,lock:true,away:true,autoNext:true,days:{},run:null};
+const SDEF={focus:25,brk:5,longBrk:15,longEvery:4,plan:50,label:'',mineName:'',sound:'piano',beat:'off',vol:.6,beatVol:.35,bells:true,water:true,lock:true,away:true,autoNext:true,days:{},run:null};
 function loadStudy(){let s=null;try{s=JSON.parse(localStorage.getItem(STUDYKEY))}catch(e){}const o=Object.assign(clone(SDEF),s||{});o.days=o.days||{};return o}
 let study=loadStudy(),studyT=0;
 function saveStudy(){const cut=ymd(new Date(Date.now()-90*864e5));Object.keys(study.days).forEach(k=>{if(k<cut)delete study.days[k]});try{localStorage.setItem(STUDYKEY,JSON.stringify(study))}catch(e){}}
@@ -3052,7 +3089,11 @@ const fmtClock=ms=>{const s=Math.max(0,Math.ceil(ms/1000)),m=Math.floor(s/60);re
 
 /* ---------- sounds, all generated on the phone ---------- */
 const SND={out:null,amb:null,ambKind:null,beat:null,beatKind:null,trick:null,white:null,pink:null,brown:null};
-function sctx(){const c=ensureCtx();if(!c)return null;if(!SND.out){SND.out=c.createGain();SND.out.gain.value=1;SND.out.connect(c.destination)}return c}
+function sctx(){const c=ensureCtx();if(!c)return null;
+  if(!SND.out){SND.out=c.createGain();SND.out.gain.value=1;const comp=c.createDynamicsCompressor();comp.threshold.value=-20;comp.knee.value=18;comp.ratio.value=3;comp.attack.value=.02;comp.release.value=.3;
+    const warm=c.createBiquadFilter();warm.type='lowpass';warm.frequency.value=9000;SND.out.connect(warm);warm.connect(comp);comp.connect(c.destination)}
+  return c}
+function irBuf(c){if(SND.ir)return SND.ir;const len=Math.floor(c.sampleRate*3),b=c.createBuffer(2,len,c.sampleRate);for(let ch=0;ch<2;ch++){const d=b.getChannelData(ch);for(let i=0;i<len;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/len,3)}return SND.ir=b}
 function nbuf(c,kind){if(SND[kind])return SND[kind];const n=c.sampleRate*4,b=c.createBuffer(1,n,c.sampleRate),d=b.getChannelData(0);let l=0,b0=0,b1=0,b2=0;
   for(let i=0;i<n;i++){const w=Math.random()*2-1;if(kind==='brown'){l=(l+.02*w)/1.02;d[i]=l*3.2}else if(kind==='pink'){b0=.99765*b0+w*.099046;b1=.963*b1+w*.2965164;b2=.57*b2+w*1.0526913;d[i]=(b0+b1+b2+w*.1848)*.11}else d[i]=w*.5}
   return SND[kind]=b}
@@ -3069,8 +3110,12 @@ function buildAmb(kind){
   const chirp=()=>{const now=c.currentTime,n=2+(Math.random()*4|0),base=2200+Math.random()*1800,p=pan(Math.random()*1.6-.8);p.connect(g);
     for(let i=0;i<n;i++){const o=c.createOscillator(),e=gain(0),t0=now+i*(.09+Math.random()*.06);o.type='sine';o.frequency.setValueAtTime(base,t0);o.frequency.exponentialRampToValueAtTime(base*(1.25+Math.random()*.4),t0+.07);
       e.gain.setValueAtTime(0,t0);e.gain.linearRampToValueAtTime(.035,t0+.015);e.gain.exponentialRampToValueAtTime(.0005,t0+.11);o.connect(e);e.connect(p);o.start(t0);o.stop(t0+.13)}};
-  if(kind==='rain'){loop('pink',F('highpass',380),F('lowpass',2800),gain(.62));loop('brown',F('lowpass',300),gain(.35));
-    const drop=()=>{if(!alive)return;burst(1500+Math.random()*4200,4+Math.random()*6,.04+Math.random()*.1,.03+Math.random()*.06,Math.random()*2-1);tm=setTimeout(drop,18+Math.random()*80)};drop()}
+  const verb=wet=>{const cv=c.createConvolver();cv.buffer=irBuf(c);const w=gain(wet);cv.connect(w);w.connect(g);return cv};
+  if(kind==='rain'){const body=loop('pink',F('bandpass',850,.55),gain(.55));const sheen=loop('pink',F('highpass',2400),F('lowpass',5200),gain(.07));loop('brown',F('lowpass',220),gain(.28));
+    const swell=gain(1);g.disconnect();g.connect(swell);swell.connect(SND.out);lfo(swell.gain,.045,.12);
+    const rv=verb(.25);const drop=()=>{if(!alive)return;const now=c.currentTime,s2=c.createBufferSource();s2.buffer=nbuf(c,'pink');const bp=F('bandpass',900+Math.random()*1700,3+Math.random()*4),eg=gain(0),pn=pan(Math.random()*1.6-.8);
+      const pk=.015+Math.random()*.035;eg.gain.setValueAtTime(0,now);eg.gain.linearRampToValueAtTime(pk,now+.006);eg.gain.exponentialRampToValueAtTime(.0003,now+.08+Math.random()*.08);s2.connect(bp);bp.connect(eg);eg.connect(pn);pn.connect(g);pn.connect(rv);s2.start(now,Math.random()*3);s2.stop(now+.25);
+      tm=setTimeout(drop,35+Math.random()*120)};drop()}
   if(kind==='forest'){const w=loop('brown',F('lowpass',520),gain(.55));const lg=gain(1);w.disconnect();w.connect(lg);lg.connect(g);lfo(lg.gain,.07,.35);
     loop('pink',F('bandpass',3200,.8),gain(.05));const bird=()=>{if(!alive)return;chirp();tm=setTimeout(bird,1800+Math.random()*5200)};tm=setTimeout(bird,900)}
   if(kind==='stream'){loop('white',F('bandpass',650,.9),gain(.5));const b=F('bandpass',2000,2.5);loop('pink',b,gain(.35));lfo(b.frequency,.37,700);
@@ -3082,7 +3127,31 @@ function buildAmb(kind){
   if(kind==='pad'){const lp=F('lowpass',900);lp.connect(g);const CH=[[110,164.81,220,277.18],[98,146.83,196,246.94],[87.31,130.81,174.61,220],[98,146.83,196,293.66]];
     const os=CH[0].map((f,i)=>{const o=c.createOscillator();o.type=i%2?'sine':'triangle';o.frequency.value=f;const e=gain(.05);lfo(e.gain,.05+Math.random()*.06,.02);o.connect(e);e.connect(lp);o.start();nodes.push(o);return o});
     let ci=0;tm2=setInterval(()=>{ci=(ci+1)%CH.length;os.forEach((o,i)=>o.frequency.setTargetAtTime(CH[ci][i],c.currentTime,2.5))},14000);loop('pink',F('lowpass',500),gain(.05))}
-  const lvl={rain:1,forest:1,stream:.8,waves:1,fire:.9,brown:.8,pad:1.3}[kind]||1;
+  /* soft piano tone: a few decaying partials, like a felt piano */
+  const pnote=(t,f,v,dest,len=3.2)=>{[[1,1],[2,.38],[3,.13],[4.03,.06],[5.02,.025]].forEach(([m,a])=>{const o=c.createOscillator(),e=gain(0);o.type='sine';o.frequency.value=f*m;
+    e.gain.setValueAtTime(0,t);e.gain.linearRampToValueAtTime(v*a,t+.006);e.gain.exponentialRampToValueAtTime(.0001,t+len/Math.sqrt(m));o.connect(e);e.connect(dest);o.start(t);o.stop(t+len+.1)})};
+  if(kind==='piano'){const bus=gain(1),lp=F('lowpass',3200);bus.connect(lp);lp.connect(g);lp.connect(verb(.55));
+    const SC=[261.63,293.66,329.63,392,440,523.25,587.33,659.25,783.99],ROOT=[[130.81,196],[110,164.81],[87.31,130.81],[98,146.83]];let ni=4,bar=0,next=c.currentTime+.4,chordAt=next;
+    const sched=()=>{if(!alive)return;while(next<c.currentTime+.6){if(next>=chordAt){const r=ROOT[bar%4];pnote(next,r[0],.07,bus,5);pnote(next+.05,r[1],.045,bus,5);bar++;chordAt=next+7.2}
+      ni=Math.max(0,Math.min(SC.length-1,ni+[-2,-1,-1,1,1,2,0][Math.random()*7|0]));pnote(next,SC[ni],.05+Math.random()*.03,bus);if(Math.random()<.25)pnote(next+.02,SC[Math.max(0,ni-2)],.03,bus);
+      next+=[.6,.9,.9,1.2,1.8,2.4][Math.random()*6|0]}};tm2=setInterval(sched,120);sched()}
+  if(kind==='lofi'){const bus=gain(1),lp=F('lowpass',2400);bus.connect(lp);lp.connect(g);lp.connect(verb(.3));const beat=60/72;let next=c.currentTime+.2,step=0;
+    const CH=[[220,261.63,329.63,392],[174.61,220,261.63,329.63],[196,246.94,293.66,349.23],[164.81,207.65,246.94,293.66]];
+    const ep=(t,f,v,d)=>{const o=c.createOscillator(),o2=c.createOscillator(),e=gain(0),tr=c.createOscillator(),tg=gain(v*.25);o.type='sine';o2.type='triangle';o.frequency.value=f;o2.frequency.value=f*2.001;tr.frequency.value=4.5;tr.connect(tg);tg.connect(e.gain);
+      const e2=gain(.12);o2.connect(e2);e2.connect(e);o.connect(e);e.connect(bus);e.gain.setValueAtTime(0,t);e.gain.linearRampToValueAtTime(v,t+.02);e.gain.exponentialRampToValueAtTime(.0001,t+d);[o,o2,tr].forEach(x=>{x.start(t);x.stop(t+d+.1)})};
+    const kick=t=>{const o=c.createOscillator(),e=gain(0);o.frequency.setValueAtTime(105,t);o.frequency.exponentialRampToValueAtTime(42,t+.14);e.gain.setValueAtTime(.32,t);e.gain.exponentialRampToValueAtTime(.0001,t+.3);o.connect(e);e.connect(bus);o.start(t);o.stop(t+.35)};
+    const tick=(t,f,v,l)=>{const n=c.createBufferSource();n.buffer=nbuf(c,'white');const h=F(f>3000?'highpass':'bandpass',f,f>3000?0:1.2),e=gain(0);e.gain.setValueAtTime(v,t);e.gain.exponentialRampToValueAtTime(.0001,t+l);n.connect(h);h.connect(e);e.connect(bus);n.start(t,Math.random()*3);n.stop(t+l+.05)};
+    const sched=()=>{if(!alive)return;while(next<c.currentTime+.5){const pos=step%8,ch=CH[Math.floor(step/8)%4],t=next+(pos%2?beat*.09:0);
+      if(pos===0){ch.forEach((f,i)=>ep(t+i*.012,f,.045,beat*3.6));ep(t,ch[0]/2,.07,beat*3)}if(pos===5)ch.slice(1).forEach(f=>ep(t,f*2,.018,beat*1.5));
+      if(pos===0||pos===3&&Math.random()<.5||pos===5)kick(t);if(pos===2||pos===6)tick(t,1800,.05,.12);tick(t,7500,pos%2?.012:.02,.04);step++;next+=beat/2}};
+    tm2=setInterval(sched,100);sched();
+    const crackle=()=>{if(!alive)return;burst(3000+Math.random()*3000,2,.006+Math.random()*.01,.004,Math.random()-.5);tm=setTimeout(crackle,40+Math.random()*260)};crackle();loop('pink',F('bandpass',1200,.5),gain(.012))}
+  if(kind==='bowls'){const rv=verb(.5),bus=gain(1);bus.connect(g);bus.connect(rv);loop('brown',F('lowpass',160),gain(.18));
+    const ring=()=>{if(!alive)return;const now=c.currentTime,f=[130.81,146.83,174.61,196,220,261.63][Math.random()*6|0];
+      [[1,.09],[2.76,.035],[5.4,.012]].forEach(([m,a])=>{const o=c.createOscillator(),e=gain(0),l=c.createOscillator(),lg=gain(a*.3);o.frequency.value=f*m;l.frequency.value=1.5+Math.random();l.connect(lg);lg.connect(e.gain);
+        e.gain.setValueAtTime(0,now);e.gain.linearRampToValueAtTime(a,now+.02);e.gain.exponentialRampToValueAtTime(.0001,now+12/Math.sqrt(m));o.connect(e);e.connect(bus);o.start(now);l.start(now);o.stop(now+13);l.stop(now+13)});
+      tm=setTimeout(ring,6500+Math.random()*5500)};tm=setTimeout(ring,300)}
+  const lvl={rain:1.1,forest:.6,stream:1.3,waves:.7,fire:.9,brown:.9,pad:1,piano:3,lofi:2.4,bowls:1.6}[kind]||1;
   return{g,lvl,stop(sec=1.2){alive=false;clearTimeout(tm);clearInterval(tm2);const now=c.currentTime;g.gain.cancelScheduledValues(now);g.gain.setValueAtTime(g.gain.value,now);g.gain.linearRampToValueAtTime(0,now+sec);
     setTimeout(()=>{nodes.forEach(n=>{try{n.stop()}catch(e){}});try{g.disconnect()}catch(e){}},sec*1000+120)}};
 }
@@ -3090,12 +3159,22 @@ const BEATS={alpha:{hz:10,car:200,name:'Alpha 10 Hz',d:'calm focus'},beta:{hz:16
 function buildBeat(kind){const c=sctx(),b=BEATS[kind];if(!c||!b)return null;const g=c.createGain();g.gain.value=0;g.connect(SND.out);
   const m=c.createChannelMerger(2);m.connect(g);const os=[0,1].map(ch=>{const o=c.createOscillator();o.type='sine';o.frequency.value=b.car+(ch?b.hz:0);const e=c.createGain();e.gain.value=.5;o.connect(e);e.connect(m,0,ch);o.start();return o});
   return{g,lvl:.16,stop(sec=1){const now=c.currentTime;g.gain.cancelScheduledValues(now);g.gain.setValueAtTime(g.gain.value,now);g.gain.linearRampToValueAtTime(0,now+sec);setTimeout(()=>{os.forEach(o=>{try{o.stop()}catch(e){}})},sec*1000+100)}}}
-function buildTrickle(){const c=sctx();if(!c)return null;const g=c.createGain();g.gain.value=0;g.connect(SND.out);const s=c.createBufferSource();s.buffer=nbuf(c,'white');s.loop=true;
-  const b1=c.createBiquadFilter();b1.type='highpass';b1.frequency.value=1800;const b2=c.createBiquadFilter();b2.type='bandpass';b2.frequency.value=5200;b2.Q.value=.7;
-  const am=c.createGain();am.gain.value=.6;const o=c.createOscillator();o.frequency.value=13;const od=c.createGain();od.gain.value=.25;o.connect(od);od.connect(am.gain);
-  s.connect(b1);s.connect(b2);b1.connect(am);b2.connect(am);am.connect(g);s.start();o.start();return{g,stop(){try{s.stop();o.stop()}catch(e){}}}}
+function buildTrickle(){const c=sctx();if(!c)return null;const g=c.createGain();g.gain.value=0;g.connect(SND.out);const s=c.createBufferSource();s.buffer=nbuf(c,'pink');s.loop=true;
+  const b1=c.createBiquadFilter();b1.type='bandpass';b1.frequency.value=1300;b1.Q.value=.6;const b2=c.createBiquadFilter();b2.type='lowpass';b2.frequency.value=2600;
+  const am=c.createGain();am.gain.value=.7;const o=c.createOscillator();o.frequency.value=.35;const od=c.createGain();od.gain.value=.2;o.connect(od);od.connect(am.gain);
+  s.connect(b1);b1.connect(b2);b2.connect(am);am.connect(g);s.start();o.start();return{g,stop(){try{s.stop();o.stop()}catch(e){}}}}
 const ramp=(node,v,sec=.8)=>{if(!node||!actx)return;const p=node.g.gain,now=actx.currentTime;p.cancelScheduledValues(now);p.setValueAtTime(p.value,now);p.linearRampToValueAtTime(v,now+sec)};
-function setAmb(kind,vol){if(SND.ambKind!==kind){if(SND.amb)SND.amb.stop();SND.amb=buildAmb(kind);SND.ambKind=kind}if(SND.amb)ramp(SND.amb,vol*SND.amb.lvl,1.5)}
+const NATURE=new Set(['rain','forest','stream','waves']);
+let studyTrack=null,studyAudio=null;
+async function loadStudyTrack(){try{const db=await mdb();studyTrack=await new Promise(res=>{const r=db.transaction('tracks').objectStore('tracks').get('study');r.onsuccess=()=>res(r.result||null);r.onerror=()=>res(null)})}catch(e){studyTrack=null}}
+async function storeStudyTrack(blob){const db=await mdb();await new Promise((res,rej)=>{const tx=db.transaction('tracks','readwrite');tx.objectStore('tracks').put(blob,'study');tx.oncomplete=res;tx.onerror=()=>rej(tx.error)})}
+function buildMine(){if(!studyTrack)return null;if(!studyAudio){studyAudio=new Audio(URL.createObjectURL(studyTrack));studyAudio.loop=true}
+  const a=studyAudio;let fade=null;a.volume=0;const p=a.play();if(p&&p.catch)p.catch(()=>{});
+  const to=(v,sec)=>{clearInterval(fade);const st=a.volume,n=Math.max(1,Math.round(sec*10));let k=0;fade=setInterval(()=>{k++;a.volume=Math.max(0,Math.min(1,st+(v-st)*k/n));if(k>=n)clearInterval(fade)},100)};
+  return{lvl:1,mine:true,set:(v,sec)=>to(v,sec),stop(sec=1.2){to(0,sec);setTimeout(()=>{if(SND.ambKind!=='mine')a.pause()},sec*1000+150)}}}
+function setAmb(kind,vol){if(SND.ambKind!==kind){if(SND.amb)SND.amb.stop();SND.amb=kind==='mine'?buildMine():buildAmb(kind);SND.ambKind=kind}
+  if(SND.amb){if(SND.amb.mine)SND.amb.set(Math.min(1,vol),1.5);else ramp(SND.amb,vol*SND.amb.lvl,1.5)}}
+loadStudyTrack();
 function setBeat(kind,vol){if(SND.beatKind!==kind){if(SND.beat)SND.beat.stop();SND.beat=buildBeat(kind);SND.beatKind=kind}if(SND.beat)ramp(SND.beat,vol*SND.beat.lvl,2)}
 function soundsOff(sec=1.5){if(SND.amb)SND.amb.stop(sec);if(SND.beat)SND.beat.stop(sec);if(SND.trick){ramp(SND.trick,0,.4);const t=SND.trick;setTimeout(()=>t.stop(),600)}SND.amb=SND.beat=SND.trick=null;SND.ambKind=SND.beatKind=null}
 function bowl(f=196,vol=.22){const c=sctx();if(!c)return;const now=c.currentTime;
@@ -3103,6 +3182,7 @@ function bowl(f=196,vol=.22){const c=sctx();if(!c)return;const now=c.currentTime
     const l=c.createOscillator();l.frequency.value=1.6+Math.random()*1.4;const lg=c.createGain();lg.gain.value=vol*a*.25;l.connect(lg);lg.connect(e.gain);o.connect(e);e.connect(SND.out);o.start(now);l.start(now);o.stop(now+10);l.stop(now+10)})}
 function chime(notes,step=.24,vol=.1){const c=sctx();if(!c)return;const now=c.currentTime;notes.forEach((f,i)=>{const t0=now+i*step;[[1,1],[2.01,.25],[3,.08]].forEach(([m,a])=>{const o=c.createOscillator();o.frequency.value=f*m;const e=c.createGain();
   e.gain.setValueAtTime(0,t0);e.gain.linearRampToValueAtTime(vol*a,t0+.015);e.gain.exponentialRampToValueAtTime(.0001,t0+2.8/m);o.connect(e);e.connect(SND.out);o.start(t0);o.stop(t0+3)})})}
+const bellsOn=()=>study.bells&&study.sound!=='off';
 const BELL={start:()=>bowl(196,.22),brk:()=>chime([659.25,783.99,987.77],.22,.09),back:()=>chime([587.33,739.99],.3,.09),done:()=>{chime([523.25,659.25,783.99,1046.5],.28,.1);setTimeout(()=>bowl(130.81,.18),900)}};
 
 /* ---------- running a sitting ---------- */
@@ -3129,7 +3209,7 @@ function beginSitting(resume){
   if(!fscene)fscene=TreeScene($('fCanvas'),{onMilestone:m=>{const t=['','Roots are deep. Branches reach out.','Leaves are opening to the light.','Blossoms are coming.','Your Tree of Knowledge is fully grown today.'][m];if(t&&run)fToast(t)},tick:()=>{}});
   const g=growth();fscene.set({seed:treeSeed(today()),G:0,jump:true,pour:false,sun:false}).start();
   setTimeout(()=>{if(fscene)fscene.set({G:g})},60); // a quick time-lapse of the day so far
-  if(study.bells)BELL.start();
+  if(bellsOn())BELL.start();
   applySounds();lockOn();
   clearInterval(studyT);studyT=setInterval(stick,250);stick();showCtrls();
 }
@@ -3137,7 +3217,8 @@ function applySounds(){
   if(!run){soundsOff();return}const on=run.phase==='focus'&&!run.paused;
   setAmb(study.sound,study.vol*(run.phase==='break'?.55:1)*(run.paused?.4:1));
   setBeat(on?study.beat:'off',study.beatVol);
-  if(study.water&&!SND.trick)SND.trick=buildTrickle();
+  if(study.water&&NATURE.has(study.sound)&&!SND.trick)SND.trick=buildTrickle();
+  if(SND.trick&&!(study.water&&NATURE.has(study.sound))){const t=SND.trick;ramp(t,0,.4);setTimeout(()=>t.stop(),600);SND.trick=null}
 }
 function stick(){
   if(!run)return;const now=Date.now();let dt=now-run.last;run.last=now;
@@ -3151,22 +3232,22 @@ function stick(){
   if(now-lastSave>5000){lastSave=now;study.run=run;saveStudy()}
   if(!run)return;
   if(fscene){const dd=sday();fscene.set({G:growth(),pour:run.phase==='focus'&&!run.paused,sun:run.phase==='break',cloud:1-run.doneMs/run.planMs,goal:dd.goal,gauge:fmtDur(dd.ms),left:fmtDur(Math.max(0,run.planMs-run.doneMs))+' of rain left'})}
-  if(SND.trick&&actx){const v=study.water?fscene.pourAmt*.07*Math.max(.3,study.vol):0;SND.trick.g.gain.setTargetAtTime(v,actx.currentTime,.15)}
+  if(SND.trick&&actx){const v=study.water&&NATURE.has(study.sound)?fscene.pourAmt*.05*Math.max(.3,study.vol):0;SND.trick.g.gain.setTargetAtTime(v,actx.currentTime,.15)}
   renderFocus();
 }
 function nextPhase(){
   if(run.phase==='focus'){
     if(run.doneMs>=run.planMs-500){finishSitting(true);return}
-    run.phase='break';run.left=brkLen();if(study.bells)BELL.brk();fToast(run.cycle%study.longEvery===0?'A longer rest. Let the sunlight in.':'Sunlight time. Stand up, stretch, sip water, look far away.');
-  }else{run.cycle++;if(study.autoNext){run.phase='focus';run.left=focusLen();if(study.bells)BELL.back()}else{run.phase='ready';run.left=0;if(study.bells)BELL.back()}}
+    run.phase='break';run.left=brkLen();if(bellsOn())BELL.brk();fToast(run.cycle%study.longEvery===0?'A longer rest. Let the sunlight in.':'Sunlight time. Stand up, stretch, sip water, look far away.');
+  }else{run.cycle++;if(study.autoNext){run.phase='focus';run.left=focusLen();if(bellsOn())BELL.back()}else{run.phase='ready';run.left=0;if(bellsOn())BELL.back()}}
   study.run=run;saveStudy();applySounds();showCtrls();
 }
 function goalReached(){const raw=rawDay();if(raw>=1&&raw<=21&&CFG.habits.includes('study')){rec(curDay()).c.study=true;save()}
-  setTimeout(()=>{if(study.bells)BELL.done()},400)}
+  setTimeout(()=>{if(bellsOn())BELL.done()},400)}
 function finishSitting(complete){
   if(!run)return;const r=run;run=null;study.run=null;clearInterval(studyT);
   if(r.doneMs>=60000)sday().sessions.push({at:r.started,ms:Math.round(r.doneMs),label:r.label||''});
-  saveStudy();soundsOff(2.5);lockOff();if(complete&&study.bells)BELL.done();
+  saveStudy();soundsOff(2.5);lockOff();if(complete&&bellsOn())BELL.done();
   const d=sday(),g=growth(),pct=Math.round(g*100);
   if(fscene)fscene.set({pour:false,sun:true});
   const close=()=>{$('focus').hidden=true;document.body.classList.remove('focusing');if(fscene)fscene.stop();if(location.hash==='#study')renderStudy();update()};
@@ -3199,13 +3280,13 @@ $('focus').addEventListener('click',e=>{const b=e.target.closest('button');if(!b
   else if(b.id==='fSkip'){run.left=0;nextPhase()}
   else if(b.id==='fGo'){run.phase='focus';run.left=focusLen();applySounds();if(study.bells)BELL.start()}
   else if(b.id==='fSound'){const s=$('fSheet');s.hidden=!s.hidden;if(!s.hidden)renderSheet()}
-  else if(b.dataset.famb){study.sound=b.dataset.famb;saveStudy();applySounds();renderSheet()}
+  else if(b.dataset.famb){if(b.dataset.famb==='mine'&&!studyTrack){fToast('Choose your music first on the Study page, under Sounds.');return}study.sound=b.dataset.famb;saveStudy();if(study.sound==='off')soundsOff(.5);applySounds();renderSheet()}
   else if(b.dataset.fbeat){study.beat=b.dataset.fbeat;saveStudy();applySounds();renderSheet()}
   else if(b.id==='fSheetClose')$('fSheet').hidden=true;
 });
 $('focus').addEventListener('input',e=>{if(e.target.id==='fVol'){study.vol=+e.target.value/100;applySounds()}if(e.target.id==='fBVol'){study.beatVol=+e.target.value/100;applySounds()}});
 $('focus').addEventListener('change',()=>saveStudy());
-const AMBS=[['rain','🌧','Rain'],['forest','🌲','Forest'],['stream','🏞','Stream'],['waves','🌊','Waves'],['fire','🔥','Fireplace'],['pad','🎹','Warm pad'],['brown','🟤','Brown noise'],['off','🔇','Silence']];
+const AMBS=[['piano','🎹','Calm piano'],['lofi','🎧','Lo-fi'],['bowls','🔔','Singing bowls'],['pad','🌙','Warm pad'],['rain','🌧','Rain'],['forest','🌲','Forest'],['stream','🏞','Stream'],['waves','🌊','Waves'],['fire','🔥','Fireplace'],['brown','🟤','Brown noise'],['mine','🎵','My music'],['off','🔇','Silence']];
 function renderSheet(){$('fSheetBody').innerHTML=`<div class="amb-grid sm">${AMBS.map(a=>`<button data-famb="${a[0]}" aria-pressed="${study.sound===a[0]}"><span>${a[1]}</span>${a[2]}</button>`).join('')}</div>
   <label class="f-range">Ambience<input type="range" id="fVol" min="0" max="100" value="${Math.round(study.vol*100)}"></label>
   <div class="seg2 beats">${[['off','Off'],...Object.entries(BEATS).map(([k,b])=>[k,b.name.split(' ')[0]])].map(([k,n])=>`<button data-fbeat="${k}" aria-pressed="${study.beat===k}">${n}</button>`).join('')}</div>
@@ -3221,7 +3302,7 @@ document.addEventListener('visibilitychange',async()=>{
   if(!run)return;
   if(document.hidden){awayAt=Date.now();if(LN&&!run.paused){const at=new Date(Date.now()+(study.away&&run.phase==='focus'?60000:Math.max(5000,run.left)));
       const away=study.away&&run.phase==='focus';
-      try{await LN.schedule({notifications:[{id:88001,title:away?'Your tree is waiting 🌱':run.phase==='focus'?'Focus round done ☀️':'Break is over 🌱',body:away?'The rain paused while you were away. Come back when you’re ready.':run.phase==='focus'?'Time for some sunlight. Stretch and rest your eyes.':'Your tree is ready for more water.',channelId:'sunshine',smallIcon:'ic_stat_sunshine',iconColor:'#F08A3C',schedule:{at,allowWhileIdle:true},extra:{card:'study'}}]})}catch(e){}}}
+      try{await LN.schedule({notifications:[{id:88001,title:away?'Your tree is waiting 🌱':run.phase==='focus'?'Focus round done ☀️':'Break is over 🌱',body:away?'The rain paused while you were away. Come back when you’re ready.':run.phase==='focus'?'Time for some sunlight. Stretch and rest your eyes.':'Your tree is ready for more water.',channelId:chan(),...sndOpt(),smallIcon:'ic_stat_sunshine',iconColor:'#F08A3C',schedule:{at,allowWhileIdle:true},extra:{card:'study'}}]})}catch(e){}}}
   else{if(LN)try{await LN.cancel({notifications:[{id:88001}]})}catch(e){}
     if(wakeLock===null&&navigator.wakeLock&&!$('focus').hidden)try{wakeLock=await navigator.wakeLock.request('screen')}catch(e){}}
 });
@@ -3235,7 +3316,7 @@ const ICO_SND='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3.5L1
 const RHY=[[15,3,'Gentle','15 min · 3 break'],[25,5,'Classic','25 min · 5 break'],[50,10,'Deep','50 min · 10 break']];
 const stOpen=new Set();
 function swRow(key,title,hint){return`<label class="sw-row"><span><b>${title}</b>${hint?`<small>${hint}</small>`:''}</span><input type="checkbox" class="sw" data-sb="${key}" ${study[key]?'checked':''}></label>`}
-function soundSum(){const a=AMBS.find(x=>x[0]===study.sound);return(a?a[2]:'Silence')+(study.beat!=='off'?' · '+BEATS[study.beat].name.split(' ')[0]+' beats':'')}
+function soundSum(){const a=AMBS.find(x=>x[0]===study.sound);if(study.sound==='off')return'Silence · no sounds';return(study.sound==='mine'&&study.mineName?study.mineName:a?a[2]:'Silence')+(study.beat!=='off'?' · '+BEATS[study.beat].name.split(' ')[0]+' beats':'')}
 function renderStudy(){
   const d=sday(),g=growth(),box=$('studyView');
   const isP=RHY.find(p=>p[0]===study.focus&&p[1]===study.brk);
@@ -3259,12 +3340,14 @@ function renderStudy(){
   </section>
   ${acc('sound',ICO_SND,'c','Sounds',soundSum(),`
     <div class="amb-grid">${AMBS.map(a=>`<button type="button" data-amb="${a[0]}" aria-pressed="${study.sound===a[0]}"><span>${a[1]}</span>${a[2]}</button>`).join('')}</div>
-    <label class="f-range">Ambience volume<input type="range" id="stVol" min="0" max="100" value="${Math.round(study.vol*100)}"></label>
+    <div class="st-mine" id="stMine" ${study.sound==='mine'?'':'hidden'}><span id="stMineName">${studyTrack?'🎵 '+esc(study.mineName||'Your music'):'Choose a song or playlist file (MP3/M4A) from your phone.'}</span><label class="btn terra" for="stMineFile" role="button" tabindex="0">Choose music</label><input type="file" id="stMineFile" class="sr" accept="audio/*,.mp3,.m4a,.aac,.wav,.ogg"></div>
+    <p class="hint st-silence">${study.sound==='off'?'Silence: no sounds at all while you study.':'Tap a sound to hear it. Choose Silence for complete quiet.'}</p>
+    <label class="f-range">Volume<input type="range" id="stVol" min="0" max="100" value="${Math.round(study.vol*100)}"></label>
     <span class="st-lab">Binaural beats <span class="hint">· best with headphones</span></span>
     <div class="beat-list">${[['off','Off','just the ambience'],...Object.entries(BEATS).map(([k,b])=>[k,b.name,b.d])].map(([k,n,dd])=>`<button type="button" data-beat="${k}" aria-pressed="${study.beat===k}"><b>${n}</b><span>${dd}</span></button>`).join('')}</div>
     <label class="f-range">Beats volume<input type="range" id="stBVol" min="0" max="100" value="${Math.round(study.beatVol*100)}"></label>
     ${swRow('bells','Bowl & chimes','A singing bowl at the start, soft chimes at breaks')}
-    ${swRow('water','Rain on the leaves','The soft sound of the rain falling on your tree')}
+    ${swRow('water','Rain on the leaves','A soft patter with nature sounds while it rains')}
     <button class="btn ghost" id="stStopPrev" type="button" hidden>■ Stop preview</button>`)}
   ${acc('set',ICO_SET,'t','Goal & focus',`Goal ${fmtDur(goalMin()*60000)} · ${study.lock?(CAP?'phone lock on':'full screen'):'no lock'}`,`
     <div class="sw-row"><span><b>Daily study goal</b><small>Your tree is fully grown when you reach it</small></span>
@@ -3292,7 +3375,9 @@ $('studyView').addEventListener('click',e=>{
   if(b.dataset.plan){study.plan=+b.dataset.plan;pressOnly(b)}
   if(b.dataset.rhythm){if(b.dataset.rhythm==='custom'){$('stCustom').hidden=false;$('stCustom').querySelector('input').focus()}else{const[f,k]=b.dataset.rhythm.split(',').map(Number);study.focus=f;study.brk=k;study.longBrk=f>=50?20:15;$('stCustom').hidden=true}pressOnly(b)}
   if(b.dataset.goalstep){CFG.studyGoal=Math.min(720,Math.max(30,goalMin()+ +b.dataset.goalstep));saveCfg(CFG);$('stGoalV').textContent=fmtDur(goalMin()*60000);renderHabitCards();update();renderStudyHead();setSum()}
-  if(b.dataset.amb){study.sound=b.dataset.amb;pressOnly(b);sctx();setAmb(study.sound,study.vol);$('stStopPrev').hidden=study.sound==='off';setSum()}
+  if(b.dataset.amb){study.sound=b.dataset.amb;pressOnly(b);sctx();$('stMine').hidden=study.sound!=='mine';
+    const sl=$('studyView').querySelector('.st-silence');if(sl)sl.textContent=study.sound==='off'?'Silence: no sounds at all while you study.':'Tap a sound to hear it. Choose Silence for complete quiet.';
+    if(study.sound==='off'){soundsOff(.5)}else if(study.sound==='mine'&&!studyTrack){}else setAmb(study.sound,study.vol);$('stStopPrev').hidden=study.sound==='off';setSum()}
   if(b.dataset.beat){study.beat=b.dataset.beat;pressOnly(b);sctx();setBeat(study.beat,study.beatVol);$('stStopPrev').hidden=false;setSum()}
   if(b.id==='stStopPrev'){soundsOff(.6);b.hidden=true}
   saveStudy();const pt=$('stPlanText');if(pt)pt.textContent=planEndText();
@@ -3307,7 +3392,12 @@ $('studyView').addEventListener('input',e=>{const t=e.target;
   if(t.id==='stBVol'){study.beatVol=+t.value/100;if(SND.beat)setBeat(study.beat,study.beatVol)}
   if(t.dataset.sn||t.id==='stLabel'){readStudyForm();$('stPlanText').textContent=planEndText()}});
 function setSum(){const a=$('sum-sound'),b=$('sum-set');if(a)a.textContent=soundSum();if(b)b.textContent=`Goal ${fmtDur(goalMin()*60000)} · ${study.lock?(CAP?'phone lock on':'full screen'):'no lock'}`}
-$('studyView').addEventListener('change',e=>{const t=e.target;if(t.dataset.sb){study[t.dataset.sb]=t.checked;setSum();if(t.dataset.sb==='water'&&!t.checked&&SND.trick){SND.trick.stop();SND.trick=null}}saveStudy()});
+$('studyView').addEventListener('change',async e=>{const t=e.target;
+  if(t.id==='stMineFile'){const f=t.files[0];t.value='';if(!f)return;const nm=$('stMineName');
+    if(!/^audio\//.test(f.type)&&!/\.(mp3|m4a|aac|wav|ogg|opus|flac)$/i.test(f.name)){nm.textContent='That file isn’t music. Choose an MP3 or M4A file.';return}
+    try{await storeStudyTrack(f)}catch(err){}studyTrack=f;if(studyAudio){try{studyAudio.pause()}catch(err){}studyAudio=null}if(SND.ambKind==='mine'){SND.amb=null;SND.ambKind=null}
+    study.mineName=f.name.replace(/\.[^.]+$/,'');saveStudy();nm.textContent='🎵 '+study.mineName;sctx();setAmb('mine',study.vol);$('stStopPrev').hidden=false;setSum();return}
+  if(t.dataset.sb){study[t.dataset.sb]=t.checked;setSum();if(t.dataset.sb==='water'&&!t.checked&&SND.trick){SND.trick.stop();SND.trick=null}}saveStudy()});
 function timelapse(btn){
   if(!pscene)return;clearInterval(stTimelapse);const t0=Date.now(),T=14000;btn.disabled=true;btn.textContent='Growing…';
   const pr=TreeScene($('stCanvas'),{mini:true,fast:true,timelapse:true});pscene.stop();pscene=pr;pr.set({seed:treeSeed(today())+1,G:0,jump:true,pour:true,sun:false}).start();

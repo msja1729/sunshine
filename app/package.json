@@ -1,6 +1,6 @@
 {
   "name": "sunshine-android",
-  "version": "1.1.3",
+  "version": "1.1.4",
   "private": true,
   "description": "Android wrapper for Sunshine with on-device reminders",
   "scripts": {

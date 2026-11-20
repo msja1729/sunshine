@@ -1034,6 +1034,37 @@ body.focusing .yt-box{bottom:calc(150px + env(safe-area-inset-bottom,0px))}
 .f-now{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:14px;background:rgba(255,255,255,.08)}
 .f-now span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:700;font-size:.88rem}
 .f-now button{width:38px;height:38px;border-radius:50%;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.1);color:#fff;font-weight:800}
+
+/* coloured, animated Study section headers (like the habit cards) */
+.st-plan,.st-acc{padding:0!important;overflow:hidden;gap:0}
+.sb-rain{--sbg:linear-gradient(120deg,#2B4776,#4C79C9 55%,#86B7E3)}
+.sb-sound{--sbg:linear-gradient(120deg,#46357F,#7B5FC9 55%,#C29BE6)}
+.sb-goal{--sbg:linear-gradient(120deg,#A84E17,#E8862E 55%,#F4C25B)}
+.sb-grove{--sbg:linear-gradient(120deg,#2B6141,#4F9A5E 55%,#9CCB7E)}
+.st-banner{position:relative;display:flex;align-items:center;gap:12px;min-height:78px;padding:14px 16px!important;background:var(--sbg);color:#fff;border-radius:0!important;overflow:hidden;isolation:isolate}
+.st-banner::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.18),transparent 60%);z-index:-1}
+.st-banner .acc-ico{background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.3);flex:none}
+.st-banner .acc-ico svg{stroke:#fff!important}
+.st-banner .acc-t{z-index:1}.st-banner .acc-t b{color:#fff;font-size:1.12rem;text-shadow:0 1px 8px rgba(0,0,0,.18)}.st-banner .acc-t small{color:rgba(255,255,255,.9)}
+.st-banner .chev{margin-left:auto;stroke:#fff;z-index:1;width:30px;height:30px;padding:5px;border-radius:50%;background:rgba(255,255,255,.18);box-sizing:border-box}
+.sb-art{position:absolute;right:52px;top:50%;width:120px;height:72px;transform:translateY(-50%);opacity:.95;z-index:0;pointer-events:none}
+.st-plan .sb-art{right:6px}
+.st-acc .acc-body{padding:14px 16px 18px}
+.st-body{padding:16px;display:flex;flex-direction:column;gap:14px}
+.st-acc .sub-h{margin:4px 0 -2px;font-size:1rem;display:flex;align-items:baseline;gap:6px;flex-wrap:wrap}
+.st-acc .sub-h:first-child{margin-top:0}
+.sb-float{animation:sbFloat 4s ease-in-out infinite}@keyframes sbFloat{0%,100%{transform:translateX(0)}50%{transform:translateX(4px)}}
+.sb-drop{animation:sbDrop 1.1s linear infinite}@keyframes sbDrop{0%{transform:translateY(-4px);opacity:0}20%{opacity:1}100%{transform:translateY(18px);opacity:0}}
+.sb-eq{animation:sbEq 1.2s ease-in-out infinite alternate}@keyframes sbEq{0%{transform:scaleY(.35)}100%{transform:scaleY(1)}}
+.sb-note{animation:waFloat 2.6s ease-in-out infinite}
+.sb-rays{animation:spin 14s linear infinite}
+.sb-ring{transform-box:fill-box;transform-origin:center;animation:sbRing 2.8s ease-out infinite}@keyframes sbRing{0%{transform:scale(.8);opacity:.9}100%{transform:scale(1.6);opacity:0}}
+.sb-tree{animation:lpSway 3.6s ease-in-out infinite alternate}
+.sb-spark{transform-box:fill-box;transform-origin:center;animation:waTw 2.2s ease-in-out infinite}
+.st-acc[open] .st-banner .sb-art{opacity:1}
+.st-banner .acc-t{max-width:calc(100% - 170px)}.st-plan .st-banner .acc-t{max-width:calc(100% - 130px)}
+@media (max-width:420px){.sb-art{width:88px;height:54px;right:46px}.st-plan .sb-art{right:4px}.st-banner .acc-t{max-width:calc(100% - 140px)}.st-plan .st-banner .acc-t{max-width:calc(100% - 100px)}}
+.beat-list{grid-template-columns:repeat(2,minmax(0,1fr))}
 @media (prefers-reduced-motion: reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 </style>
 </head>
@@ -3403,6 +3434,11 @@ const ICO_SND='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3.5L1
   ICO_SET='<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M5.3 18.7l2.1-2.1M16.6 7.4l2.1-2.1"/></svg>',
   ICO_TREE='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21v-6"/><path d="M12 15c-4.5 0-7-2.3-7-5.3S7.6 4 12 4s7 2.7 7 5.7-2.5 5.3-7 5.3z"/></svg>',
   CHEV='<svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>';
+const SB_ART={
+ rain:'<svg class="sb-art" viewBox="0 0 120 72" aria-hidden="true"><g class="sb-float"><path d="M34 34h50a13 13 0 0 0-3-25 17 17 0 0 0-31-3 13 13 0 0 0-22 7 11 11 0 0 0 6 21z" fill="#F4F8FF" opacity=".95"/></g>'+[[42,0],[52,.35],[62,.7],[72,.2],[80,.55]].map(([x,d])=>`<path class="sb-drop" style="animation-delay:${d}s" d="M${x} 40v7" stroke="#CFE6FF" stroke-width="2.4" stroke-linecap="round"/>`).join('')+'<path d="M20 66q20-6 40 0t40 0" stroke="#9FD0F5" stroke-width="2" fill="none" opacity=".7"/></svg>',
+ sound:'<svg class="sb-art" viewBox="0 0 120 72" aria-hidden="true">'+[[46,.0,30],[56,.25,40],[66,.5,24],[76,.1,36],[86,.4,28]].map(([x,d,h])=>`<rect class="sb-eq" style="animation-delay:-${d}s;transform-origin:${x+3}px 62px" x="${x}" y="${62-h}" width="6" height="${h}" rx="3" fill="#F3E8FF"/>`).join('')+'<g class="sb-note"><path d="M100 30V14l10-3v14" stroke="#FFE7A6" stroke-width="2.2" fill="none"/><circle cx="98" cy="30" r="3.4" fill="#FFE7A6"/><circle cx="108" cy="25" r="3.4" fill="#FFE7A6"/></g></svg>',
+ goal:'<svg class="sb-art" viewBox="0 0 120 72" aria-hidden="true"><g class="sb-rays" style="transform-origin:84px 32px" stroke="#FFF3D1" stroke-width="2.4" stroke-linecap="round"><path d="M84 8v6M84 50v6M60 32h6M102 32h6M67 15l4 4M97 45l4 4M67 49l4-4M97 19l4-4"/></g><circle cx="84" cy="32" r="12" fill="#FFF3D1"/><circle class="sb-ring" cx="84" cy="32" r="16" fill="none" stroke="#FFF3D1" stroke-width="1.6"/><path d="M40 60h28" stroke="#FFE2A8" stroke-width="3" stroke-linecap="round" opacity=".7"/></svg>',
+ grove:'<svg class="sb-art" viewBox="0 0 120 72" aria-hidden="true"><path d="M30 66h86" stroke="#DDEFCF" stroke-width="2.4" stroke-linecap="round" opacity=".7"/>'+[[50,.0,.8],[74,.6,1],[98,1.2,.7]].map(([x,d,k])=>`<g class="sb-tree" style="animation-delay:-${d}s;transform-origin:${x}px 66px"><path d="M${x} 66V${66-26*k}" stroke="#6B4A33" stroke-width="${2.6*k+1}" stroke-linecap="round"/><circle cx="${x}" cy="${66-30*k}" r="${12*k}" fill="#DDF2C8"/><circle cx="${x-6*k}" cy="${66-24*k}" r="${8*k}" fill="#C4E6A6"/><circle cx="${x+6*k}" cy="${66-25*k}" r="${8*k}" fill="#B5DC93"/></g>`).join('')+'<path class="sb-spark" d="M36 18l1.4 3.6L41 23l-3.6 1.4L36 28l-1.4-3.6L31 23l3.6-1.4z" fill="#FFF3B0"/></svg>'};
 const RHY=[[15,3,'Gentle','15 min · 3 break'],[25,5,'Classic','25 min · 5 break'],[50,10,'Deep','50 min · 10 break']];
 const stOpen=new Set();
 function swRow(key,title,hint){return`<label class="sw-row"><span><b>${title}</b>${hint?`<small>${hint}</small>`:''}</span><input type="checkbox" class="sw" data-sb="${key}" ${study[key]?'checked':''}></label>`}
@@ -3410,7 +3446,7 @@ function soundSum(){const a=AMBS.find(x=>x[0]===study.sound);if(study.sound==='o
 function renderStudy(){
   const d=sday(),g=growth(),box=$('studyView');
   const isP=RHY.find(p=>p[0]===study.focus&&p[1]===study.brk);
-  const acc=(id,ico,cls,title,sum,body)=>`<details class="pbox acc st-acc" data-acc="${id}" ${stOpen.has(id)?'open':''}><summary><span class="acc-ico ${cls}">${ico}</span><span class="acc-t"><b>${title}</b><small id="sum-${id}">${sum}</small></span>${CHEV}</summary><div class="acc-body">${body}</div></details>`;
+  const acc=(id,ico,cls,title,sum,body,band)=>`<details class="pbox acc st-acc sb-${band}" data-acc="${id}" ${stOpen.has(id)?'open':''}><summary class="st-banner">${SB_ART[band]}<span class="acc-ico ${cls}">${ico}</span><span class="acc-t"><b>${title}</b><small id="sum-${id}">${sum}</small></span>${CHEV}</summary><div class="acc-body">${body}</div></details>`;
   box.innerHTML=`<section class="page-head st-head"><span class="eyebrow">Study garden</span><h1>Tree of Knowledge</h1><p class="soft">Focus brings the rain, breaks bring the sun. Reach today’s goal and your tree stands fully grown.</p></section>
   ${study.run?`<section class="panel st-resume"><div><b>A sitting is waiting for you</b><span class="soft">${fmtDur(study.run.doneMs)} of ${fmtDur(study.run.planMs)} done${study.run.label?' · '+esc(study.run.label):''}</span></div><div class="btns"><button class="btn sage" id="stResume">Continue</button><button class="btn ghost" id="stDrop">End it</button></div></section>`:''}
   <section class="panel st-hero">
@@ -3418,8 +3454,9 @@ function renderStudy(){
     <div class="st-stats"><div><b>${fmtDur(d.ms)}</b><span>today</span></div><div><b>${fmtDur(d.goal*60000)}</b><span>goal</span></div><div><b>${Math.round(g*100)}%</b><span>${g>=1?'fully grown':'grown'}</span></div></div>
     <div class="st-meter"><i style="width:${Math.min(100,g*100)}%"></i></div>
   </section>
-  <section class="panel st-plan">
-    <h2>Start a sitting</h2>
+  <section class="panel st-plan sb-rain">
+    <div class="st-banner">${SB_ART.rain}<span class="acc-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 15h10a4 4 0 0 0-1-7.9A5.5 5.5 0 0 0 5.5 9.5 3 3 0 0 0 7 15z"/><path d="M9 18l-1 2M13 18l-1 2M17 18l-1 2"/></svg></span><span class="acc-t"><b>Start a sitting</b><small>Choose how long, then let it rain</small></span></div>
+    <div class="st-body">
     <input id="stLabel" class="note st-label" maxlength="40" value="${esc(study.label)}" placeholder="What are you studying? (optional)" aria-label="What are you studying?">
     <div class="st-field"><span class="st-lab">How long</span><div class="opt-grid c3">${[[25,'25 min'],[50,'50 min'],[60,'1 hour'],[90,'1½ hours'],[120,'2 hours'],[180,'3 hours']].map(([v,l])=>`<button type="button" class="opt" data-plan="${v}" aria-pressed="${study.plan===v}">${l}</button>`).join('')}</div></div>
     <div class="st-field"><span class="st-lab">Rhythm</span><div class="opt-grid c2">${RHY.map(p=>`<button type="button" class="opt two" data-rhythm="${p[0]},${p[1]}" aria-pressed="${isP===p}"><b>${p[2]}</b><small>${p[3]}</small></button>`).join('')}<button type="button" class="opt two" data-rhythm="custom" aria-pressed="${!isP}"><b>Custom</b><small>${isP?'set your own':study.focus+' min · '+study.brk+' break'}</small></button></div></div>
@@ -3427,28 +3464,30 @@ function renderStudy(){
       ${[['focus','Focus (min)',5,120],['brk','Break (min)',1,30],['longBrk','Long break (min)',5,45],['longEvery','Long break every',2,8]].map(([k,l,mn,mx])=>`<label class="num"><span>${l}</span><input type="number" class="note" inputmode="numeric" min="${mn}" max="${mx}" data-sn="${k}" value="${study[k]}"></label>`).join('')}</div>
     <p class="st-plantext" id="stPlanText">${planEndText()}</p>
     <button class="btn sage wide st-begin" id="stBegin" type="button"><span>🌧</span> Let it rain</button>
-  </section>
+  </div></section>
   ${acc('sound',ICO_SND,'c','Sounds',soundSum(),`
+    <h4 class="sub-h">Background sound</h4>
     <div class="amb-grid">${AMBS.map(a=>`<button type="button" data-amb="${a[0]}" aria-pressed="${study.sound===a[0]}"><span>${a[1]}</span>${a[2]}</button>`).join('')}</div>
     ${plEditorHTML()}
     <p class="hint st-silence">${study.sound==='off'?'Silence: no sounds at all while you study.':'Tap a sound to hear it. Choose Silence for complete quiet.'}</p>
     <label class="f-range">Volume<input type="range" id="stVol" min="0" max="100" value="${Math.round(study.vol*100)}"></label>
-    <span class="st-lab">Binaural beats <span class="hint">· best with headphones</span></span>
+    <h4 class="sub-h">Binaural beats <span class="hint">· best with headphones</span></h4>
     <div class="beat-list">${[['off','Off','just the ambience'],...Object.entries(BEATS).map(([k,b])=>[k,b.name,b.d])].map(([k,n,dd])=>`<button type="button" data-beat="${k}" aria-pressed="${study.beat===k}"><b>${n}</b><span>${dd}</span></button>`).join('')}</div>
     <label class="f-range">Beats volume<input type="range" id="stBVol" min="0" max="100" value="${Math.round(study.beatVol*100)}"></label>
+    <h4 class="sub-h">Extras</h4>
     ${swRow('bells','Bowl & chimes','A singing bowl at the start, soft chimes at breaks')}
     ${swRow('water','Rain on the leaves','A soft patter with nature sounds while it rains')}
-    <button class="btn ghost" id="stStopPrev" type="button" hidden>■ Stop preview</button>`)}
+    <button class="btn ghost" id="stStopPrev" type="button" hidden>■ Stop preview</button>`,'sound')}
   ${acc('set',ICO_SET,'t','Goal & focus',`Goal ${fmtDur(goalMin()*60000)} · ${study.lock?(CAP?'phone lock on':'full screen'):'no lock'}`,`
     <div class="sw-row"><span><b>Daily study goal</b><small>Your tree is fully grown when you reach it</small></span>
       <div class="stepper"><button type="button" data-goalstep="-30" aria-label="Less">−</button><b id="stGoalV">${fmtDur(goalMin()*60000)}</b><button type="button" data-goalstep="30" aria-label="More">+</button></div></div>
     ${swRow('lock',CAP?'Lock my phone while I focus':'Full screen while I focus',CAP?'No YouTube, Instagram or other apps until the sitting ends. Android asks once to allow “App pinning”.':'Hides everything else on the screen')}
     ${swRow('away','Count only on-screen time','Leaving Sunshine pauses the rain')}
-    ${swRow('autoNext','Start the next round by itself','After each sunlight break')}`)}
+    ${swRow('autoNext','Start the next round by itself','After each sunlight break')}`,'goal')}
   ${acc('log',ICO_TREE,'s','Today & your grove',d.sessions.length?`${d.sessions.length} sitting${d.sessions.length>1?'s':''} · ${fmtDur(d.ms)}`:'Your sittings and the last 14 days',`
     ${d.sessions.length?`<ul class="st-sess">${d.sessions.map(s=>`<li><b>${fmtDur(s.ms)}</b><span>${esc(s.label||'Focus')}</span><time>${new Date(s.at).toLocaleTimeString([],{hour:'numeric',minute:'2-digit'})}</time></li>`).join('')}</ul>`:'<p class="soft">No sittings yet today.</p>'}
     <div class="grove">${Array.from({length:14},(_,i)=>{const dt=new Date();dt.setDate(dt.getDate()-13+i);const k=ymd(dt),gg=growth(k),dd=study.days[k];
-      return`<div class="gtree${k===today()?' today':''}" title="${dt.toLocaleDateString()}: ${dd?fmtDur(dd.ms):'0m'}"><canvas data-k="${k}" data-g="${gg}" width="60" height="80"></canvas><span>${dt.toLocaleDateString(undefined,{weekday:'narrow'})}${dt.getDate()}</span></div>`}).join('')}</div>`)}`;
+      return`<div class="gtree${k===today()?' today':''}" title="${dt.toLocaleDateString()}: ${dd?fmtDur(dd.ms):'0m'}"><canvas data-k="${k}" data-g="${gg}" width="60" height="80"></canvas><span>${dt.toLocaleDateString(undefined,{weekday:'narrow'})}${dt.getDate()}</span></div>`}).join('')}</div>`,'grove')}`;
   drawGrove();
   if(pscene)pscene.stop();pscene=TreeScene($('stCanvas'),{mini:true,sun:true});pscene.set({seed:treeSeed(today()),G:g,sun:true,jump:true,goal:d.goal,gauge:fmtDur(d.ms),cloud:1}).start();
 }

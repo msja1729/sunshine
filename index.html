@@ -930,6 +930,46 @@ body.focusing{overflow:hidden}
 .toast.show{opacity:1}
 .rt-sugg{display:flex;flex-wrap:wrap;gap:6px}
 @media (prefers-reduced-motion: reduce){.jr-stem{stroke-dashoffset:0}.jr-leaf{transform:none}.jr-bloom{transform:none}}
+
+/* ---------- animated first-time setup ---------- */
+.lock>.lock-card{position:relative;z-index:1}
+.lock-bg{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:0}
+.lb-sun{position:absolute;top:-60px;right:-40px;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,color-mix(in srgb,var(--honey) 55%,transparent),transparent 65%);animation:breathe 7s ease-in-out infinite}
+.lb-cloud{position:absolute;width:150px;fill:color-mix(in srgb,var(--surface) 70%,transparent);opacity:.7;animation:lbDrift linear infinite}
+.lb-cloud.c1{top:8%;animation-duration:70s;animation-delay:-20s}.lb-cloud.c2{top:22%;width:110px;animation-duration:95s;animation-delay:-60s;opacity:.5}.lb-cloud.c3{top:58%;width:180px;animation-duration:120s;animation-delay:-35s;opacity:.35}
+@keyframes lbDrift{from{transform:translateX(-220px)}to{transform:translateX(calc(100vw + 40px))}}
+.lf{position:absolute;top:-30px;left:var(--x);width:calc(14px*var(--s));height:calc(8px*var(--s));background:var(--c);opacity:.55;border-radius:0 100% 0 100%;animation:lbFall var(--d) linear var(--dl) infinite}
+@keyframes lbFall{0%{transform:translate(0,0) rotate(0)}25%{transform:translate(28px,26vh) rotate(110deg)}50%{transform:translate(-18px,52vh) rotate(200deg)}75%{transform:translate(24px,78vh) rotate(300deg)}100%{transform:translate(-10px,110vh) rotate(400deg)}}
+.lb-plants{position:absolute;left:0;right:0;bottom:0;width:100%;height:120px;color:color-mix(in srgb,var(--sage) 55%,transparent)}
+.lp{animation:lpSway ease-in-out infinite alternate}@keyframes lpSway{from{transform:rotate(-5deg)}to{transform:rotate(5deg)}}
+.lock-card{animation:cardIn .7s cubic-bezier(.2,1.2,.4,1)}@keyframes cardIn{from{opacity:0;transform:translateY(24px) scale(.97)}}
+.wiz-body.fwd{animation:wizFwd .5s cubic-bezier(.2,.9,.3,1)}.wiz-body.back{animation:wizBack .5s cubic-bezier(.2,.9,.3,1)}
+@keyframes wizFwd{from{opacity:0;transform:translateX(36px)}}@keyframes wizBack{from{opacity:0;transform:translateX(-36px)}}
+.wiz-body>*{animation:wizUp .55s cubic-bezier(.2,.9,.3,1) backwards}
+.wiz-body>*:nth-child(2){animation-delay:.06s}.wiz-body>*:nth-child(3){animation-delay:.12s}.wiz-body>*:nth-child(4){animation-delay:.18s}.wiz-body>*:nth-child(5){animation-delay:.24s}.wiz-body>*:nth-child(6){animation-delay:.3s}.wiz-body>*:nth-child(n+7){animation-delay:.36s}
+@keyframes wizUp{from{opacity:0;transform:translateY(14px)}}
+.wdots i.on{background:linear-gradient(90deg,var(--terra),var(--honey),var(--terra));background-size:200% 100%;animation:dotShine 2.4s linear infinite}
+@keyframes dotShine{to{background-position:-200% 0}}
+.wart{width:132px;height:80px;align-self:center;overflow:visible}
+.wa-stem{stroke-dasharray:1;stroke-dashoffset:1;animation:jrDraw 1s .2s ease forwards}
+.wa-l1,.wa-l2{transform-box:fill-box;transform:scale(0);animation:jrPop .7s cubic-bezier(.2,1.6,.4,1) forwards}.wa-l1{transform-origin:100% 100%;animation-delay:.8s}.wa-l2{transform-origin:0 100%;animation-delay:1s}
+.wa-heart{animation:waFloat 3.2s ease-in-out infinite}.wa-heart.d2{animation-delay:-1.6s}
+@keyframes waFloat{0%,100%{transform:translateY(0);opacity:.9}50%{transform:translateY(-8px);opacity:.5}}
+.wa-rays{animation:spin 8s linear infinite}
+.wa-bob{transform-box:fill-box;transform-origin:center;animation:waBob 2.6s ease-in-out infinite}@keyframes waBob{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-6px) rotate(-8deg)}}
+.wa-tick{fill:none;stroke:var(--sage);stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1;stroke-dashoffset:1;animation:waTick 4.5s ease infinite}
+.wa-tick.t2{animation-delay:.5s}.wa-tick.t3{animation-delay:1s}
+@keyframes waTick{0%{stroke-dashoffset:1}15%,80%{stroke-dashoffset:0}100%{stroke-dashoffset:0;opacity:0}}
+.wa-spark{transform-box:fill-box;transform-origin:center;animation:waTw 2s ease-in-out infinite}@keyframes waTw{0%,100%{transform:scale(.6) rotate(0);opacity:.5}50%{transform:scale(1.15) rotate(45deg);opacity:1}}
+.wa-grow{animation:waGrow 4.5s cubic-bezier(.3,1.4,.5,1) infinite}@keyframes waGrow{0%{transform:scaleY(0)}25%,85%{transform:scaleY(1)}100%{transform:scaleY(1);opacity:0}}
+.wa-swap{transform-origin:48px 38px;animation:spin 14s linear infinite}
+.wa-moon{transform-box:fill-box;transform-origin:center;animation:waBob 3.4s ease-in-out infinite}
+.wa-note{animation:waFloat 2.4s ease-in-out infinite}
+.wa-shackle{animation:waLock 3s ease-in-out infinite}@keyframes waLock{0%,30%{transform:translateY(-7px)}45%,100%{transform:translateY(0)}}
+.wa-vine{stroke-dasharray:1;stroke-dashoffset:1;animation:jrDraw 1.4s .6s ease forwards}
+.wa-down{animation:waDown 1.6s ease-in-out infinite}@keyframes waDown{0%,100%{transform:translateY(-4px)}50%{transform:translateY(4px)}}
+.wnav .btn.sage{animation:beginGlow 3s ease-in-out infinite}
+.gbtn{transition:transform .2s}.gbtn:active{transform:scale(.97)}
 @media (prefers-reduced-motion: reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 </style>
 </head>
@@ -1167,6 +1207,14 @@ body.focusing{overflow:hidden}
 </div></div>
 <div class="toast" id="toast" hidden role="status"></div>
 <div class="lock" id="lock" hidden>
+  <div class="lock-bg" aria-hidden="true">
+    <div class="lb-sun"></div>
+    <svg class="lb-cloud c1" viewBox="0 0 200 70"><path d="M30 60h140a26 26 0 0 0-8-50 34 34 0 0 0-62-6 26 26 0 0 0-46 14 22 22 0 0 0-24 42z"/></svg>
+    <svg class="lb-cloud c2" viewBox="0 0 200 70"><path d="M30 60h140a26 26 0 0 0-8-50 34 34 0 0 0-62-6 26 26 0 0 0-46 14 22 22 0 0 0-24 42z"/></svg>
+    <svg class="lb-cloud c3" viewBox="0 0 200 70"><path d="M30 60h140a26 26 0 0 0-8-50 34 34 0 0 0-62-6 26 26 0 0 0-46 14 22 22 0 0 0-24 42z"/></svg>
+    <i class="lf" style="--x:6%;--d:17s;--dl:-3s;--s:1;--c:var(--sage)"></i><i class="lf" style="--x:18%;--d:22s;--dl:-11s;--s:0.7;--c:var(--honey)"></i><i class="lf" style="--x:31%;--d:19s;--dl:-6s;--s:0.9;--c:var(--terra)"></i><i class="lf" style="--x:44%;--d:25s;--dl:-15s;--s:0.6;--c:var(--sage)"></i><i class="lf" style="--x:57%;--d:18s;--dl:-1s;--s:1.1;--c:var(--honey)"></i><i class="lf" style="--x:69%;--d:23s;--dl:-9s;--s:0.8;--c:var(--sage)"></i><i class="lf" style="--x:81%;--d:20s;--dl:-13s;--s:0.9;--c:var(--terra)"></i><i class="lf" style="--x:92%;--d:26s;--dl:-5s;--s:0.7;--c:var(--sage)"></i>
+    <svg class="lb-plants" viewBox="0 0 400 120" preserveAspectRatio="xMidYMax slice"><g class="lp" style="animation-duration:5s;animation-delay:-1s;transform-origin:14px 120px"><path d="M14 120 Q18 94.0 20.4 68" stroke="currentColor" stroke-width="2.4" fill="none" stroke-linecap="round"/><path d="M16.0 96.6 q-12 -4 -16 -14 q12 0 16 14z M18.4 83.6 q12 -6 15 -16 q-12 2 -15 16z" fill="currentColor"/></g><g class="lp" style="animation-duration:6.5s;animation-delay:-2.5s;transform-origin:40px 120px"><path d="M40 120 Q35 85.0 32.0 50" stroke="currentColor" stroke-width="2.4" fill="none" stroke-linecap="round"/><path d="M37.5 88.5 q-12 -4 -16 -14 q12 0 16 14z M34.5 71.0 q12 -6 15 -16 q-12 2 -15 16z" fill="currentColor"/></g><g class="lp" style="animation-duration:5.5s;animation-delay:-0.8s;transform-origin:70px 120px"><path d="M70 120 Q76 98.0 79.6 76" stroke="currentColor" stroke-width="2.4" fill="none" stroke-linecap="round"/><path d="M73.0 100.2 q-12 -4 -16 -14 q12 0 16 14z M76.6 89.2 q12 -6 15 -16 q-12 2 -15 16z" fill="currentColor"/></g><g class="lp" style="animation-duration:6s;animation-delay:-3s;transform-origin:330px 120px"><path d="M330 120 Q326 90.0 323.6 60" stroke="currentColor" stroke-width="2.4" fill="none" stroke-linecap="round"/><path d="M328.0 93.0 q-12 -4 -16 -14 q12 0 16 14z M325.6 78.0 q12 -6 15 -16 q-12 2 -15 16z" fill="currentColor"/></g><g class="lp" style="animation-duration:7s;animation-delay:-1.7s;transform-origin:360px 120px"><path d="M360 120 Q365 81.0 368.0 42" stroke="currentColor" stroke-width="2.4" fill="none" stroke-linecap="round"/><path d="M362.5 84.9 q-12 -4 -16 -14 q12 0 16 14z M365.5 65.4 q12 -6 15 -16 q-12 2 -15 16z" fill="currentColor"/></g><g class="lp" style="animation-duration:5s;animation-delay:-4s;transform-origin:388px 120px"><path d="M388 120 Q382 96.0 378.4 72" stroke="currentColor" stroke-width="2.4" fill="none" stroke-linecap="round"/><path d="M385.0 98.4 q-12 -4 -16 -14 q12 0 16 14z M381.4 86.4 q12 -6 15 -16 q-12 2 -15 16z" fill="currentColor"/></g></svg>
+  </div>
   <div class="lock-card" id="lockCard"></div>
 </div>
 
@@ -2034,6 +2082,14 @@ function routineClicks(e){const b=e.target.closest('button');if(!b)return false;
 /* ---------- First-install setup ---------- */
 let wiz=null;
 const WSTEPS=['welcome','about','day','meds','habits','look','pin'];
+const WART={
+ about:'<svg class="wart" viewBox="0 0 120 74"><path d="M44 70h32l-4-16H48z" fill="var(--terra)" opacity=".85"/><rect x="42" y="50" width="36" height="6" rx="3" fill="var(--terra)"/><path class="wa-stem" d="M60 50V24" stroke="var(--sage)" stroke-width="3" stroke-linecap="round" pathLength="1"/><path class="wa-l1" d="M60 36c-10 0-16-6-16-12 9 0 16 5 16 12z" fill="var(--sage)"/><path class="wa-l2" d="M60 30c10 0 16-6 16-12-9 0-16 5-16 12z" fill="var(--sage)"/><path class="wa-heart" d="M84 20c0-5 7-5 7 0 0-5 7-5 7 0 0 5-7 9-7 9s-7-4-7-9z" fill="var(--terra)"/><path class="wa-heart d2" d="M22 26c0-4 5-4 5 0 0-4 5-4 5 0 0 4-5 7-5 7s-5-3-5-7z" fill="var(--honey)"/></svg>',
+ day:'<svg class="wart" viewBox="0 0 120 74"><path d="M8 64 Q60 -6 112 64" stroke="var(--line)" stroke-width="2" stroke-dasharray="3 5" fill="none"/><path d="M4 64h112" stroke="var(--sage)" stroke-width="2.5" stroke-linecap="round"/><g><circle r="9" fill="var(--honey)"/><g class="wa-rays" stroke="var(--terra)" stroke-width="2" stroke-linecap="round"><path d="M0-14v-4M0 14v4M-14 0h-4M14 0h4M-10-10l-3-3M10 10l3 3M-10 10l-3 3M10-10l3-3"/></g><animateMotion dur="7s" repeatCount="indefinite" path="M8 64 Q60 -6 112 64" keyPoints="0;1" keyTimes="0;1" calcMode="spline" keySplines=".45 0 .55 1"/></g></svg>',
+ meds:'<svg class="wart" viewBox="0 0 120 74"><g class="wa-bob"><rect x="18" y="30" width="34" height="14" rx="7" fill="#9677D2" transform="rotate(-30 35 37)"/><path d="M27 42l17-10" stroke="#fff" stroke-width="1.5" opacity=".6"/></g><g class="wa-list"><rect x="64" y="12" width="40" height="52" rx="6" fill="var(--surface)" stroke="var(--line)" stroke-width="2"/><path class="wa-tick t1" d="M70 26l4 4 7-8" pathLength="1"/><path class="wa-tick t2" d="M70 40l4 4 7-8" pathLength="1"/><path class="wa-tick t3" d="M70 54l4 4 7-8" pathLength="1"/><path d="M86 27h12M86 41h12M86 55h9" stroke="var(--line)" stroke-width="3" stroke-linecap="round"/></g><path class="wa-spark" d="M30 10l1.6 4.4L36 16l-4.4 1.6L30 22l-1.6-4.4L24 16l4.4-1.6z" fill="var(--honey)"/></svg>',
+ habits:'<svg class="wart" viewBox="0 0 120 74"><path d="M6 68h108" stroke="var(--terra)" stroke-width="3" stroke-linecap="round" opacity=".6"/>'+[[28,'var(--sage)',0],[60,'var(--honey)',.5],[92,'var(--terra)',1]].map(([x,c,d])=>`<g class="wa-grow" style="animation-delay:${d}s;transform-origin:${x}px 68px"><path d="M${x} 68V36" stroke="var(--sage)" stroke-width="3" stroke-linecap="round"/><path d="M${x} 52c-9 0-13-5-13-10 8 0 13 4 13 10zM${x} 46c9 0 13-5 13-10-8 0-13 4-13 10z" fill="var(--sage)"/><circle cx="${x}" cy="32" r="6" fill="${c}"/><circle cx="${x}" cy="32" r="2.5" fill="#fff" opacity=".8"/></g>`).join('')+'</svg>',
+ look:'<svg class="wart" viewBox="0 0 120 74"><g class="wa-swap"><circle cx="48" cy="38" r="16" fill="var(--honey)"/><g stroke="var(--terra)" stroke-width="2.4" stroke-linecap="round"><path d="M48 14v-6M48 62v6M24 38h-6M72 38h6M31 21l-4-4M65 55l4 4M31 55l-4 4M65 21l4-4"/></g></g><path class="wa-moon" d="M86 22a16 16 0 1 0 14 24 13 13 0 0 1-14-24z" fill="var(--calm)"/><path class="wa-note" d="M100 60V46l10-2v12" stroke="var(--sage)" stroke-width="2" fill="none"/><circle class="wa-note" cx="98" cy="60" r="3" fill="var(--sage)"/><circle class="wa-note" cx="108" cy="58" r="3" fill="var(--sage)"/></svg>',
+ pin:'<svg class="wart" viewBox="0 0 120 74"><path class="wa-shackle" d="M48 36V26a12 12 0 0 1 24 0v10" stroke="var(--terra)" stroke-width="5" fill="none" stroke-linecap="round"/><rect x="40" y="34" width="40" height="32" rx="8" fill="var(--honey)"/><circle cx="60" cy="48" r="4" fill="var(--terra)"/><path d="M60 50v7" stroke="var(--terra)" stroke-width="3" stroke-linecap="round"/><path class="wa-vine" d="M80 62c8 0 10-8 18-8M40 62c-8 0-10-8-18-8" stroke="var(--sage)" stroke-width="2.4" fill="none" stroke-linecap="round" pathLength="1"/><path class="wa-spark" d="M92 18l1.4 3.6L97 23l-3.6 1.4L92 28l-1.4-3.6L87 23l3.6-1.4z" fill="var(--honey)"/></svg>',
+ restore:'<svg class="wart" viewBox="0 0 120 74"><path d="M34 44h52a14 14 0 0 0-3-27 18 18 0 0 0-33-3 14 14 0 0 0-24 8 12 12 0 0 0 8 22z" fill="var(--calm-bg)" stroke="var(--calm)" stroke-width="2"/><g class="wa-down"><path d="M60 30v22M52 45l8 8 8-8" stroke="var(--sage)" stroke-width="3.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g><path d="M44 68h32" stroke="var(--sage)" stroke-width="3" stroke-linecap="round"/></svg>'};
 function renderWizard(){
   if(!wiz)wiz={step:0,cfg:normCfg(DEF_CFG),name:'',cName:'',cPhone:'',start:'today',rem:true,restored:false,offer:null};
   const c=$('lockCard');c.classList.add('wiz');
@@ -2070,7 +2126,8 @@ function renderWizard(){
     <button class="btn sage wide" type="submit">Create my space ☀️</button>
     <p class="lock-note">Your PIN stays on this phone and can’t be recovered. ${g.signedIn?`Your data is kept safe in ${esc(g.email||'your Google Drive')}.`:'Export a backup from Me now and then.'}</p></form>`;
   const nav=(key==='welcome'||key==='restore')?'':`<div class="wnav"><button type="button" class="btn ghost" data-wz="back">Back</button>${key==='pin'?'':`<button type="button" class="btn sage" data-wz="next">${key==='look'?'Almost done':'Next'}</button>`}</div>`;
-  c.innerHTML=`<div class="wiz-body">${head}${body}</div><p class="lock-msg" id="wizMsg" aria-live="polite"></p>${nav}`;
+  const dir=wiz.dir||'fwd';wiz.dir='fwd';
+  c.innerHTML=`<div class="wiz-body ${dir}">${head}${WART[key]||''}${body}</div><p class="lock-msg" id="wizMsg" aria-live="polite"></p>${nav}`;
   c.scrollTop=0;$('lock').scrollTop=0;
   setTimeout(()=>{const f=c.querySelector('#wName,#rPin');if(f)try{f.focus()}catch(e){}},60);
 }
@@ -2105,7 +2162,7 @@ $('lock').addEventListener('click',async e=>{
     catch(err){m.textContent='Your data couldn’t be restored just now. Please check your connection and try again.'}
     return}
   if(a==='fresh'){wiz.offer=null;wiz.step=1;renderWizard();return}
-  if(a==='back'){wizCollect();if(wiz.step>0)wiz.step--;if(musicCfg&&playing)musicStop(.4);renderWizard();return}
+  if(a==='back'){wizCollect();wiz.dir='back';if(wiz.step>0)wiz.step--;if(musicCfg&&playing)musicStop(.4);renderWizard();return}
   if(a==='next'){const key=wizCollect();
     if(key==='about'&&!wiz.name){m.textContent='Please add your name.';return}
     if(playing)musicStop(.4);wiz.step++;renderWizard()}
@@ -2239,7 +2296,7 @@ $('importConfirm').addEventListener('click',async e=>{
 /* ---------- Google sign-in and Drive sync ----------
    Paste the Web client ID from Google Cloud below (client IDs are public, not secrets).
    Data is saved as one private file in the app's hidden Drive folder (appDataFolder), which only Sunshine can see. */
-const GOOGLE_CLIENT_ID='';
+const GOOGLE_CLIENT_ID='780752723505-bpnju8ro43bmr04r4ih9t8uu8vaquroh.apps.googleusercontent.com';
 const DRIVE_SCOPE='https://www.googleapis.com/auth/drive.appdata',DRIVE_FILE='sunshine-data.json',GKEY='sunshine-google';
 const GLOGO='<svg class="glogo" viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9.1 3.6l6.8-6.8C35.8 2.4 30.3 0 24 0 14.6 0 6.6 5.4 2.6 13.3l7.9 6.1C12.4 13.7 17.7 9.5 24 9.5z"/><path fill="#4285F4" d="M46.1 24.5c0-1.6-.1-3.1-.4-4.5H24v9h12.4c-.5 2.9-2.2 5.3-4.6 6.9l7.4 5.7c4.3-4 6.9-9.9 6.9-17.1z"/><path fill="#FBBC05" d="M10.5 28.6c-.5-1.4-.8-3-.8-4.6s.3-3.2.8-4.6l-7.9-6.1C1 16.6 0 20.2 0 24s1 7.4 2.6 10.7l7.9-6.1z"/><path fill="#34A853" d="M24 48c6.5 0 11.9-2.1 15.9-5.8l-7.4-5.7c-2.1 1.4-4.8 2.3-8.5 2.3-6.3 0-11.6-4.2-13.5-9.9l-7.9 6.1C6.6 42.6 14.6 48 24 48z"/></svg>';
 const gState=()=>{try{return JSON.parse(localStorage.getItem(GKEY))||{}}catch(e){return{}}};

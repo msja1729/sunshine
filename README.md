@@ -38,7 +38,7 @@ To switch this on, put the Web OAuth client ID into `const GOOGLE_CLIENT_ID=''` 
 
 ## What's inside
 
-- **Study garden (Tree of Knowledge):** set a daily study goal and plan each sitting with Pomodoro rounds (15·3, 25·5, 50·10 or your own). While you focus, a jug pours water onto today's tree and it grows live, from seed to sapling to blossoms to golden fruit when you reach your goal. Breaks bring the sunrise. Sounds generated on the phone: rain, forest, stream, waves, fireplace, warm pad, brown noise, plus binaural beats (alpha, beta, theta, gamma). On Android, the phone can be pinned to Sunshine so other apps can't open until you end the sitting. A grove shows a tree for each day.
+- **Study garden (Tree of Knowledge):** set a daily study goal and plan each sitting with Pomodoro rounds (15·3, 25·5, 50·10 or your own). While you focus, a rain cloud waters today's tree and it grows live. The cloud holds this sitting's rain and shrinks as it falls; a rain gauge fills toward today's goal, from seed to sapling to blossoms to golden fruit when you reach your goal. Breaks bring the sunrise. Sounds generated on the phone: rain, forest, stream, waves, fireplace, warm pad, brown noise, plus binaural beats (alpha, beta, theta, gamma). On Android, the phone can be pinned to Sunshine so other apps can't open until you end the sitting. A grove shows a tree for each day.
 - **Done from the notification:** reminders have a ✓ Done button (or +250 ml / +500 ml for water, and "In 10 min"). Tapping it ticks the habit and opens a card with a little plant growing and a kind line.
 - **Your own routines:** besides medicines, add any routine (skincare, journaling, revising notes…) with its own time, days and reminder.
 

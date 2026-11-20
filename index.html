@@ -1153,7 +1153,7 @@ body.focusing{overflow:hidden}
   <div class="f-top"><span class="f-label" id="fLabel">Focus</span><span class="f-day" id="fDay"></span></div>
   <div class="f-mid"><span class="f-phase" id="fPhase"></span><b class="f-time" id="fTime">25:00</b><div class="f-bar"><i id="fBar"></i></div><span class="f-sub" id="fSub"></span></div>
   <div class="f-toast" id="fToast" aria-live="polite"></div>
-  <div class="f-ready" id="fReady" hidden><p>Break is over. Ready to pour again?</p><button class="btn sage" id="fGo">🌱 Pour again</button></div>
+  <div class="f-ready" id="fReady" hidden><p>Break is over. Ready for more rain?</p><button class="btn sage" id="fGo">🌧 Let it rain again</button></div>
   <div class="f-ctrl">
     <button class="fbtn" id="fPause" aria-label="Pause"><svg class="i-pause" viewBox="0 0 24 24"><path d="M9 6v12M15 6v12"/></svg><svg class="i-play" viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></button>
     <button class="fhold" id="fEnd"><i></i><span>Hold to end</span></button>
@@ -2623,8 +2623,8 @@ function genTree(seed){
 function TreeScene(cv,o){
   o=o||{};const ctx=cv.getContext('2d');
   let W=1,H=1,dpr=1,raf=0,running=false,tree=null,seed=0,t=0,last=0;
-  let G=0,Gd=0,pour=false,sun=false,pourAmt=0,sunAmt=o.sun?1:0,tilt=.05,wet=0,u0=0,u1=0,streamOn=false,mile=-1;
-  let S=80,baseX=0,groundY=0,bbox=null,jug=null,hills=[],grass=[],stars=[],flies=[],butter=[],parts=[],ripples=[],sap=[],falling=[],pulses=[],birds=null,sparkT=0,dropT=0,sapT=0,leafT=0;
+  let G=0,Gd=0,pour=false,sun=false,pourAmt=0,sunAmt=o.sun?1:0,wet=0,mile=-1,cloud=1,cl=1,goalMin=180,gText='',leftText='',drops=[],rainAcc=0,cloudPuffs=[];
+  let S=80,baseX=0,groundY=0,bbox=null,sky0=null,hills=[],grass=[],stars=[],flies=[],butter=[],parts=[],ripples=[],sap=[],falling=[],pulses=[],birds=null,sparkT=0,dropT=0,sapT=0,leafT=0;
   let X0,Y0,X1,Y1,AN,LP,OFF;
   const leafPts=[];
 
@@ -2646,13 +2646,14 @@ function TreeScene(cv,o){
   function groundAt(x){const k=(x-baseX)/W;return groundY+k*k*H*.16}
   function layout(){
     if(!tree)return;
-    const mini=!!o.mini,top=mini?H*.05:H*.25;groundY=H*(mini?.84:.8);
+    const mini=!!o.mini,top=mini?H*.24:H*.41;groundY=H*(mini?.84:.8);
     const bw=bbox.maxX-bbox.minX,bh=-bbox.minY,availW=W*(mini?.92:.98);
     S=Math.min((groundY-top)/bh,availW/bw);
     const cx=mini?W*.5:W*.6;baseX=cx-((bbox.minX+bbox.maxX)/2)*S;
     baseX=clamp(baseX,W*.03-bbox.minX*S,W*.97-bbox.maxX*S);
-    const js=clamp(Math.min(W,H)*(mini?.07:.075),15,52);
-    jug=o.jug===false?null:{s:js,x:clamp(baseX-S*1.05,js*1.25,W*.3),y:clamp(groundY-S*1.05,top+js,groundY-js*3)};
+    const tcx=baseX+((bbox.minX+bbox.maxX)/2)*S;
+    sky0=o.jug===false?null:{x:clamp(tcx,W*.3,W*.7),y:H*(mini?.12:.325),w:Math.min(W*(mini?.62:.6),Math.max(S*2,W*.48),H*.32)};
+    const Rp=rng(seed+31);cloudPuffs=Array.from({length:11},(_,i)=>{const u=i/10-.5;return{x:u+(Rp()-.5)*.06,y:(Rp()-.5)*.12-Math.cos(u*Math.PI)*.16,r:.13+Math.cos(u*Math.PI)*.12+Rp()*.05,ph:Rp()*TAU}});
     hills=[0,1].map(l=>{const pts=[],R=rng(seed+l*99);const ph=R()*TAU,ph2=R()*TAU;for(let x=-20;x<=W+20;x+=16)pts.push([x,groundY-(l?H*.07:H*.15)+Math.sin(x/W*3+ph)*H*(l?.025:.04)+Math.sin(x/W*7.3+ph2)*H*.012]);return pts});
     const R=rng(seed+7);
     grass=Array.from({length:Math.round(W/(mini?7:4))},()=>{const x=R()*W;return{x,y:groundAt(x)+R()*R()*(H-groundAt(x))*.9,h:(mini?4:7)+R()*(mini?6:13),l:(R()-.5)*.5,ph:R()*TAU,c:R()<.5?0:1}}).sort((a,b)=>a.y-b.y);
@@ -2664,20 +2665,22 @@ function TreeScene(cv,o){
 
   function step(dt){
     if(G<Gd-.05)Gd=G;Gd+=(G-Gd)*Math.min(1,dt*(o.fast?4:1.4));
-    tilt+=((pour?(.95+.5*Math.min(1,Gd)):.05+Math.sin(t*.8)*.02)-tilt)*Math.min(1,dt*2.6);
-    const flowing=pour&&tilt>.75;
-    if(flowing&&!streamOn){streamOn=true;u0=0;u1=0}
-    if(streamOn){if(flowing){if(u0>0){u0=0;u1=0}u1=Math.min(1,u1+dt*2.4)}else{u0+=dt*2.6;if(u0>=u1){streamOn=false;u0=u1=0}}}
-    pourAmt+=((flowing?1:0)-pourAmt)*Math.min(1,dt*3);
+    const raining=pour;
+    pourAmt+=((raining?1:0)-pourAmt)*Math.min(1,dt*1.6);
+    cl+=(cloud-cl)*Math.min(1,dt*1.2);
     sunAmt+=((sun?1:0)-sunAmt)*Math.min(1,dt*.7);
-    const hitting=streamOn&&u1>=1&&u0<.05;
-    wet=hitting?Math.min(1,wet+dt*.5):Math.max(0,wet-dt*.025);
+    wet=pourAmt>.5?Math.min(1,wet+dt*.35):Math.max(0,wet-dt*.025);
     // particles
     for(let i=parts.length-1;i>=0;i--){const p=parts[i];p.life-=dt;p.vy+=p.g*dt;p.x+=p.vx*dt;p.y+=p.vy*dt;if(p.life<=0)parts.splice(i,1)}
     for(let i=ripples.length-1;i>=0;i--){ripples[i].k+=dt*1.3;if(ripples[i].k>=1)ripples.splice(i,1)}
     for(let i=pulses.length-1;i>=0;i--){pulses[i].k+=dt*.45;if(pulses[i].k>=1)pulses.splice(i,1)}
-    if(hitting){dropT-=dt;if(dropT<=0){dropT=.035;const tx=target();for(let k=0;k<2;k++)parts.push({x:tx[0],y:tx[1],vx:(Math.random()-.5)*90,vy:-40-Math.random()*70,g:420,life:.45+Math.random()*.25,r:1+Math.random()*1.4,c:'w'})}
-      if(Math.random()<dt*3.2)ripples.push({k:0})}
+    // rain: as heavy as the cloud is full; each drop lands on the ground with a tiny splash
+    if(sky0&&!o.still){const c=cloudPos(),rate=pourAmt*(o.mini?70:240)*(.35+.65*cl);rainAcc+=rate*dt;
+      while(rainAcc>=1){rainAcc--;drops.push({x:c.x+(Math.random()-.5)*c.w*.8,y:c.y+c.h*.25,v:H*(.85+Math.random()*.4),l:(o.mini?6:10)+Math.random()*8,a:.45+Math.random()*.45})}
+      const wind=10+12*Math.sin(t*.3);
+      for(let i=drops.length-1;i>=0;i--){const d=drops[i];d.y+=d.v*dt;d.x+=wind*dt;const gy=groundAt(d.x);
+        if(d.y>=gy){drops.splice(i,1);if(Math.random()<.4)for(let k=0;k<2;k++)parts.push({x:d.x,y:gy-1,vx:(Math.random()-.5)*50,vy:-25-Math.random()*45,g:380,life:.3+Math.random()*.2,r:.8+Math.random(),c:Gd>=.999?'g':'w'});
+          if(Math.abs(d.x-baseX)<S*.45&&Math.random()<.3)ripples.push({k:0,x:d.x})}}}
     // sap rising through the tree while it drinks
     sapT-=dt;if((wet>.35||o.timelapse&&pour)&&sapT<=0&&sap.length<(o.mini?10:28)){sapT=o.mini?.25:.12;const tp=tree.tips[Math.random()*tree.tips.length|0];if(LP[tp]>.5){const path=[];let k=tp;while(k>=0){path.unshift(k);k=tree.B[k].p}sap.push({path,s:0,sp:1.6+Math.random()*1.2})}}
     for(let i=sap.length-1;i>=0;i--){const p=sap[i];p.s+=dt*p.sp;if(p.s>=p.path.length||LP[p.path[Math.floor(p.s)]]<=0)sap.splice(i,1)}
@@ -2689,7 +2692,7 @@ function TreeScene(cv,o){
     if(mile<0)mile=m;else if(m>mile){mile=m;if(!o.mini||o.timelapse)pulses.push({k:0});if(o.onMilestone)o.onMilestone(m)}
     if(birds){birds.x+=dt*birds.v;if(birds.x>W+80)birds=null}else if(sunAmt>.6&&!o.still&&Math.random()<dt/14)birds={x:-60,y:H*(.12+Math.random()*.14),v:40+Math.random()*25};
   }
-  function target(){const x=baseX-S*.09;return[x,groundAt(x)-1]}
+  function cloudPos(){const k=sm(sunAmt),sc=(.42+.58*cl)*(1-.35*k);return{x:sky0.x-k*W*.22+Math.sin(t*.25)*W*.015,y:sky0.y+Math.sin(t*.4)*3,w:sky0.w*sc,h:sky0.w*sc*.42}}
 
   function sky(){
     const g=ctx.createLinearGradient(0,0,0,groundY),k=sm(sunAmt);
@@ -2697,7 +2700,7 @@ function TreeScene(cv,o){
     ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
     const night=1-k;
     if(night>.02){ctx.fillStyle='#fff';stars.forEach(s=>{ctx.globalAlpha=night*(.35+.45*Math.sin(t*1.3+s.ph)**2);ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,TAU);ctx.fill()});ctx.globalAlpha=1;
-      const mx=W*.84,my=H*(o.mini?.16:.27),mr=Math.min(W,H)*(o.mini?.05:.04);
+      const mx=W*.87,my=H*(o.mini?.16:.2),mr=Math.min(W,H)*(o.mini?.05:.04);
       const mg=ctx.createRadialGradient(mx,my,mr*.6,mx,my,mr*4);mg.addColorStop(0,`rgba(255,240,210,${.3*night})`);mg.addColorStop(1,'rgba(255,240,210,0)');ctx.fillStyle=mg;ctx.fillRect(mx-mr*4,my-mr*4,mr*8,mr*8);
       ctx.fillStyle=`rgba(255,244,222,${.95*night})`;ctx.beginPath();ctx.arc(mx,my,mr,0,TAU);ctx.fill();
       ctx.fillStyle=`rgba(220,205,180,${.35*night})`;[[-.3,-.2,.22],[.25,.15,.16],[.05,.4,.12]].forEach(([a,b,r])=>{ctx.beginPath();ctx.arc(mx+a*mr,my+b*mr,r*mr,0,TAU);ctx.fill()})}
@@ -2779,39 +2782,37 @@ function TreeScene(cv,o){
     if(Gd>.98&&!o.still){sparkT-=1/60;if(sparkT<=0){sparkT=.12;parts.push({x:cx+(Math.random()-.5)*S*1.4,y:cy+(Math.random()-.3)*S*.8,vx:(Math.random()-.5)*8,vy:-10-Math.random()*16,g:0,life:2+Math.random(),r:1+Math.random()*1.5,c:'g'})}}
     return[cx,cy];
   }
-  function stream(){
-    if(!jug)return;const{s,x,y}=jug,a=tilt,sxl=.74*s,syl=-1.16*s,px=x+sxl*Math.cos(a)-syl*Math.sin(a),py=y+sxl*Math.sin(a)+syl*Math.cos(a);
-    if(streamOn&&u1>u0){const[tx,ty]=target(),cx1=lerp(px,tx,.72),cy1=py+(ty-py)*.04,gold=Gd>=.999;
-      const pt=u=>{const m=1-u;return[m*m*px+2*m*u*cx1+u*u*tx,m*m*py+2*m*u*cy1+u*u*ty]};
-      const pts=[];for(let i=0;i<=26;i++)pts.push(pt(lerp(u0,u1,i/26)));
-      const line=()=>{ctx.beginPath();ctx.moveTo(pts[0][0],pts[0][1]);for(let i=1;i<pts.length;i++)ctx.lineTo(pts[i][0],pts[i][1])};
-      const wv=Math.max(1.6,s*.075)*(.6+.4*pourAmt);ctx.lineCap='round';
-      line();ctx.strokeStyle=gold?'rgba(255,210,120,.25)':'rgba(150,215,255,.22)';ctx.lineWidth=wv*3.2;ctx.stroke();
-      line();ctx.strokeStyle=gold?'rgba(255,214,130,.85)':'rgba(170,225,255,.85)';ctx.lineWidth=wv;ctx.stroke();
-      line();ctx.setLineDash([wv*1.6,wv*4.5]);ctx.lineDashOffset=-t*s*2.4;ctx.strokeStyle='rgba(255,255,255,.85)';ctx.lineWidth=wv*.4;ctx.stroke();ctx.setLineDash([])}
-    const[tx,ty]=target();ripples.forEach(r=>{ctx.strokeStyle=`rgba(190,230,255,${.5*(1-r.k)})`;ctx.lineWidth=1;ctx.beginPath();ctx.ellipse(tx,ty+1,2+r.k*S*.2,(2+r.k*S*.2)*.22,0,0,TAU);ctx.stroke()});
+  function rain(){
+    if(!sky0)return;const gold=Gd>=.999;
+    if(drops.length){ctx.lineCap='round';ctx.lineWidth=o.mini?1.1:1.5;
+      drops.forEach(d=>{ctx.strokeStyle=gold?`rgba(255,220,140,${d.a})`:`rgba(190,225,255,${d.a})`;ctx.beginPath();ctx.moveTo(d.x,d.y);ctx.lineTo(d.x-d.l*.06,d.y-d.l);ctx.stroke()})}
+    ripples.forEach(r=>{const x=r.x||baseX,y=groundAt(x);ctx.strokeStyle=`rgba(190,230,255,${.45*(1-r.k)})`;ctx.lineWidth=1;ctx.beginPath();ctx.ellipse(x,y+1,2+r.k*S*.12,(2+r.k*S*.12)*.25,0,0,TAU);ctx.stroke()});
   }
-  function drawJug(){
-    if(!jug)return;const{s,x,y}=jug,a=tilt,lvl=clamp(1-Gd),gold=Gd>=.999;
-    const path=()=>{ctx.beginPath();ctx.moveTo(-.4*s,-1*s);ctx.lineTo(.36*s,-1*s);ctx.quadraticCurveTo(.56*s,-1.02*s,.76*s,-1.18*s);ctx.quadraticCurveTo(.68*s,-.92*s,.5*s,-.8*s);
-      ctx.bezierCurveTo(.8*s,-.4*s,.72*s,.6*s,.46*s,.96*s);ctx.quadraticCurveTo(0,1.07*s,-.46*s,.96*s);ctx.bezierCurveTo(-.72*s,.6*s,-.74*s,-.4*s,-.46*s,-.82*s);ctx.closePath()};
-    ctx.save();ctx.translate(x,y);
-    const sh=ctx.createRadialGradient(0,s*1.9,0,0,s*1.9,s*1.4);sh.addColorStop(0,'rgba(0,0,0,.18)');sh.addColorStop(1,'rgba(0,0,0,0)');
-    ctx.rotate(a);
-    ctx.strokeStyle='rgba(235,245,255,.6)';ctx.lineWidth=s*.09;ctx.beginPath();ctx.moveTo(-.55*s,-.7*s);ctx.bezierCurveTo(-1.08*s,-.6*s,-1.05*s,.25*s,-.62*s,.38*s);ctx.stroke();
-    path();ctx.fillStyle='rgba(225,240,255,.13)';ctx.fill();
-    ctx.save();path();ctx.clip();ctx.rotate(-a);
-    let lo=-1e9,hiY=1e9;[[-.46,.96],[.46,.96],[0,1.06],[-.4,-1],[.36,-1],[.76,-1.18],[-.7,0],[.74,0]].forEach(([px,py])=>{const wy=px*s*Math.sin(a)+py*s*Math.cos(a);lo=Math.max(lo,wy);hiY=Math.min(hiY,wy)});
-    const surf=lo-(lo-hiY)*lvl*.92;
-    if(lvl>.003||gold){const wg=ctx.createLinearGradient(0,surf,0,lo);
-      if(gold){wg.addColorStop(0,'rgba(255,226,150,.8)');wg.addColorStop(1,'rgba(240,160,60,.85)')}else{wg.addColorStop(0,'rgba(150,215,245,.9)');wg.addColorStop(1,'rgba(40,130,190,.92)')}
-      ctx.fillStyle=wg;const sy=gold?lo-(lo-hiY)*.25:surf;ctx.beginPath();ctx.moveTo(-3*s,lo+s);ctx.lineTo(-3*s,sy);
-      for(let xx=-3*s;xx<=3*s;xx+=s*.2)ctx.lineTo(xx,sy+Math.sin(xx/s*4+t*3.2)*s*.025*(1+pourAmt*2));ctx.lineTo(3*s,lo+s);ctx.fill();
-      ctx.strokeStyle='rgba(255,255,255,.5)';ctx.lineWidth=1;ctx.beginPath();for(let xx=-3*s;xx<=3*s;xx+=s*.2){const yy=sy+Math.sin(xx/s*4+t*3.2)*s*.025*(1+pourAmt*2);xx===-3*s?ctx.moveTo(xx,yy):ctx.lineTo(xx,yy)}ctx.stroke()}
+  function drawCloud(){
+    if(!sky0||o.still)return;const c=cloudPos(),k=sm(sunAmt),dark=pourAmt*(.4+.6*cl)*(1-k),gold=Gd>=.999;
+    const top=gold?'#FFF1CF':mixC('#C9D1E0','#F4F7FB',k),bot=gold?'#F2C76E':mixC('#8C98B1','#4E5A75',dark);
+    ctx.save();ctx.globalAlpha=.94-.12*k;
+    const g=ctx.createLinearGradient(0,c.y-c.h*.6,0,c.y+c.h*.4);g.addColorStop(0,top);g.addColorStop(1,bot);ctx.fillStyle=g;
+    ctx.beginPath();cloudPuffs.forEach(p=>{const r=p.r*c.w*(1+.03*Math.sin(t*.8+p.ph));ctx.moveTo(c.x+p.x*c.w+r,c.y+p.y*c.w);ctx.arc(c.x+p.x*c.w,c.y+p.y*c.w,r,0,TAU)});
+    ctx.ellipse(c.x,c.y+c.h*.12,c.w*.48,c.h*.28,0,0,TAU);ctx.fill();
+    ctx.globalAlpha=.3*(1-k);ctx.fillStyle='#fff';ctx.beginPath();cloudPuffs.slice(3,8).forEach(p=>{const r=p.r*c.w*.55;ctx.moveTo(c.x+p.x*c.w+r,c.y+p.y*c.w-r*.5);ctx.arc(c.x+p.x*c.w,c.y+p.y*c.w-r*.5,r,0,TAU)});ctx.fill();
     ctx.restore();
-    path();ctx.strokeStyle='rgba(240,248,255,.7)';ctx.lineWidth=Math.max(1.2,s*.045);ctx.stroke();
-    ctx.strokeStyle='rgba(255,255,255,.55)';ctx.lineWidth=s*.06;ctx.lineCap='round';ctx.beginPath();ctx.moveTo(-.42*s,-.5*s);ctx.bezierCurveTo(-.58*s,-.1*s,-.56*s,.4*s,-.38*s,.7*s);ctx.stroke();
-    if(gold){const gr=ctx.createRadialGradient(0,0,0,0,0,s*2.2);gr.addColorStop(0,`rgba(255,220,140,${.25+.1*Math.sin(t*2)})`);gr.addColorStop(1,'rgba(255,220,140,0)');ctx.fillStyle=gr;ctx.fillRect(-s*2.2,-s*2.2,s*4.4,s*4.4)}
+    if(leftText&&pourAmt>.2&&k<.5){ctx.save();ctx.globalAlpha=Math.min(1,pourAmt)*(1-k*2);ctx.fillStyle='rgba(255,255,255,.95)';ctx.font=`700 ${o.mini?10:12}px system-ui,sans-serif`;ctx.textAlign='center';ctx.textBaseline='middle';
+      ctx.shadowColor='rgba(20,30,60,.55)';ctx.shadowBlur=6;ctx.fillText(leftText,c.x,c.y+c.h*.05);ctx.restore()}
+  }
+  function gauge(){
+    if(!sky0||o.still)return;const k=sm(sunAmt),gold=Gd>=.999,gw=o.mini?10:15,gh=H*(o.mini?.26:.19),x=Math.max(gw+12,W*.09),by=groundAt(x)+(o.mini?4:8),ty=by-gh,lvl=clamp(Gd);
+    ctx.save();ctx.fillStyle='rgba(0,0,0,.18)';ctx.beginPath();ctx.ellipse(x,by+2,gw*.9,3,0,0,TAU);ctx.fill();
+    ctx.fillStyle='rgba(225,240,255,.14)';ctx.strokeStyle='rgba(235,245,255,.7)';ctx.lineWidth=1.3;
+    ctx.beginPath();ctx.moveTo(x-gw/2,ty);ctx.lineTo(x-gw/2,by-4);ctx.quadraticCurveTo(x-gw/2,by,x,by);ctx.quadraticCurveTo(x+gw/2,by,x+gw/2,by-4);ctx.lineTo(x+gw/2,ty);ctx.fill();ctx.stroke();
+    ctx.beginPath();ctx.moveTo(x-gw*.95,ty-gw*.55);ctx.lineTo(x-gw/2,ty);ctx.moveTo(x+gw*.95,ty-gw*.55);ctx.lineTo(x+gw/2,ty);ctx.stroke();
+    const wy=by-2-(gh-4)*lvl;if(lvl>.002){const wg=ctx.createLinearGradient(0,wy,0,by);if(gold){wg.addColorStop(0,'#FFE29A');wg.addColorStop(1,'#E9A23B')}else{wg.addColorStop(0,'rgba(150,215,245,.95)');wg.addColorStop(1,'rgba(40,130,190,.95)')}
+      ctx.fillStyle=wg;ctx.beginPath();ctx.moveTo(x-gw/2+1.5,wy+Math.sin(t*3)*.8);ctx.lineTo(x+gw/2-1.5,wy-Math.sin(t*3)*.8);ctx.lineTo(x+gw/2-1.5,by-4);ctx.quadraticCurveTo(x+gw/2-1.5,by-1.5,x,by-1.5);ctx.quadraticCurveTo(x-gw/2+1.5,by-1.5,x-gw/2+1.5,by-4);ctx.fill()}
+    const hrs=goalMin/60,step=hrs>6?2:1;ctx.fillStyle='rgba(255,255,255,.85)';ctx.font=`600 ${o.mini?8:9.5}px system-ui,sans-serif`;ctx.textAlign='left';ctx.textBaseline='middle';
+    for(let h=step;h<hrs+.01;h+=step){const yy=by-2-(gh-4)*(h/hrs);ctx.fillRect(x+gw/2-5,yy,5,1.2);ctx.fillText(h+'h',x+gw/2+3,yy)}
+    if(hrs%step||hrs<1){ctx.fillRect(x+gw/2-5,ty+2,5,1.2)}
+    if(gText){ctx.textAlign='center';ctx.font=`800 ${o.mini?9:11}px system-ui,sans-serif`;ctx.fillStyle=gold?'#FFE29A':'#E6F4FF';ctx.shadowColor='rgba(0,0,0,.5)';ctx.shadowBlur=4;ctx.fillText(gText,x,ty-gw*.9)}
+    if(gold){const gr=ctx.createRadialGradient(x,by-gh/2,0,x,by-gh/2,gh*.7);gr.addColorStop(0,`rgba(255,220,140,${.22+.08*Math.sin(t*2)})`);gr.addColorStop(1,'rgba(255,220,140,0)');ctx.fillStyle=gr;ctx.fillRect(x-gh,by-gh*1.2,gh*2,gh*1.4)}
     ctx.restore();
   }
   function life(cx,cy){
@@ -2833,12 +2834,12 @@ function TreeScene(cv,o){
   }
   function draw(){
     if(!tree)return;ctx.setTransform(dpr,0,0,dpr,0,0);
-    sky();land();const[cx,cy]=drawTree();stream();drawJug();grassDraw();life(cx,cy);
+    sky();land();gauge();const[cx,cy]=drawTree();rain();drawCloud();grassDraw();life(cx,cy);
     if(!o.mini){const v=ctx.createRadialGradient(W/2,H*.55,Math.min(W,H)*.35,W/2,H*.55,Math.max(W,H)*.8);v.addColorStop(0,'rgba(0,0,0,0)');v.addColorStop(1,'rgba(0,0,0,.38)');ctx.fillStyle=v;ctx.fillRect(0,0,W,H)}
   }
   function frame(now){if(!running)return;raf=requestAnimationFrame(frame);const dt=Math.min(.05,((now-(last||now))/1000));last=now;t+=dt;if(o.tick)o.tick(dt);step(dt);draw()}
   const api={
-    set(st){if(st.seed!==undefined)setSeed(st.seed);if(st.G!==undefined)G=clamp(st.G,0,1);if(st.pour!==undefined)pour=st.pour;if(st.sun!==undefined)sun=st.sun;if(st.jump){Gd=G;mile=-1}if(!running)draw();return api},
+    set(st){if(st.seed!==undefined)setSeed(st.seed);if(st.G!==undefined)G=clamp(st.G,0,1);if(st.pour!==undefined)pour=st.pour;if(st.sun!==undefined)sun=st.sun;if(st.cloud!==undefined)cloud=clamp(st.cloud);if(st.goal)goalMin=st.goal;if(st.gauge!==undefined)gText=st.gauge;if(st.left!==undefined)leftText=st.left;if(st.jump){Gd=G;mile=-1}if(!running)draw();return api},
     start(){if(running)return api;running=true;last=0;resize();raf=requestAnimationFrame(frame);return api},
     stop(){running=false;cancelAnimationFrame(raf);return api},
     resize,get pourAmt(){return pourAmt},get shown(){return Gd},get running(){return running}
@@ -2955,8 +2956,8 @@ function buildBeat(kind){const c=sctx(),b=BEATS[kind];if(!c||!b)return null;cons
   const m=c.createChannelMerger(2);m.connect(g);const os=[0,1].map(ch=>{const o=c.createOscillator();o.type='sine';o.frequency.value=b.car+(ch?b.hz:0);const e=c.createGain();e.gain.value=.5;o.connect(e);e.connect(m,0,ch);o.start();return o});
   return{g,lvl:.16,stop(sec=1){const now=c.currentTime;g.gain.cancelScheduledValues(now);g.gain.setValueAtTime(g.gain.value,now);g.gain.linearRampToValueAtTime(0,now+sec);setTimeout(()=>{os.forEach(o=>{try{o.stop()}catch(e){}})},sec*1000+100)}}}
 function buildTrickle(){const c=sctx();if(!c)return null;const g=c.createGain();g.gain.value=0;g.connect(SND.out);const s=c.createBufferSource();s.buffer=nbuf(c,'white');s.loop=true;
-  const b1=c.createBiquadFilter();b1.type='bandpass';b1.frequency.value=2600;b1.Q.value=1.4;const b2=c.createBiquadFilter();b2.type='bandpass';b2.frequency.value=900;b2.Q.value=3;
-  const am=c.createGain();am.gain.value=.6;const o=c.createOscillator();o.frequency.value=7;const od=c.createGain();od.gain.value=.35;o.connect(od);od.connect(am.gain);
+  const b1=c.createBiquadFilter();b1.type='highpass';b1.frequency.value=1800;const b2=c.createBiquadFilter();b2.type='bandpass';b2.frequency.value=5200;b2.Q.value=.7;
+  const am=c.createGain();am.gain.value=.6;const o=c.createOscillator();o.frequency.value=13;const od=c.createGain();od.gain.value=.25;o.connect(od);od.connect(am.gain);
   s.connect(b1);s.connect(b2);b1.connect(am);b2.connect(am);am.connect(g);s.start();o.start();return{g,stop(){try{s.stop();o.stop()}catch(e){}}}}
 const ramp=(node,v,sec=.8)=>{if(!node||!actx)return;const p=node.g.gain,now=actx.currentTime;p.cancelScheduledValues(now);p.setValueAtTime(p.value,now);p.linearRampToValueAtTime(v,now+sec)};
 function setAmb(kind,vol){if(SND.ambKind!==kind){if(SND.amb)SND.amb.stop();SND.amb=buildAmb(kind);SND.ambKind=kind}if(SND.amb)ramp(SND.amb,vol*SND.amb.lvl,1.5)}
@@ -3006,7 +3007,7 @@ function applySounds(){
 function stick(){
   if(!run)return;const now=Date.now();let dt=now-run.last;run.last=now;
   if(dt>4000){ // the app was in the background or the phone slept
-    if(run.phase==='focus'&&!run.paused&&study.away&&!pinned){run.away+=dt;fToast(`Welcome back. The jug waited for you (${fmtDur(dt)} away).`);dt=0}
+    if(run.phase==='focus'&&!run.paused&&study.away&&!pinned){run.away+=dt;fToast(`Welcome back. The rain waited for you (${fmtDur(dt)} away).`);dt=0}
     else dt=Math.min(dt,run.left+1000)}
   if(!run.paused&&run.phase!=='ready'){
     run.left-=dt;
@@ -3014,8 +3015,8 @@ function stick(){
     if(run.left<=0)nextPhase()}
   if(now-lastSave>5000){lastSave=now;study.run=run;saveStudy()}
   if(!run)return;
-  if(fscene)fscene.set({G:growth(),pour:run.phase==='focus'&&!run.paused,sun:run.phase==='break'});
-  if(SND.trick&&actx){const v=study.water?fscene.pourAmt*.05*Math.max(.3,study.vol):0;SND.trick.g.gain.setTargetAtTime(v,actx.currentTime,.15)}
+  if(fscene){const dd=sday();fscene.set({G:growth(),pour:run.phase==='focus'&&!run.paused,sun:run.phase==='break',cloud:1-run.doneMs/run.planMs,goal:dd.goal,gauge:fmtDur(dd.ms),left:fmtDur(Math.max(0,run.planMs-run.doneMs))+' of rain left'})}
+  if(SND.trick&&actx){const v=study.water?fscene.pourAmt*.07*Math.max(.3,study.vol):0;SND.trick.g.gain.setTargetAtTime(v,actx.currentTime,.15)}
   renderFocus();
 }
 function nextPhase(){
@@ -3048,7 +3049,7 @@ function renderFocus(){
   if(!run)return;const d=sday(),n=rounds(),ph=run.phase;
   $('fLabel').textContent=run.label||'Focus';
   $('fDay').textContent=`Today ${fmtDur(d.ms)} / ${fmtDur(d.goal*60000)}`;
-  $('fPhase').textContent=run.paused?'Paused · the jug rests':ph==='focus'?`Pouring · focus ${Math.min(run.cycle,n)} of ${n}`:ph==='break'?(run.cycle%study.longEvery===0?'Long sunlight break':'Sunlight · break'):'Ready when you are';
+  $('fPhase').textContent=run.paused?'Paused · the rain rests':ph==='focus'?`Raining · focus ${Math.min(run.cycle,n)} of ${n}`:ph==='break'?(run.cycle%study.longEvery===0?'Long sunlight break':'Sunlight · break'):'Ready when you are';
   $('fTime').textContent=ph==='ready'?'—':fmtClock(run.left);
   $('fBar').style.width=Math.min(100,run.doneMs/run.planMs*100)+'%';
   $('fSub').textContent=`This sitting: ${fmtDur(run.doneMs)} of ${fmtDur(run.planMs)}`;
@@ -3085,7 +3086,7 @@ document.addEventListener('visibilitychange',async()=>{
   if(!run)return;
   if(document.hidden){awayAt=Date.now();if(LN&&!run.paused){const at=new Date(Date.now()+(study.away&&run.phase==='focus'?60000:Math.max(5000,run.left)));
       const away=study.away&&run.phase==='focus';
-      try{await LN.schedule({notifications:[{id:88001,title:away?'Your tree is waiting 🌱':run.phase==='focus'?'Focus round done ☀️':'Break is over 🌱',body:away?'The jug paused while you were away. Come back when you’re ready.':run.phase==='focus'?'Time for some sunlight. Stretch and rest your eyes.':'Your tree is ready for more water.',channelId:'sunshine',smallIcon:'ic_stat_sunshine',iconColor:'#F08A3C',schedule:{at,allowWhileIdle:true},extra:{card:'study'}}]})}catch(e){}}}
+      try{await LN.schedule({notifications:[{id:88001,title:away?'Your tree is waiting 🌱':run.phase==='focus'?'Focus round done ☀️':'Break is over 🌱',body:away?'The rain paused while you were away. Come back when you’re ready.':run.phase==='focus'?'Time for some sunlight. Stretch and rest your eyes.':'Your tree is ready for more water.',channelId:'sunshine',smallIcon:'ic_stat_sunshine',iconColor:'#F08A3C',schedule:{at,allowWhileIdle:true},extra:{card:'study'}}]})}catch(e){}}}
   else{if(LN)try{await LN.cancel({notifications:[{id:88001}]})}catch(e){}
     if(wakeLock===null&&navigator.wakeLock&&!$('focus').hidden)try{wakeLock=await navigator.wakeLock.request('screen')}catch(e){}}
 });
@@ -3096,7 +3097,7 @@ function renderStudy(){
   const d=sday(),g=growth(),box=$('studyView');
   const ch=(attr,val,cur,label)=>`<button type="button" data-${attr}="${val}" aria-pressed="${cur==val}">${label}</button>`;
   const preset=[[15,3,'Gentle 15·3'],[25,5,'Classic 25·5'],[50,10,'Deep 50·10']];const isP=preset.find(p=>p[0]===study.focus&&p[1]===study.brk);
-  box.innerHTML=`<section class="page-head"><span class="eyebrow">Study garden</span><h1>Tree of Knowledge</h1><p class="soft">Every focused minute pours water on today’s tree. Breaks bring the sunlight. Reach your goal and it stands fully grown.</p></section>
+  box.innerHTML=`<section class="page-head"><span class="eyebrow">Study garden</span><h1>Tree of Knowledge</h1><p class="soft">While you focus, a rain cloud waters today’s tree. The cloud holds this sitting’s rain and shrinks as it falls; the rain gauge fills toward today’s goal. Breaks bring the sunlight.</p></section>
   ${study.run?`<section class="panel st-resume"><div><b>A sitting is waiting for you</b><span class="soft">${fmtDur(study.run.doneMs)} of ${fmtDur(study.run.planMs)} done${study.run.label?' · '+esc(study.run.label):''}</span></div><div class="btns"><button class="btn sage" id="stResume">Continue</button><button class="btn ghost" id="stDrop">End it</button></div></section>`:''}
   <section class="panel st-hero">
     <div class="st-stage"><canvas id="stCanvas" aria-label="Today’s tree, ${Math.round(g*100)} percent grown"></canvas><button class="st-tl" id="stTl" type="button">▶ Watch a tree grow</button></div>
@@ -3114,7 +3115,7 @@ function renderStudy(){
       <div class="field"><label>Long break</label><input type="number" class="note" inputmode="numeric" min="5" max="45" data-sn="longBrk" value="${study.longBrk}"></div>
       <div class="field"><label>Long every</label><input type="number" class="note" inputmode="numeric" min="2" max="8" data-sn="longEvery" value="${study.longEvery}"></div></div>
     <p class="soft st-plantext" id="stPlanText">${planEndText()}</p>
-    <button class="btn sage wide st-begin" id="stBegin" type="button"><span>🌱</span> Begin pouring</button>
+    <button class="btn sage wide st-begin" id="stBegin" type="button"><span>🌧</span> Let it rain</button>
   </section>
   <section class="panel st-sound">
     <h2>Sounds while you focus</h2><p class="soft">Tap one to hear it.</p>
@@ -3124,7 +3125,7 @@ function renderStudy(){
     <div class="beat-list">${[['off','Off','just the ambience'],...Object.entries(BEATS).map(([k,b])=>[k,b.name,b.d])].map(([k,n,dd])=>`<button type="button" data-beat="${k}" aria-pressed="${study.beat===k}"><b>${n}</b><span>${dd}</span></button>`).join('')}</div>
     <label class="f-range">Beats volume<input type="range" id="stBVol" min="0" max="100" value="${Math.round(study.beatVol*100)}"></label>
     <label class="toggle-row"><input type="checkbox" data-sb="bells" ${study.bells?'checked':''}> A singing bowl at the start, and soft chimes at breaks</label>
-    <label class="toggle-row"><input type="checkbox" data-sb="water" ${study.water?'checked':''}> The gentle sound of water pouring</label>
+    <label class="toggle-row"><input type="checkbox" data-sb="water" ${study.water?'checked':''}> The soft sound of rain on the leaves</label>
     <div class="btns"><button class="btn ghost" id="stStopPrev" type="button" hidden>■ Stop preview</button></div>
   </section>
   <section class="panel st-set">
@@ -3143,7 +3144,7 @@ function renderStudy(){
       return`<div class="gtree${k===today()?' today':''}" title="${dt.toLocaleDateString()}: ${dd?fmtDur(dd.ms):'0m'}"><canvas data-k="${k}" data-g="${gg}" width="60" height="80"></canvas><span>${dt.toLocaleDateString(undefined,{weekday:'narrow'})}</span><small>${dd&&dd.ms>=60000?fmtDur(dd.ms):'·'}</small></div>`}).join('')}</div>
   </section>`;
   box.querySelectorAll('.grove canvas').forEach(c=>{const g=+c.dataset.g;if(g>0)drawStillTree(c,treeSeed(c.dataset.k),Math.max(.06,g));else{const x=c.getContext('2d');x.fillStyle='rgba(141,185,143,.18)';x.beginPath();x.ellipse(30,72,16,4,0,0,TAU);x.fill()}});
-  if(pscene)pscene.stop();pscene=TreeScene($('stCanvas'),{mini:true,sun:true});pscene.set({seed:treeSeed(today()),G:g,sun:true,jump:true}).start();
+  if(pscene)pscene.stop();pscene=TreeScene($('stCanvas'),{mini:true,sun:true});pscene.set({seed:treeSeed(today()),G:g,sun:true,jump:true,goal:d.goal,gauge:fmtDur(d.ms),cloud:1}).start();
 }
 function stopStudyPreview(){if(pscene){pscene.stop();pscene=null}clearInterval(stTimelapse);stTimelapse=null;if(!run)soundsOff(.6)}
 $('studyView').addEventListener('click',e=>{
@@ -3174,7 +3175,7 @@ function timelapse(btn){
   if(!pscene)return;clearInterval(stTimelapse);const t0=Date.now(),T=14000;btn.disabled=true;btn.textContent='Growing…';
   const pr=TreeScene($('stCanvas'),{mini:true,fast:true,timelapse:true});pscene.stop();pscene=pr;pr.set({seed:treeSeed(today())+1,G:0,jump:true,pour:true,sun:false}).start();
   stTimelapse=setInterval(()=>{const k=Math.min(1,(Date.now()-t0)/T),seg=Math.floor(k*8),brk=seg%2===1&&k<1;
-    pr.set({G:k,pour:!brk&&k<1,sun:brk||k>=1});
+    pr.set({G:k,pour:!brk&&k<1,sun:brk||k>=1,cloud:1-k,goal:180,gauge:fmtDur(k*180*60000),left:''});
     if(k>=1){clearInterval(stTimelapse);stTimelapse=null;btn.disabled=false;btn.textContent='▶ Watch again';setTimeout(()=>{if(pscene===pr&&!stTimelapse)pr.set({seed:treeSeed(today()),G:growth(),jump:true,sun:true})},4000)}},100);
 }
 /* the joy card can hold a tiny still tree */

@@ -772,6 +772,47 @@ body{background-color:var(--bg);background-image:radial-gradient(120% 50% at 50%
 .seg2.four{flex-wrap:wrap}.seg2.four button{flex:1 1 40%}
 .vol{width:100%;accent-color:var(--terra)}
 .flabel{font-size:.84rem;font-weight:800}
+
+/* ---------- Setup wizard and routine editors ---------- */
+.lock-card.wiz{max-width:500px;gap:12px}
+.wiz-body{display:flex;flex-direction:column;gap:12px}
+.wiz-body h2{font-size:1.5rem}
+.whead{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.wdots{display:flex;gap:6px}
+.wdots i{width:22px;height:5px;border-radius:99px;background:var(--line);transition:background .3s,width .3s}
+.wdots i.past{background:var(--sage)}
+.wdots i.on{background:var(--terra);width:34px}
+.wnav{display:flex;gap:10px;justify-content:space-between;position:sticky;bottom:0;padding-top:6px;background:linear-gradient(transparent,var(--surface) 30%)}
+.wnav .btn{flex:1;padding:12px}
+.wnav .btn.sage{flex:2}
+.gbtn{background:#fff;color:#3C4043;border:1px solid #DADCE0;font-weight:700;gap:10px}
+.gbtn:hover{border-color:#B5B9BE}
+.glogo{width:18px;height:18px;flex:none}
+.or{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:.8rem;font-weight:700}
+.or::before,.or::after{content:"";flex:1;height:1px;background:var(--line)}
+.row3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.lock input[type=time],.acc-body input[type=time],.med-row input[type=time]{width:100%;border:1.5px solid var(--line);border-radius:12px;background:var(--bg);color:var(--ink);padding:10px 8px;font:inherit;font-size:.95rem}
+.acc-body .field input:not([type=checkbox]):not([type=range]){width:100%;border:1.5px solid var(--line);border-radius:12px;background:var(--bg);color:var(--ink);padding:10px 12px;font:inherit}
+.med-list{display:flex;flex-direction:column;gap:10px}
+.med-row{background:var(--bg);border:1px solid var(--line);border-radius:16px;padding:10px;display:flex;flex-direction:column;gap:8px}
+.med-top{display:grid;grid-template-columns:minmax(0,1fr) 136px 36px;gap:6px;align-items:center}
+@media (max-width:560px){.row3{grid-template-columns:1fr 1fr}.row3 .field:last-child{grid-column:1/-1}}
+@media (max-width:380px){.row3{grid-template-columns:1fr}.med-top{grid-template-columns:minmax(0,1fr) 36px}.med-top [data-m=time]{grid-column:1/-1;grid-row:2}}
+.days{display:flex;gap:4px;flex-wrap:wrap}
+.days button{border:1px solid var(--line);background:var(--surface);color:var(--muted);border-radius:99px;min-width:32px;height:32px;padding:0 9px;font-weight:800;font-size:.8rem}
+.days button[aria-pressed="true"]{background:var(--sage);border-color:var(--sage);color:#fff}
+.days [data-every]{padding:0 12px}
+.hlist{display:grid;grid-template-columns:1fr;gap:6px}
+.hrow{display:flex;align-items:center;gap:10px;background:var(--bg);border:1px solid var(--line);border-radius:14px;padding:9px 12px;cursor:pointer;font-size:.93rem;font-weight:700}
+.hrow input{width:20px;height:20px;accent-color:var(--hc)}
+.hrow .hico{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:color-mix(in srgb,var(--hc) 18%,var(--surface));color:var(--hc);flex:none}
+.hrow .hico svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.hrow:has(input:not(:checked)){opacity:.6}
+.hcust{display:flex;flex-direction:column;gap:10px;margin-top:6px}
+.wsong{display:flex;flex-direction:column;gap:8px;align-items:flex-start}
+.sub-h{font-family:var(--f-display);font-weight:500;font-size:1.05rem;margin:6px 0 0;color:var(--sage-ink)}
+.habits.one-group .cat-head{display:flex}
+@media (min-width:600px){.hlist{grid-template-columns:1fr 1fr}}
 @media (prefers-reduced-motion: reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 </style>
 </head>
@@ -913,6 +954,12 @@ body{background-color:var(--bg);background-image:radial-gradient(120% 50% at 50%
             <p class="pmsg" id="profileMsg" aria-live="polite"></p>
           </form>
         </details>
+        <details class="pbox acc" id="routineBox"><summary><span class="acc-ico s"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21v-8"/><path d="M12 13c0-4 3-6 7-6 0 4-3 6-7 6z"/><path d="M12 15.5c0-3-2-5-6-5 0 3 2 5 6 5z"/></svg></span><span class="acc-t"><b>My routine</b><small>Times, medicines and habits</small></span><svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary>
+          <div class="acc-body" id="routineBody"></div>
+        </details>
+        <details class="pbox acc" id="gBox"><summary><span class="acc-ico c"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 18h10a4 4 0 0 0 0-8 5.5 5.5 0 0 0-10.6 1.5A3.3 3.3 0 0 0 7 18z"/></svg></span><span class="acc-t"><b>Google Drive</b><small id="sumG">Not connected</small></span><svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary>
+          <div class="acc-body" id="gBody"></div>
+        </details>
         <details class="pbox acc" id="remBox"><summary><span class="acc-ico s"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 20a2 2 0 0 0 4 0"/></svg></span><span class="acc-t"><b>Reminders</b><small>Times for your gentle notifications</small></span><svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary>
           <div class="acc-body">
             <div id="remBody"></div>
@@ -1011,7 +1058,7 @@ const STARS='radial-gradient(1.2px 1.2px at 12% 30%,#fff 60%,transparent),radial
 const HEART=(x,y,d)=>`<g transform="translate(${x} ${y})"><path class="rise" style="animation-delay:${d}s" d="M0 4C0-1 7-1 7 4c0-5 7-5 7 0 0 5-7 9-7 9S0 9 0 4z" fill="#FFF1E8"/></g>`;
 const G1='#F08A3C', G2='#8DB98F';
 /* Category 1 scenes stay in warm terracotta / honey tones; category 2 scenes stay in sage / eucalyptus tones. */
-const HABITS=[
+const TEMPLATES=[
  {id:'sleep',cat:1,icon:'moon',short:'Sleep',title:'Sleep Schedule',meta:'7–8 hours of real rest',glow:'#7B6FD0',hc:'#7B6FD0',cap:'Rest by 10:45 PM · Rise at 7:00 AM',
   sbg:STARS+'linear-gradient(120deg,#1F1B3D,#4A3566 55%,#D2773A)',
   art:'<circle class="tw" cx="20" cy="14" r="1.6" fill="#fff"/><circle class="tw" style="animation-delay:.7s" cx="34" cy="34" r="1.3" fill="#fff"/><circle class="tw" style="animation-delay:1.3s" cx="12" cy="42" r="1.1" fill="#fff"/><path d="M60 8a18 18 0 1 0 16 27 14 14 0 0 1-16-27z" fill="#F6DFA8"/>',
@@ -1056,6 +1103,61 @@ const HABITS=[
   art:HEART(46,30,0)+HEART(62,18,.9)+HEART(34,14,1.7),
   tags:['Studying','Sketching','Comfort movie','Tending plants','A hobby'],subs:[{id:'love',label:'Did something I love',win:'Made time for joy'}]}
 ];
+/* ---------- Each person's own routine ---------- */
+const CFGKEY='sunshine-config';
+const DEF_CFG={v:1,habits:['sleep','meals','water','meds','pray','classes','bath','move','mind','love'],
+  wake:'07:00',bed:'22:45',meals:{bfast:'09:00',lunch:'13:00',dinner:'19:30'},waterL:2.5,meds:[],
+  prayer:{label:'Prayer & Grounding',mantra:'',reading:''},classes:{title:'Study or Work',done:'Showed up for my study or work'},
+  moveMin:30,breathMin:5,moveTags:['Walk','Yoga','Stretching','Running'],joy:['Reading','Music','Drawing','Comfort movie','Tending plants','Time outdoors']};
+/* People who set Sunshine up before routines were customisable keep exactly what they had (with generic medicine names they can rename). */
+const LEGACY_CFG={habits:DEF_CFG.habits.slice(),wake:'07:00',bed:'22:45',meals:{bfast:'09:30',lunch:'13:00',dinner:'19:00'},waterL:3,
+  meds:[{id:'medam',name:'Morning medicine',time:'10:00',days:'daily'},{id:'b12',name:'Vitamin B12',time:'09:45',days:'daily'},{id:'vitd',name:'Vitamin D',time:'10:30',days:[0]},{id:'medpm',name:'Night medicine',time:'21:00',days:'daily'}],
+  prayer:{label:'Prayer & Grounding',mantra:'ॐ श्री मात्रे नमः',reading:'Om Shree Matre Namaha'},classes:{title:'Attend Classes',done:'Went to my classes'},
+  joy:['Studying','Sketching','Comfort movie','Tending plants','A hobby']};
+const clone=o=>JSON.parse(JSON.stringify(o));
+function normCfg(c){const d=clone(DEF_CFG);c=c||{};
+  const out=Object.assign(d,c);out.meals=Object.assign(d.meals,c.meals||{});out.prayer=Object.assign(clone(DEF_CFG.prayer),c.prayer||{});out.classes=Object.assign(clone(DEF_CFG.classes),c.classes||{});
+  out.meds=(out.meds||[]).filter(m=>m&&m.name).map(m=>({id:m.id||('m'+Math.random().toString(36).slice(2,8)),name:String(m.name).slice(0,40),time:m.time||'09:00',days:Array.isArray(m.days)&&m.days.length&&m.days.length<7?m.days.map(Number):'daily'}));
+  return out}
+function loadCfg(){let c=null;try{c=JSON.parse(localStorage.getItem(CFGKEY))}catch(e){}
+  if(c)return normCfg(c);
+  let had=false;try{had=!!localStorage.getItem('sunshine-profile')}catch(e){}
+  const n=normCfg(had?Object.assign(clone(DEF_CFG),clone(LEGACY_CFG)):DEF_CFG);if(had)try{localStorage.setItem(CFGKEY,JSON.stringify(n))}catch(e){}return n}
+function saveCfg(c){CFG=normCfg(c);try{localStorage.setItem(CFGKEY,JSON.stringify(CFG))}catch(e){}}
+const tm=t=>{const[h,m]=String(t||'0:0').split(':').map(Number);return[h||0,m||0]};
+const fmtT=t=>{const[h,m]=tm(t);return`${h%12||12}:${String(m).padStart(2,'0')} ${h<12?'AM':'PM'}`};
+const fmtTs=t=>{const[h,m]=tm(t);return`${h%12||12}${m?':'+String(m).padStart(2,'0'):''} ${h<12?'AM':'PM'}`};
+const DAYN=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'],DAYL=['Sundays','Mondays','Tuesdays','Wednesdays','Thursdays','Fridays','Saturdays'];
+const daysLabel=d=>d==='daily'?'Daily':d.length===1?DAYL[d[0]]:d.map(x=>DAYN[x]).join(', ');
+const isAscii=s=>/^[\x00-\x7F]*$/.test(s);
+let CFG=loadCfg();
+const waterGoal=()=>Math.round((+CFG.waterL||2.5)*1000);
+function buildHabits(c){
+  const out=[];
+  TEMPLATES.forEach(t=>{
+    if(!c.habits.includes(t.id))return;
+    const h=Object.assign({},t);h.subs=t.subs.map(s=>Object.assign({},s));
+    if(h.id==='sleep'){h.cap=`Rest by ${fmtT(c.bed)} · Rise at ${fmtT(c.wake)}`;h.subs[0].label=`Slept by ${fmtT(c.bed)}, up at ${fmtT(c.wake)}`}
+    if(h.id==='meals'){const m=c.meals;h.cap=`${fmtTs(m.bfast)} · ${fmtTs(m.lunch)} · ${fmtTs(m.dinner)}`;h.subs[0].time=fmtT(m.bfast);h.subs[1].time=fmtT(m.lunch);h.subs[2].time=fmtT(m.dinner)}
+    if(h.id==='water'){const L=+c.waterL;h.meta=`${L} liters through the day`;h.cap=`${L} liters, sip by sip`}
+    if(h.id==='meds'){if(!c.meds.length)return;
+      const ms=c.meds.slice().sort((a,b)=>a.time.localeCompare(b.time));
+      h.subs=ms.map(m=>({id:m.id,label:m.name,time:m.days==='daily'?fmtT(m.time):daysLabel(m.days),only:m.days==='daily'?null:m.days,win:`Took ${m.name}`}));
+      const daily=ms.filter(m=>m.days==='daily').length,other=ms.length-daily;
+      h.cap=[daily?`${daily} daily`:'',other?`${other} on set days`:''].filter(Boolean).join(' · ')}
+    if(h.id==='pray'){const p=c.prayer;h.title=p.label||'Prayer & Grounding';h.short=h.title.split(/[ &]/)[0]||'Prayer';
+      h.mantra=!!p.mantra;h.mantraText=p.mantra;h.mantraReading=p.reading;h.cap=p.mantra||'A quiet moment';h.deva=!!p.mantra&&!isAscii(p.mantra);
+      const said=p.reading||p.mantra;h.subs[0].label=said?`Prayed: ${said}`:'Prayed or sat in stillness';h.subs[0].win=said?`Prayed: ${said}`:'Took a quiet moment to pray'}
+    if(h.id==='classes'){const k=c.classes;h.title=k.title||'Show up';h.short=h.title.length<=12?h.title:h.title.split(' ')[0];h.subs[0].label=k.done||'Showed up';h.subs[0].win=k.done||'Showed up'}
+    if(h.id==='move'){const n=+c.moveMin||30;h.meta=`${n} minutes, any kind`;h.cap=`${n} minutes, any kind`;h.subs[0].label=`Moved my body for ${n} min`;h.subs[0].win=`Moved for ${n} minutes`;h.tags=c.moveTags.length?c.moveTags:null}
+    if(h.id==='mind'){const n=+c.breathMin||5;h.meta=`${n} minutes of slow breath`;h.subs[0].time=`${n} min`;h.subs[0].win=`Breathed slowly for ${n} minutes`}
+    if(h.id==='love')h.tags=c.joy.length?c.joy:null;
+    out.push(h);
+  });
+  return out;
+}
+let HABITS=buildHabits(CFG);
+
 const QUOTES=[
  "Thank you, body, for carrying me through today.",
  "Faith is trusting the morning while it is still dark.",
@@ -1144,11 +1246,11 @@ const rec=n=>state.days[n]||(state.days[n]=EMPTY());
 let view=curDay();
 
 const subsFor=(h,n)=>h.subs.filter(s=>!s.only||s.only.includes(dateFor(n).getDay()));
-const isDone=(h,r,n)=>h.water?r.water>=3000:subsFor(h,n).every(s=>r.c[s.id]);
+const isDone=(h,r,n)=>h.water?r.water>=waterGoal():subsFor(h,n).every(s=>r.c[s.id]);
 const isPart=(h,r,n)=>!isDone(h,r,n)&&(h.water?r.water>0:subsFor(h,n).some(s=>r.c[s.id]));
 const score=(r,n)=>HABITS.filter(h=>isDone(h,r,n)).length;
 const anyWin=r=>Object.values(r.c).some(Boolean)||r.water>0||!!r.mood||r.step;
-function stage(r,n){const s=score(r,n);if(s>=9)return 4;if(s>=6)return 3;if(s>=3)return 2;return anyWin(r)?1:0}
+function stage(r,n){const f=score(r,n)/Math.max(1,HABITS.length);if(f>=.9)return 4;if(f>=.6)return 3;if(f>=.3)return 2;return anyWin(r)?1:0}
 
 const POT='<path d="M10.5 40h19l-2.4 7.2h-14.2z" fill="var(--terra)" opacity=".55"/><rect x="9" y="37.5" width="22" height="3.6" rx="1.6" fill="var(--terra)" opacity=".8"/>';
 function plant(st,future,n){
@@ -1170,25 +1272,33 @@ function plant(st,future,n){
 function cardHTML(h){
   let x=`<article class="card" data-habit="${h.id}" style="--glow:${h.glow};--hc:${h.hc};--i:${HABITS.indexOf(h)}">`;
   x+=`<div class="scene" style="--sbg:${h.sbg}"><svg class="motif" viewBox="0 0 84 62" aria-hidden="true">${h.art}</svg>
-    <div class="scene-text"><div class="st-row"><span class="sico"><svg viewBox="0 0 24 24">${ICON[h.icon]}</svg></span><h3>${h.title}</h3><span class="badge">Done ✓</span></div><small${h.deva?' class="deva"':''}>${h.cap}</small></div>
+    <div class="scene-text"><div class="st-row"><span class="sico"><svg viewBox="0 0 24 24">${ICON[h.icon]}</svg></span><h3>${esc(h.title)}</h3><span class="badge">Done ✓</span></div><small${h.deva?' class="deva"':''}>${esc(h.cap)}</small></div>
     <svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></div>`;
-  if(h.mantra) x+='<div class="mantra"><span class="dv">ॐ श्री मात्रे नमः</span><span class="tr">Om Shree Matre Namaha</span></div>';
+  if(h.mantra) x+=`<div class="mantra"><span class="dv">${esc(h.mantraText)}</span>${h.mantraReading?`<span class="tr">${esc(h.mantraReading)}</span>`:''}</div>`;
   if(h.water){
     x+=`<div class="water-row"><div class="glass" aria-hidden="true"><div class="marks"></div><div class="fill" id="waterFill"><svg viewBox="0 0 120 10" preserveAspectRatio="none"><path d="M0 5 Q15 0 30 5 T60 5 T90 5 T120 5 V10 H0z"/></svg></div></div>
-    <div class="water-info"><span class="water-amt" id="waterAmt">0 L <small>of 3 L</small></span><span class="soft" id="waterMsg"></span>
+    <div class="water-info"><span class="water-amt" id="waterAmt">0 L <small>of ${CFG.waterL} L</small></span><span class="soft" id="waterMsg"></span>
     <div class="water-btns"><button class="btn" data-water="500">+500 ml</button><button class="btn" data-water="1000">+1 L</button><button class="btn ghost" data-water="-250" aria-label="Remove 250 ml">−250</button></div></div></div>`;
   } else {
-    x+='<div class="subs">'+h.subs.map(s=>`<label class="check" data-row="${s.id}"><input type="checkbox" class="sr" data-sub="${s.id}">${CHECK}<span class="lbl">${s.label}</span>${s.time?`<span class="time">${s.time}</span>`:''}</label>`).join('')+'</div>';
+    x+='<div class="subs">'+h.subs.map(s=>`<label class="check" data-row="${s.id}"><input type="checkbox" class="sr" data-sub="${s.id}">${CHECK}<span class="lbl">${esc(s.label)}</span>${s.time?`<span class="time">${esc(s.time)}</span>`:''}</label>`).join('')+'</div>';
   }
-  if(h.tags) x+='<div class="chips">'+h.tags.map(t=>`<button class="chip" data-tag="${h.id}" data-val="${t}" aria-pressed="false">${t}</button>`).join('')+'</div>';
+  if(h.tags) x+='<div class="chips">'+h.tags.map(t=>`<button class="chip" data-tag="${h.id}" data-val="${esc(t)}" aria-pressed="false">${esc(t)}</button>`).join('')+'</div>';
   if(h.custom) x+=`<input class="note" id="custom-${h.id}" data-custom="${h.id}" maxlength="60" placeholder="Or write your own…" aria-label="What did you love today?">`;
   return x+'</article>';
 }
-$('habits').dataset.seg='cat1';
-$('habits').innerHTML=
- `<div class="seg" role="tablist" aria-label="Habit groups"><button role="tab" data-seg="cat1" aria-selected="true">Basics <span id="segC1">0/5</span></button><button role="tab" data-seg="cat2" aria-selected="false">Care <span id="segC2">0/5</span></button></div>
-  <section class="cat1"><div class="cat-head"><span class="pill">Basics</span><h2>Daily Foundation</h2><p>The ground everything else grows from.</p></div><div class="cards">${HABITS.filter(h=>h.cat===1).map(cardHTML).join('')}</div></section>
-  <section class="cat2"><div class="cat-head"><span class="pill">Care</span><h2>Mindful Care &amp; Living</h2><p>The softer things that make life feel like yours.</p></div><div class="cards">${HABITS.filter(h=>h.cat===2).map(cardHTML).join('')}</div></section>`;
+function renderHabitCards(){
+  HABITS=buildHabits(CFG);
+  const c1=HABITS.filter(h=>h.cat===1),c2=HABITS.filter(h=>h.cat===2),both=c1.length&&c2.length;
+  $('habits').dataset.seg=both?($('habits').dataset.seg||'cat1'):(c1.length?'cat1':'cat2');
+  $('habits').classList.toggle('one-group',!both);
+  $('habits').innerHTML=
+   `<div class="seg" role="tablist" aria-label="Habit groups"${both?'':' hidden'}><button role="tab" data-seg="cat1" aria-selected="true">Basics <span id="segC1">0/${c1.length}</span></button><button role="tab" data-seg="cat2" aria-selected="false">Care <span id="segC2">0/${c2.length}</span></button></div>
+    ${c1.length?`<section class="cat1"><div class="cat-head"><span class="pill">Basics</span><h2>Daily Foundation</h2><p>The ground everything else grows from.</p></div><div class="cards">${c1.map(cardHTML).join('')}</div></section>`:''}
+    ${c2.length?`<section class="cat2"><div class="cat-head"><span class="pill">Care</span><h2>Mindful Care &amp; Living</h2><p>The softer things that make life feel like yours.</p></div><div class="cards">${c2.map(cardHTML).join('')}</div></section>`:''}
+    ${HABITS.length?'':'<p class="soft">No habits are switched on. Choose some under Me → My routine.</p>'}`;
+  doneMem={view:null,set:new Set()};segAuto=null;
+}
+
 $('moods').innerHTML=MOODS.map(m=>`<button class="mood-btn" data-mood="${m.id}" style="--mc:${m.c}" aria-pressed="false"><svg viewBox="0 0 24 24">${m.svg}</svg>${m.name}</button>`).join('');
 
 function celebrate(el,cat){
@@ -1207,6 +1317,7 @@ function celebrate(el,cat){
 let segAuto=null;const openCards=new Set();
 function setSeg(v){$('habits').dataset.seg=v;document.querySelectorAll('button[data-seg]').forEach(b=>b.setAttribute('aria-selected',b.dataset.seg===v))}
 let prevWins=new Set(),prevView=null,doneMem={view:null,set:new Set()};
+renderHabitCards();
 const fmtL=ml=>(ml/1000).toFixed(ml%1000===0?0:ml%500===0?1:2)+' L';
 function extras(hb,r){const a=[...((hb.tags&&r.tags&&r.tags[hb.id])||[])],c=((r.custom||{})[hb.id]||'').trim();if(c)a.push(c);return a.length?` (${a.join(', ').toLowerCase()})`:''}
 function update(){
@@ -1216,7 +1327,7 @@ function update(){
   $('greet').innerHTML=raw<1?`${greet}${nm}. <em>Day 1</em> begins tomorrow.`:`${greet}${nm}. <em>Day ${view}</em> of 21.`;
   $('dateLine').textContent=dateFor(view).toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'});
   const sc=score(r,view);
-  $('ringNum').textContent=sc+'/10';$('ringFg').style.strokeDashoffset=213.6*(1-sc/10);
+  const NH=Math.max(1,HABITS.length);$('ringNum').textContent=sc+'/'+HABITS.length;$('ringFg').style.strokeDashoffset=213.6*(1-sc/NH);
 
   const ban=$('viewBanner');
   $('homeView').classList.toggle('prestart',raw<1);
@@ -1246,11 +1357,11 @@ function update(){
   });
   doneMem={view,set:nowDone};
   const c1=HABITS.filter(h=>h.cat===1&&nowDone.has(h.id)).length,c2=HABITS.filter(h=>h.cat===2&&nowDone.has(h.id)).length;
-  $('segC1').textContent=c1+'/5';$('segC2').textContent=c2+'/5';
-  if(segAuto!==view){segAuto=view;setSeg(c1===5&&c2<5?'cat2':'cat1')}
-  $('waterFill').style.height=(Math.min(r.water/3000,1)*100)+'%';
-  $('waterAmt').innerHTML=`${fmtL(r.water)} <small>of 3 L</small>`;
-  $('waterMsg').textContent=r.water>=3000?'Fully hydrated. Well done.':r.water>=1500?'Halfway there.':r.water>0?'Every sip counts.':'Start with one glass.';
+  const n1=HABITS.filter(h=>h.cat===1).length,n2=HABITS.filter(h=>h.cat===2).length;$('segC1').textContent=c1+'/'+n1;$('segC2').textContent=c2+'/'+n2;
+  if(segAuto!==view&&n1&&n2){segAuto=view;setSeg(c1===n1&&c2<n2?'cat2':'cat1')}
+  if($('waterFill'))$('waterFill').style.height=(Math.min(r.water/waterGoal(),1)*100)+'%';
+  if($('waterAmt'))$('waterAmt').innerHTML=`${fmtL(r.water)} <small>of ${CFG.waterL} L</small>`;
+  if($('waterMsg'))$('waterMsg').textContent=r.water>=waterGoal()?'Fully hydrated. Well done.':r.water>=waterGoal()/2?'Halfway there.':r.water>0?'Every sip counts.':'Start with one glass.';
 
   document.querySelectorAll('[data-mood]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.mood===r.mood));
   const m=MOODS.find(m=>m.id===r.mood);$('moodReply').textContent=m?m.reply:'There is no wrong answer here.';
@@ -1263,13 +1374,13 @@ function update(){
   if(isToday&&raw>=1)wins.push({k:'here',t:'Opened Sunshine today',c:'var(--honey)'});
   HABITS.forEach(hb=>{
     subsFor(hb,view).forEach(s=>{if(r.c[s.id])wins.push({k:s.id,t:s.win+extras(hb,r),c:hb.hc})});
-    if(hb.water&&r.water>0)wins.push({k:'water'+(r.water>=3000),t:r.water>=3000?'Drank a full 3 liters of water':`Sipped ${fmtL(r.water)} of water`,c:'var(--water-deep)'});
+    if(hb.water&&r.water>0)wins.push({k:'water'+(r.water>=waterGoal()),t:r.water>=waterGoal()?`Drank your full ${CFG.waterL} liters of water`:`Sipped ${fmtL(r.water)} of water`,c:'var(--water-deep)'});
   });
   if(m)wins.push({k:'mood',t:'Checked in with how you feel',c:m.c});
   if(r.step)wins.push({k:'step',t:'Took a gentle healing step',c:'var(--sage)'});
   const fresh=prevView===view;
   $('winCount').textContent=wins.length;$('winsChipN').textContent=wins.length;$('winsChipW').textContent=wins.length===1?'win':'wins';
-  $('winList').innerHTML=wins.length?wins.map(w=>`<li class="${fresh&&!prevWins.has(w.k)?'new':''}"><svg viewBox="0 0 16 16"><path d="M3 13C3 7 7 3 14 3c0 7-4 11-10 11" fill="${w.c}"/></svg>${w.t}</li>`).join(''):'<li class="soft">Your wins will gather here as the day goes on.</li>';
+  $('winList').innerHTML=wins.length?wins.map(w=>`<li class="${fresh&&!prevWins.has(w.k)?'new':''}"><svg viewBox="0 0 16 16"><path d="M3 13C3 7 7 3 14 3c0 7-4 11-10 11" fill="${w.c}"/></svg>${esc(w.t)}</li>`).join(''):'<li class="soft">Your wins will gather here as the day goes on.</li>';
   prevWins=new Set(wins.map(w=>w.k));prevView=view;
   $('quoteLabel').textContent=(isToday&&h<18)?'Gratitude & hope for today':'To close your day';
   $('quote').textContent=QUOTES[(view-1)%QUOTES.length];
@@ -1279,17 +1390,17 @@ function renderTracker(raw,cd){
   const days=Array.from({length:21},(_,i)=>i+1),sel=n=>n===view?' sel':'';
   let h='<thead><tr><th class="rowh"><span class="eyebrow">Day</span></th>'+days.map(n=>`<th class="${sel(n)}${n===cd&&raw<=21?' tod':''}"><button data-day="${n}" ${n>raw?'disabled':''} aria-label="Open day ${n}">${n}</button></th>`).join('')+'<th class="tot">Days</th></tr></thead><tbody>';
   HABITS.forEach((hb,i)=>{let cnt=0;
-    if(i===5)h+='<tr class="gap"><td colspan="23"></td></tr>';
-    h+=`<tr style="--hc:${hb.hc}"><th class="rowh"><span class="lab"><span class="mini c${hb.cat}"><svg viewBox="0 0 24 24">${ICON[hb.icon]}</svg></span>${hb.short}</span></th>`+days.map(n=>{
+    if(i>0&&hb.cat!==HABITS[i-1].cat)h+='<tr class="gap"><td colspan="23"></td></tr>';
+    h+=`<tr style="--hc:${hb.hc}"><th class="rowh"><span class="lab"><span class="mini c${hb.cat}"><svg viewBox="0 0 24 24">${ICON[hb.icon]}</svg></span>${esc(hb.short)}</span></th>`+days.map(n=>{
       if(n>raw)return `<td class="${sel(n)}"><span class="dot fut"></span></td>`;
       const r=peek(n),full=isDone(hb,r,n),part=isPart(hb,r,n);if(full)cnt++;
-      return `<td class="${sel(n)}" title="${hb.short}, day ${n}: ${full?'done':part?'partly done':'not yet'}"><span class="dot c${hb.cat}${full?' full':part?' half':''}"></span></td>`}).join('')+`<td class="tot">${cnt}/21</td></tr>`});
+      return `<td class="${sel(n)}" title="${esc(hb.short)}, day ${n}: ${full?'done':part?'partly done':'not yet'}"><span class="dot c${hb.cat}${full?' full':part?' half':''}"></span></td>`}).join('')+`<td class="tot">${cnt}/21</td></tr>`});
   h+='</tbody><tfoot><tr><th class="rowh">Done</th>'+days.map(n=>`<td class="${sel(n)}">${n>raw?'':score(peek(n),n)}</td>`).join('')+'<td></td></tr></tfoot>';
   $('tracker').innerHTML=h;
   $('trackerList').innerHTML=HABITS.map((hb,i)=>{let cnt=0;
     const dots=days.map(n=>{if(n>raw)return `<span class="tdot fut"></span>`;const r=peek(n),full=isDone(hb,r,n),part=isPart(hb,r,n);if(full)cnt++;
-      return `<button class="tdot c${hb.cat}${full?' full':part?' half':''}${n===view?' sel':''}" data-day="${n}" aria-label="${hb.short}, day ${n}: ${full?'done':part?'partly done':'not yet'}"></button>`}).join('');
-    return `${i===5?'<div class="tl-gap"></div>':''}<div class="tl-row" style="--hc:${hb.hc}"><div class="tl-head"><span class="mini c${hb.cat}"><svg viewBox="0 0 24 24">${ICON[hb.icon]}</svg></span><b>${hb.short}</b><span class="tl-n">${cnt}/21</span></div><div class="tl-dots">${dots}</div></div>`}).join('')+
+      return `<button class="tdot c${hb.cat}${full?' full':part?' half':''}${n===view?' sel':''}" data-day="${n}" aria-label="${esc(hb.short)}, day ${n}: ${full?'done':part?'partly done':'not yet'}"></button>`}).join('');
+    return `${i>0&&hb.cat!==HABITS[i-1].cat?'<div class="tl-gap"></div>':''}<div class="tl-row" style="--hc:${hb.hc}"><div class="tl-head"><span class="mini c${hb.cat}"><svg viewBox="0 0 24 24">${ICON[hb.icon]}</svg></span><b>${esc(hb.short)}</b><span class="tl-n">${cnt}/21</span></div><div class="tl-dots">${dots}</div></div>`}).join('')+
     '<div class="tl-scale"><span style="grid-column:1">1</span><span style="grid-column:7">7</span><span style="grid-column:14">14</span><span style="grid-column:21">21</span></div>';
 }
 
@@ -1680,28 +1791,12 @@ function setLocked(on){
   $('lock').hidden=!on;
   document.querySelector('.wrap').inert=on;$('bnav').inert=on;
   document.body.style.overflow=on?'hidden':'';
-  if(on)renderLock();else{update();renderPerson();if(CAP)scheduleReminders();if(typeof musicBegin==='function')musicBegin()}
+  if(on)renderLock();else{update();renderPerson();if(CAP)scheduleReminders();if(typeof musicBegin==='function')musicBegin();if(typeof syncNow==='function')setTimeout(()=>syncNow(false),900)}
 }
 function renderLock(mode){
   const c=$('lockCard'),sun=`<div class="lock-logo">${SUN_SVG}<h1>Sunshine</h1>`;
-  if(!profile||!profile.hash){
-    c.innerHTML=`${sun}<p>A gentle space for your 21 days. Let's set it up. It takes a minute.</p></div>
-    <form id="regForm" class="field" style="gap:12px" autocomplete="off">
-      <div class="field"><label for="rName">Your name</label><input id="rName" maxlength="40" required autocomplete="given-name" placeholder="What should Sunshine call you?"></div>
-      <div class="row2">
-        <div class="field"><label for="rCName">Trusted person</label><input id="rCName" maxlength="40" placeholder="e.g. Amma"></div>
-        <div class="field"><label for="rCPhone">Their phone</label><input id="rCPhone" type="tel" inputmode="tel" maxlength="20" placeholder="+91 …"></div>
-      </div>
-      <p class="hint" style="margin-top:-6px">Optional. They'll appear as a "Call" button on the SOS page.</p>
-      <div class="row2">
-        <div class="field"><label for="rPin">Create a PIN</label><input id="rPin" class="pin" type="password" inputmode="numeric" maxlength="6" autocomplete="new-password" placeholder="••••"></div>
-        <div class="field"><label for="rPin2">Confirm PIN</label><input id="rPin2" class="pin" type="password" inputmode="numeric" maxlength="6" autocomplete="new-password" placeholder="••••"></div>
-      </div>
-      <p class="lock-msg" id="lockMsg" aria-live="polite"></p>
-      <button class="btn sage wide" type="submit">Create my space</button>
-      <p class="lock-note">Your details and PIN stay on this phone only. There's no online account, so a forgotten PIN can't be recovered. Export a backup from Profile &amp; backup now and then.</p>
-    </form>`;
-    setTimeout(()=>{try{$('rName').focus()}catch(e){}},50);return}
+  c.classList.remove('wiz');
+  if(!profile||!profile.hash){renderWizard();return}
   if(mode==='forgot'){
     c.innerHTML=`${sun}<p>Forgot your PIN?</p></div>
     <p class="soft" style="text-align:center">Your PIN only lives on this phone, so it can't be recovered. The only way back in is to erase Sunshine on this phone and start again. If you exported a backup, you can import it afterwards.</p>
@@ -1722,16 +1817,155 @@ function renderLock(mode){
   setTimeout(()=>{try{$('lPin').focus()}catch(e){}},50);
 }
 const SUN_SVG='<svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="7" fill="#F4C25B"/><g stroke="#F08A3C" stroke-width="2.2" stroke-linecap="round"><path d="M16 2.5v4M16 25.5v4M2.5 16h4M25.5 16h4M6.4 6.4l2.8 2.8M22.8 22.8l2.8 2.8M6.4 25.6l2.8-2.8M22.8 9.2l2.8-2.8"/></g></svg>';
+/* ---------- Routine editors (shared by first-install setup and Me → My routine) ---------- */
+const HABIT_NAMES={sleep:'Sleep schedule',meals:'Three meals on time',water:'Drink water',meds:'Medicines & vitamins',pray:'Prayer or a quiet moment',classes:'Show up (classes, work…)',bath:'Body care, morning & night',move:'Movement',mind:'Breathwork',love:'One thing I love'};
+function dayHTML(c){return`
+  <div class="row2"><div class="field"><label>Wake up</label><input type="time" data-k="wake" value="${c.wake}"></div><div class="field"><label>Sleep by</label><input type="time" data-k="bed" value="${c.bed}"></div></div>
+  <div class="row3"><div class="field"><label>Breakfast</label><input type="time" data-k="bfast" value="${c.meals.bfast}"></div><div class="field"><label>Lunch</label><input type="time" data-k="lunch" value="${c.meals.lunch}"></div><div class="field"><label>Dinner</label><input type="time" data-k="dinner" value="${c.meals.dinner}"></div></div>
+  <div class="field"><label>Daily water goal</label><div class="seg2">${[1.5,2,2.5,3,3.5].map(v=>`<button type="button" data-water-goal="${v}" aria-pressed="${+c.waterL===v}">${v} L</button>`).join('')}</div></div>`}
+function medRow(m){const daily=m.days==='daily';return`<div class="med-row" data-id="${esc(m.id)}">
+  <div class="med-top"><input class="note" data-m="name" maxlength="40" placeholder="Name, e.g. Vitamin D" value="${esc(m.name||'')}" aria-label="Medicine or vitamin name"><input type="time" data-m="time" value="${m.time||'09:00'}" aria-label="Time"><button type="button" class="mdel" data-act="delMed" aria-label="Remove">×</button></div>
+  <div class="days"><button type="button" data-every aria-pressed="${daily}">Every day</button>${DAYN.map((d,i)=>`<button type="button" data-dow="${i}" aria-pressed="${daily||m.days.includes(i)}" aria-label="${DAYL[i]}">${d[0]}</button>`).join('')}</div></div>`}
+function medsHTML(c){return`<div class="med-list">${c.meds.map(medRow).join('')}</div>
+  <button type="button" class="btn" data-act="addMed">+ Add a medicine or vitamin</button>
+  <p class="soft">Nothing to add? That’s fine; the medicine card stays hidden. Names stay private: reminders only say “medicine time”.</p>`}
+function habitsHTML(c){const on=id=>c.habits.includes(id);
+  return`<div class="hlist">${TEMPLATES.map(t=>`<label class="hrow" style="--hc:${t.hc}"><input type="checkbox" data-habit-on="${t.id}" ${on(t.id)?'checked':''}><span class="hico"><svg viewBox="0 0 24 24">${ICON[t.icon]}</svg></span><span>${HABIT_NAMES[t.id]}</span></label>`).join('')}</div>
+  <div class="hcust">
+    <div class="field"><label>What do you show up for?</label><input class="note" data-k="classTitle" maxlength="30" value="${esc(c.classes.title)}" placeholder="e.g. Attend Classes, Work, Study"></div>
+    <div class="field"><label>Name of your prayer card</label><input class="note" data-k="prayLabel" maxlength="30" value="${esc(c.prayer.label)}" placeholder="e.g. Prayer & Grounding, Gratitude, Namaz"></div>
+    <div class="field"><label>Your prayer or mantra <span class="hint">(optional, any language)</span></label><input class="note" data-k="mantra" maxlength="60" value="${esc(c.prayer.mantra)}" placeholder="e.g. ॐ नमः शिवाय"></div>
+    <div class="field"><label>How it reads <span class="hint">(optional)</span></label><input class="note" data-k="reading" maxlength="60" value="${esc(c.prayer.reading)}" placeholder="e.g. Om Namah Shivaya"></div>
+    <div class="row2"><div class="field"><label>Movement minutes</label><input class="note" type="number" inputmode="numeric" min="5" max="180" data-k="moveMin" value="${c.moveMin}"></div><div class="field"><label>Breathwork minutes</label><input class="note" type="number" inputmode="numeric" min="1" max="60" data-k="breathMin" value="${c.breathMin}"></div></div>
+    <div class="field"><label>Your kinds of movement</label><input class="note" data-k="moveTags" maxlength="120" value="${esc(c.moveTags.join(', '))}" placeholder="Separate with commas"></div>
+    <div class="field"><label>Things you love doing</label><input class="note" data-k="joy" maxlength="160" value="${esc(c.joy.join(', '))}" placeholder="Separate with commas"></div>
+  </div>`}
+function readRoutine(root,c){
+  c=normCfg(clone(c));const v=k=>{const el=root.querySelector(`[data-k="${k}"]`);return el?el.value:null};
+  if(v('wake')!==null){c.wake=v('wake')||c.wake;c.bed=v('bed')||c.bed;c.meals.bfast=v('bfast')||c.meals.bfast;c.meals.lunch=v('lunch')||c.meals.lunch;c.meals.dinner=v('dinner')||c.meals.dinner;
+    const w=root.querySelector('[data-water-goal][aria-pressed="true"]');if(w)c.waterL=+w.dataset.waterGoal}
+  if(root.querySelector('.med-list'))c.meds=[...root.querySelectorAll('.med-row')].map(r=>{const name=r.querySelector('[data-m=name]').value.trim();if(!name)return null;
+    const every=r.querySelector('[data-every]').getAttribute('aria-pressed')==='true',ds=[...r.querySelectorAll('[data-dow][aria-pressed="true"]')].map(b=>+b.dataset.dow);
+    return{id:r.dataset.id,name,time:r.querySelector('[data-m=time]').value||'09:00',days:every||ds.length===7||!ds.length?'daily':ds}}).filter(Boolean);
+  if(root.querySelector('.hlist')){c.habits=[...root.querySelectorAll('[data-habit-on]')].filter(x=>x.checked).map(x=>x.dataset.habitOn);
+    c.classes.title=(v('classTitle')||'').trim()||'Show up';c.classes.done=/class/i.test(c.classes.title)?'Went to my classes':`Showed up: ${c.classes.title}`;
+    c.prayer.label=(v('prayLabel')||'').trim()||'Prayer & Grounding';c.prayer.mantra=(v('mantra')||'').trim();c.prayer.reading=(v('reading')||'').trim();
+    c.moveMin=Math.min(180,Math.max(5,+v('moveMin')||30));c.breathMin=Math.min(60,Math.max(1,+v('breathMin')||5));
+    const list=s=>(s||'').split(',').map(x=>x.trim()).filter(Boolean).slice(0,10).map(x=>x.slice(0,24));c.moveTags=list(v('moveTags'));c.joy=list(v('joy'))}
+  return normCfg(c);
+}
+function routineClicks(e){const b=e.target.closest('button');if(!b)return false;
+  if(b.dataset.waterGoal){b.parentElement.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b));return true}
+  if(b.dataset.act==='addMed'){const list=b.parentElement.querySelector('.med-list'),t=document.createElement('div');t.innerHTML=medRow({id:'m'+Date.now().toString(36),name:'',time:'09:00',days:'daily'});const row=t.firstElementChild;list.appendChild(row);row.querySelector('input').focus();return true}
+  if(b.dataset.act==='delMed'){b.closest('.med-row').remove();return true}
+  if(b.hasAttribute('data-every')){const onNow=b.getAttribute('aria-pressed')!=='true';b.closest('.days').querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',onNow));return true}
+  if(b.dataset.dow!==undefined){b.setAttribute('aria-pressed',b.getAttribute('aria-pressed')!=='true');const row=b.closest('.days');row.querySelector('[data-every]').setAttribute('aria-pressed',[...row.querySelectorAll('[data-dow]')].every(x=>x.getAttribute('aria-pressed')==='true'));return true}
+  return false;
+}
+
+/* ---------- First-install setup ---------- */
+let wiz=null;
+const WSTEPS=['welcome','about','day','meds','habits','look','pin'];
+function renderWizard(){
+  if(!wiz)wiz={step:0,cfg:normCfg(DEF_CFG),name:'',cName:'',cPhone:'',start:'today',rem:true,restored:false,offer:null};
+  const c=$('lockCard');c.classList.add('wiz');
+  const steps=wiz.restored?['welcome','pin']:WSTEPS,key=wiz.offer?'restore':steps[wiz.step],total=steps.length-1;
+  const head=key==='welcome'||key==='restore'?'':`<div class="whead"><div class="wdots">${steps.slice(1).map((s,i)=>`<i class="${i+1<wiz.step?'past':i+1===wiz.step?'on':''}"></i>`).join('')}</div><span class="eyebrow">Step ${wiz.step} of ${total}</span></div>`;
+  const g=gState();let body='';
+  if(key==='welcome')body=`<div class="lock-logo">${SUN_SVG}<h1>Welcome to Sunshine</h1><p>A gentle space for your days. Let’s make it yours; it takes about two minutes.</p></div>
+    ${gReady()?`<button type="button" class="btn gbtn wide" data-wz="google">${GLOGO}<span>Continue with Google</span></button><p class="lock-note">Your data is kept privately in your own Google Drive, so you can bring it back on a new phone.</p><div class="or"><span>or</span></div>`:''}
+    <button type="button" class="btn sage wide" data-wz="next">Set up on this phone</button>
+    <p class="lock-note">${gReady()?'Without Google, everything stays only on this phone.':'Everything stays only on this phone. You can export a backup from Me any time.'}</p>`;
+  if(key==='restore'){const when=new Date(wiz.offer.updated);body=`<div class="lock-logo">${SUN_SVG}<h1>Welcome back${g.name?', '+esc(g.name):''}</h1>
+    <p>We found your Sunshine in Google Drive, last saved ${when.toLocaleDateString(undefined,{day:'numeric',month:'long'})} at ${when.toLocaleTimeString([],{hour:'numeric',minute:'2-digit'})}.</p></div>
+    <button type="button" class="btn sage wide" data-wz="restore">Restore my Sunshine</button>
+    <button type="button" class="btn ghost wide" data-wz="fresh">Start fresh instead</button>
+    <p class="lock-note">Starting fresh will replace the copy in your Drive once you finish setting up.</p>`}
+  if(key==='about')body=`<h2>About you</h2><p class="soft">What should Sunshine call you?</p>
+    <div class="field"><label for="wName">Your name</label><input id="wName" maxlength="40" autocomplete="given-name" value="${esc(wiz.name)}" placeholder="Your first name"></div>
+    <div class="row2"><div class="field"><label for="wCName">Trusted person</label><input id="wCName" maxlength="40" value="${esc(wiz.cName)}" placeholder="e.g. Amma"></div><div class="field"><label for="wCPhone">Their phone</label><input id="wCPhone" type="tel" inputmode="tel" maxlength="20" value="${esc(wiz.cPhone)}" placeholder="+91 …"></div></div>
+    <p class="hint">Optional. They’ll appear as a “Call” button on the SOS page.</p>`;
+  if(key==='day')body=`<h2>Your day</h2><p class="soft">These shape your habit cards and gentle reminders. You can change them any time in Me.</p>${dayHTML(wiz.cfg)}
+    <div class="field"><label>Start my 21 days</label><div class="seg2" id="wStart"><button type="button" data-start="today" aria-pressed="${wiz.start==='today'}">Today</button><button type="button" data-start="tomorrow" aria-pressed="${wiz.start==='tomorrow'}">Tomorrow</button></div></div>`;
+  if(key==='meds')body=`<h2>Medicines & vitamins</h2><p class="soft">Add anything you take regularly, with its time and the days you take it.</p>${medsHTML(wiz.cfg)}`;
+  if(key==='habits')body=`<h2>Your habits</h2><p class="soft">Switch on what you’d like to track, then make each one yours.</p>${habitsHTML(wiz.cfg)}`;
+  if(key==='look'){const mc=musicCfg(),t=themePref();body=`<h2>Look & sound</h2><p class="soft">How should Sunshine feel when you open it?</p>
+    <div class="field"><label>Theme</label><div class="seg2"><button type="button" data-wtheme="light" aria-pressed="${t==='light'}">☀️ Light</button><button type="button" data-wtheme="dark" aria-pressed="${t==='dark'}">🌙 Dark</button><button type="button" data-wtheme="system" aria-pressed="${t==='system'}">📱 Phone</button></div></div>
+    <div class="field"><label>Music when Sunshine opens</label><div class="seg2"><button type="button" data-wmusic="chimes" aria-pressed="${mc.on&&mc.source==='chimes'}">🎐 Chimes</button><button type="button" data-wmusic="mine" aria-pressed="${mc.on&&mc.source==='mine'}">🎵 My song</button><button type="button" data-wmusic="off" aria-pressed="${!mc.on}">🔇 Off</button></div></div>
+    <div class="wsong" id="wSong" ${mc.on&&mc.source==='mine'?'':'hidden'}><p class="soft" id="wSongName">${trackBlob?'🎵 '+esc(mc.name||'Your song'):'Choose a song file (MP3 or M4A) from your phone.'}</p><label class="btn terra" for="wFile" role="button" tabindex="0">Choose a song</label><input type="file" id="wFile" class="sr" accept="audio/*,.mp3,.m4a,.aac,.wav,.ogg"></div>
+    <button type="button" class="btn ghost" data-wz="hear" ${mc.on?'':'hidden'}>▶ Hear it</button>
+    ${CAP?`<label class="toggle-row"><input type="checkbox" id="wRem" ${wiz.rem?'checked':''}> Send me gentle reminders</label>`:''}`}
+  if(key==='pin')body=`<form id="regForm" class="field" style="gap:12px" autocomplete="off"><h2>Create your PIN</h2><p class="soft">${wiz.restored?`Welcome back, ${esc(wiz.name)}. `:''}A 4–6 digit PIN keeps Sunshine private on this phone.</p>
+    <div class="row2"><div class="field"><label for="rPin">Create a PIN</label><input id="rPin" class="pin" type="password" inputmode="numeric" maxlength="6" autocomplete="new-password" placeholder="••••"></div><div class="field"><label for="rPin2">Confirm PIN</label><input id="rPin2" class="pin" type="password" inputmode="numeric" maxlength="6" autocomplete="new-password" placeholder="••••"></div></div>
+    <p class="lock-msg" id="lockMsg" aria-live="polite"></p>
+    <button class="btn sage wide" type="submit">Create my space ☀️</button>
+    <p class="lock-note">Your PIN stays on this phone and can’t be recovered. ${g.signedIn?`Your data is kept safe in ${esc(g.email||'your Google Drive')}.`:'Export a backup from Me now and then.'}</p></form>`;
+  const nav=(key==='welcome'||key==='restore')?'':`<div class="wnav"><button type="button" class="btn ghost" data-wz="back">Back</button>${key==='pin'?'':`<button type="button" class="btn sage" data-wz="next">${key==='look'?'Almost done':'Next'}</button>`}</div>`;
+  c.innerHTML=`<div class="wiz-body">${head}${body}</div><p class="lock-msg" id="wizMsg" aria-live="polite"></p>${nav}`;
+  c.scrollTop=0;$('lock').scrollTop=0;
+  setTimeout(()=>{const f=c.querySelector('#wName,#rPin');if(f)try{f.focus()}catch(e){}},60);
+}
+function wizCollect(){
+  const key=(wiz.restored?['welcome','pin']:WSTEPS)[wiz.step],c=$('lockCard');
+  if(key==='about'){wiz.name=$('wName').value.trim();wiz.cName=$('wCName').value.trim();wiz.cPhone=$('wCPhone').value.trim()}
+  if(key==='day'||key==='meds'||key==='habits')wiz.cfg=readRoutine(c,wiz.cfg);
+  if(key==='day'){const s=c.querySelector('[data-start][aria-pressed="true"]');wiz.start=s?s.dataset.start:'today'}
+  if(key==='look'&&$('wRem'))wiz.rem=$('wRem').checked;
+  return key;
+}
+$('lock').addEventListener('click',async e=>{
+  if(!wiz||!$('lockCard').classList.contains('wiz'))return;
+  if(routineClicks(e))return;
+  const b=e.target.closest('button');if(!b)return;const m=$('wizMsg');
+  if(b.dataset.start){b.parentElement.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b));return}
+  if(b.dataset.wtheme){applyTheme(b.dataset.wtheme);b.parentElement.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b));return}
+  if(b.dataset.wmusic){const mc=musicCfg(),v=b.dataset.wmusic;mc.on=v!=='off';if(v!=='off')mc.source=v;saveMusicCfg(mc);if(playing)musicStop(.5);
+    b.parentElement.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b));$('wSong').hidden=v!=='mine';$('lockCard').querySelector('[data-wz="hear"]').hidden=v==='off';return}
+  const a=b.dataset.wz;if(!a)return;
+  if(a==='hear'){playing?musicStop(.8):musicPlayNow();b.textContent=playing?'■ Stop':'▶ Hear it';return}
+  if(a==='google'){m.textContent='Opening Google…';
+    try{await gSignIn(true);m.textContent='Checking your Google Drive…';const f=await driveFind();
+      wiz.name=wiz.name||gState().name||'';
+      if(f){wiz.offer={id:f.id,updated:+((f.appProperties||{}).updated)||Date.parse(f.modifiedTime)||Date.now()}}else wiz.step=1;
+      renderWizard()}
+    catch(err){m.textContent='Google sign-in didn’t finish. You can try again, or set up on this phone.'}
+    return}
+  if(a==='restore'){m.textContent='Bringing your Sunshine back…';
+    try{const d=await driveGet(wiz.offer.id);await applySnapshot(d,false);const p=d.profile||{};wiz.name=p.name||wiz.name;wiz.cName=p.contactName||'';wiz.cPhone=p.contactPhone||'';
+      wiz.restored=true;wiz.restoredAt=wiz.offer.updated;wiz.offer=null;wiz.step=1;renderWizard()}
+    catch(err){m.textContent='Your data couldn’t be restored just now. Please check your connection and try again.'}
+    return}
+  if(a==='fresh'){wiz.offer=null;wiz.step=1;renderWizard();return}
+  if(a==='back'){wizCollect();if(wiz.step>0)wiz.step--;if(musicCfg&&playing)musicStop(.4);renderWizard();return}
+  if(a==='next'){const key=wizCollect();
+    if(key==='about'&&!wiz.name){m.textContent='Please add your name.';return}
+    if(playing)musicStop(.4);wiz.step++;renderWizard()}
+});
+$('lock').addEventListener('change',async e=>{
+  if(e.target.id!=='wFile')return;const f=e.target.files[0];e.target.value='';if(!f)return;const m=$('wizMsg');
+  if(!/^audio\//.test(f.type)&&!/\.(mp3|m4a|aac|wav|ogg|opus|flac)$/i.test(f.name)){m.textContent='That file isn’t a song. Choose an MP3 or M4A file.';return}
+  if(f.size>30*1024*1024){m.textContent='That song is over 30 MB. Please choose a smaller file.';return}
+  try{await storeTrack(f)}catch(err){}
+  trackBlob=f;prepAudio();const c=musicCfg();c.on=true;c.source='mine';c.name=f.name.replace(/\.[^.]+$/,'');saveMusicCfg(c);
+  $('wSongName').textContent='🎵 '+c.name;m.textContent='Saved. It will play softly each time you open Sunshine.';
+});
+async function finishWizard(p1){
+  const salt=newSalt();
+  profile={name:wiz.name||'friend',contactName:wiz.cName,contactPhone:wiz.cPhone,salt,hash:await hashPin(p1,salt),created:new Date().toISOString()};
+  if(!wiz.restored){saveCfg(wiz.cfg);const d=new Date();if(wiz.start==='tomorrow')d.setDate(d.getDate()+1);state={start:ymd(d),days:{}};save();
+    const rs=remSettings();rs.on=!!wiz.rem;saveRem(rs)}
+  saveProfile();
+  if(wiz.restored)gSave({remoteSeen:wiz.restoredAt,localUpdated:wiz.restoredAt,lastHash:snapHash(await makeSnapshot())});
+  renderHabitCards();view=curDay();prevView=null;wiz=null;$('lockCard').classList.remove('wiz');
+}
+
 async function lockSubmit(e){
   e.preventDefault();const msg=$('lockMsg');
   if(e.target.id==='regForm'){
-    const name=$('rName').value.trim(),p1=$('rPin').value,p2=$('rPin2').value;
-    if(!name){msg.textContent='Please add your name.';return}
+    const p1=$('rPin').value,p2=$('rPin2').value;
     if(!validPin(p1)){msg.textContent='Your PIN needs 4 to 6 digits.';return}
     if(p1!==p2){msg.textContent='The two PINs don’t match. Please try again.';return}
-    const salt=newSalt();
-    profile={name,contactName:$('rCName').value.trim(),contactPhone:$('rCPhone').value.trim(),salt,hash:await hashPin(p1,salt),created:new Date().toISOString()};
-    saveProfile();setLocked(false);celebrate(document.querySelector('.brand'),1);if(CAP)askNotify().then(ok=>{if(ok)scheduleReminders()});return}
+    await finishWizard(p1);setLocked(false);celebrate(document.querySelector('.brand'),1);if(CAP)askNotify().then(ok=>{if(ok)scheduleReminders()});return}
   if(e.target.id==='loginForm'){
     const now=Date.now();if(now<coolUntil){msg.textContent=`Please wait ${Math.ceil((coolUntil-now)/1000)} seconds and try again.`;return}
     const pin=$('lPin').value;
@@ -1749,7 +1983,9 @@ $('lock').addEventListener('click',async e=>{
   else if(a==='erase2'){await eraseAll();location.reload()}
 });
 async function eraseAll(){
-  try{[PKEY,REAL_KEY,TRIAL_KEY,SOSKEY,'sunshine-photos','sunshine-trial-count'].forEach(k=>localStorage.removeItem(k))}catch(e){}
+  try{await gSignOut()}catch(e){}
+  try{[PKEY,REAL_KEY,TRIAL_KEY,SOSKEY,'sunshine-photos','sunshine-trial-count',CFGKEY,GKEY,MEDIAKEY,MUSICKEY,REMKEY,'sunshine-theme'].forEach(k=>localStorage.removeItem(k))}catch(e){}
+  try{await deleteTrack()}catch(e){}
   try{for(const p of (await store.all()))await store.del(p.id)}catch(e){}
 }
 document.addEventListener('visibilitychange',()=>{
@@ -1769,7 +2005,7 @@ function renderPerson(){
 /* Profile panel */
 function openMe(){
   {$('pName').value=profile?profile.name:'';$('pCName').value=profile?profile.contactName||'':'';$('pCPhone').value=profile?profile.contactPhone||'':'';
-    ['profileMsg','pinMsg','backupMsg','remMsg'].forEach(i=>$(i).textContent='');renderRem();if(typeof renderMusicSettings==='function')renderMusicSettings();$('meTitle').textContent=profile&&profile.name?profile.name:'Me';$('sumAbout').textContent=profile?(profile.name+(profile.contactName?' · trusted person: '+profile.contactName:'')):'Your name and trusted person'}
+    ['profileMsg','pinMsg','backupMsg','remMsg'].forEach(i=>$(i).textContent='');renderRem();renderRoutine();if(typeof renderG==='function')renderG();if(typeof renderMusicSettings==='function')renderMusicSettings();$('meTitle').textContent=profile&&profile.name?profile.name:'Me';$('sumAbout').textContent=profile?(profile.name+(profile.contactName?' · trusted person: '+profile.contactName:'')):'Your name and trusted person'}
 }
 $('profileForm').addEventListener('submit',e=>{e.preventDefault();if(!profile)return;
   const n=$('pName').value.trim();if(!n){$('profileMsg').textContent='Please add your name.';return}
@@ -1782,6 +2018,13 @@ $('pinForm').addEventListener('submit',async e=>{e.preventDefault();const m=$('p
   if(a!==b){m.textContent='The new PINs don’t match.';return}
   profile.salt=newSalt();profile.hash=await hashPin(a,profile.salt);saveProfile();e.target.reset();m.textContent='PIN updated.'});
 
+/* My routine (Me page) */
+function renderRoutine(){$('routineBody').innerHTML=`<h4 class="sub-h">Your day</h4>${dayHTML(CFG)}<h4 class="sub-h">Medicines &amp; vitamins</h4>${medsHTML(CFG)}<h4 class="sub-h">Your habits</h4>${habitsHTML(CFG)}
+  <div class="btns"><button class="btn sage" id="routineSave">Save my routine</button></div><p class="pmsg" id="routineMsg" aria-live="polite"></p>`}
+$('routineBody').addEventListener('click',e=>{if(routineClicks(e))return;const b=e.target.closest('#routineSave');if(!b)return;
+  saveCfg(readRoutine($('routineBody'),CFG));renderHabitCards();update();if(CAP)scheduleReminders();renderRem();
+  $('routineMsg').textContent='Saved. Your habit cards and reminders now follow your routine.';if(typeof syncNow==='function')syncNow(false)});
+
 /* Backup export / import */
 const toDataURL=src=>src.startsWith('data:')?Promise.resolve(src):fetch(src).then(r=>r.blob()).then(b=>new Promise(res=>{const f=new FileReader();f.onload=()=>res(f.result);f.readAsDataURL(b)}));
 $('exportBtn').addEventListener('click',async()=>{
@@ -1791,7 +2034,7 @@ $('exportBtn').addEventListener('click',async()=>{
     let pics=[];try{pics=await Promise.all((await store.all()).map(p=>toDataURL(p.src)))}catch(e){}
     const data={app:'sunshine',version:1,exported:new Date().toISOString(),
       profile:profile?{name:profile.name,contactName:profile.contactName,contactPhone:profile.contactPhone}:null,
-      journey:get(REAL_KEY),sos:get(SOSKEY)||[],photos:pics};
+      journey:get(REAL_KEY),sos:get(SOSKEY)||[],config:CFG,photos:pics};
     const fname=`sunshine-backup-${today()}.json`;
     if(CAP){const FS=plug('Filesystem'),SH=plug('Share');
       const w=await FS.writeFile({path:fname,data:JSON.stringify(data),directory:'CACHE',encoding:'utf8'});
@@ -1816,12 +2059,119 @@ $('importConfirm').addEventListener('click',async e=>{
   const d=pendingImport;$('importConfirm').innerHTML='';$('backupMsg').textContent='Importing…';
   try{
     if(d.journey)localStorage.setItem(REAL_KEY,JSON.stringify(d.journey));
+    if(d.config)saveCfg(d.config);
     localStorage.setItem(SOSKEY,JSON.stringify(d.sos||[]));
     if(d.profile&&profile){profile.name=d.profile.name||profile.name;profile.contactName=d.profile.contactName||'';profile.contactPhone=d.profile.contactPhone||'';saveProfile()}
     for(const src of (d.photos||[]))try{await store.add(src)}catch(err){}
     $('backupMsg').textContent='Imported. Reloading…';setTimeout(()=>location.reload(),700);
   }catch(err){$('backupMsg').textContent='Import didn’t finish. Please try again.'}
 });
+
+/* ---------- Google sign-in and Drive sync ----------
+   Paste the Web client ID from Google Cloud below (client IDs are public, not secrets).
+   Data is saved as one private file in the app's hidden Drive folder (appDataFolder), which only Sunshine can see. */
+const GOOGLE_CLIENT_ID='';
+const DRIVE_SCOPE='https://www.googleapis.com/auth/drive.appdata',DRIVE_FILE='sunshine-data.json',GKEY='sunshine-google';
+const GLOGO='<svg class="glogo" viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9.1 3.6l6.8-6.8C35.8 2.4 30.3 0 24 0 14.6 0 6.6 5.4 2.6 13.3l7.9 6.1C12.4 13.7 17.7 9.5 24 9.5z"/><path fill="#4285F4" d="M46.1 24.5c0-1.6-.1-3.1-.4-4.5H24v9h12.4c-.5 2.9-2.2 5.3-4.6 6.9l7.4 5.7c4.3-4 6.9-9.9 6.9-17.1z"/><path fill="#FBBC05" d="M10.5 28.6c-.5-1.4-.8-3-.8-4.6s.3-3.2.8-4.6l-7.9-6.1C1 16.6 0 20.2 0 24s1 7.4 2.6 10.7l7.9-6.1z"/><path fill="#34A853" d="M24 48c6.5 0 11.9-2.1 15.9-5.8l-7.4-5.7c-2.1 1.4-4.8 2.3-8.5 2.3-6.3 0-11.6-4.2-13.5-9.9l-7.9 6.1C6.6 42.6 14.6 48 24 48z"/></svg>';
+const gState=()=>{try{return JSON.parse(localStorage.getItem(GKEY))||{}}catch(e){return{}}};
+const gSave=o=>{try{localStorage.setItem(GKEY,JSON.stringify(Object.assign(gState(),o)))}catch(e){}};
+let gToken=null,gExp=0,gisLoading=null;
+const nativeGoogle=()=>!!(CAP&&window.Capacitor&&window.Capacitor.isPluginAvailable&&window.Capacitor.isPluginAvailable('GoogleAuth'));
+function gReady(){return !!GOOGLE_CLIENT_ID&&(CAP?nativeGoogle():location.protocol==='https:')}
+function loadGis(){return gisLoading||(gisLoading=new Promise((res,rej)=>{if(window.google&&google.accounts&&google.accounts.oauth2)return res();
+  const s=document.createElement('script');s.src='https://accounts.google.com/gsi/client';s.async=true;s.onload=()=>res();s.onerror=()=>{gisLoading=null;rej(new Error('gis'))};document.head.appendChild(s)}))}
+function webToken(prompt){return new Promise((res,rej)=>{
+  const tc=google.accounts.oauth2.initTokenClient({client_id:GOOGLE_CLIENT_ID,scope:DRIVE_SCOPE+' openid email profile',
+    callback:r=>{if(r&&r.access_token){gToken=r.access_token;gExp=Date.now()+((+r.expires_in||3600)-120)*1000;res(true)}else rej(new Error((r&&r.error)||'denied'))},
+    error_callback:err=>rej(new Error((err&&err.type)||'closed'))});
+  tc.requestAccessToken({prompt})})}
+async function gSignIn(){
+  if(CAP){const GA=plug('GoogleAuth');try{await GA.initialize({clientId:GOOGLE_CLIENT_ID,scopes:['profile','email',DRIVE_SCOPE],grantOfflineAccess:false})}catch(e){}
+    const u=await GA.signIn();gToken=u&&u.authentication&&u.authentication.accessToken;if(!gToken)throw new Error('no token');gExp=Date.now()+50*60*1000;
+    gSave({signedIn:true,email:u.email||'',name:u.givenName||u.name||''});return true}
+  if(!(window.google&&google.accounts&&google.accounts.oauth2))await loadGis();
+  await webToken('');
+  let info={};try{info=await (await fetch('https://www.googleapis.com/oauth2/v3/userinfo',{headers:{Authorization:'Bearer '+gToken}})).json()}catch(e){}
+  gSave({signedIn:true,email:info.email||'',name:info.given_name||info.name||''});return true;
+}
+async function gEnsure(interactive){
+  if(gToken&&Date.now()<gExp)return true;
+  try{if(CAP){const r=await plug('GoogleAuth').refresh();gToken=r&&r.accessToken;gExp=Date.now()+50*60*1000;return !!gToken}
+    if(!interactive)return false;if(!(window.google&&google.accounts))await loadGis();await webToken('');return true}catch(e){return false}
+}
+async function gSignOut(){
+  try{if(CAP)await plug('GoogleAuth').signOut();else if(gToken&&window.google&&google.accounts)google.accounts.oauth2.revoke(gToken,()=>{})}catch(e){}
+  gToken=null;gExp=0;try{localStorage.removeItem(GKEY)}catch(e){}
+}
+async function dfetch(url,opt){opt=opt||{};const r=await fetch(url,Object.assign({},opt,{headers:Object.assign({Authorization:'Bearer '+gToken},opt.headers||{})}));
+  if(r.status===401){gToken=null;throw new Error('auth')}if(!r.ok)throw new Error('drive '+r.status);return r}
+async function driveFind(){const q=encodeURIComponent(`name='${DRIVE_FILE}'`);
+  const j=await (await dfetch(`https://www.googleapis.com/drive/v3/files?spaces=appDataFolder&q=${q}&fields=files(id,modifiedTime,appProperties)&pageSize=5`)).json();return(j.files||[])[0]||null}
+async function driveGet(id){return(await dfetch(`https://www.googleapis.com/drive/v3/files/${encodeURIComponent(id)}?alt=media`)).json()}
+async function drivePut(id,data){const meta={name:DRIVE_FILE,mimeType:'application/json',appProperties:{updated:String(data.updated)}};if(!id)meta.parents=['appDataFolder'];
+  const bnd='sunshine'+Date.now().toString(36),body=`--${bnd}\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n${JSON.stringify(meta)}\r\n--${bnd}\r\nContent-Type: application/json\r\n\r\n${JSON.stringify(data)}\r\n--${bnd}--`;
+  const r=await dfetch(`https://www.googleapis.com/upload/drive/v3/files${id?'/'+encodeURIComponent(id):''}?uploadType=multipart&fields=id`,{method:id?'PATCH':'POST',headers:{'Content-Type':'multipart/related; boundary='+bnd},body});return(await r.json()).id}
+const LSGET=k=>{try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}};
+async function makeSnapshot(){let pics=[];try{pics=await Promise.all((await store.all()).map(p=>toDataURL(p.src)))}catch(e){}
+  return{app:'sunshine',version:2,profile:profile?{name:profile.name,contactName:profile.contactName||'',contactPhone:profile.contactPhone||''}:null,
+    config:CFG,journey:LSGET(KEY),sos:LSGET(SOSKEY)||[],music:musicCfg(),comfort:loadMedia(),reminders:LSGET(REMKEY),theme:themePref(),photos:pics}}
+function snapHash(d){const x=Object.assign({},d,{updated:0,photos:(d.photos||[]).map(p=>p.length+':'+p.slice(-24))});const s=JSON.stringify(x);let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)>>>0}return h.toString(16)}
+async function applySnapshot(d,withProfile){
+  if(!d||d.app!=='sunshine')throw new Error('not sunshine');
+  if(d.config)saveCfg(d.config);
+  if(d.journey)localStorage.setItem(KEY,JSON.stringify(d.journey));
+  localStorage.setItem(SOSKEY,JSON.stringify(d.sos||[]));
+  if(d.music){const m=Object.assign(musicCfg(),d.music);if(m.source==='mine'&&!trackBlob)m.source='chimes';saveMusicCfg(m)}
+  if(Array.isArray(d.comfort))saveMedia(d.comfort);
+  if(d.reminders)localStorage.setItem(REMKEY,JSON.stringify(d.reminders));
+  if(d.theme)applyTheme(d.theme);
+  if(Array.isArray(d.photos)){try{for(const p of (await store.all()))await store.del(p.id)}catch(e){}
+    for(const src of d.photos)try{await store.add(src)}catch(e){}try{photos=await store.all()}catch(e){}idx=0;showPhoto()}
+  if(withProfile&&d.profile&&profile){profile.name=d.profile.name||profile.name;profile.contactName=d.profile.contactName||'';profile.contactPhone=d.profile.contactPhone||'';saveProfile()}
+  state=load()||state;sosLog=LSGET(SOSKEY)||[];view=curDay();renderHabitCards();renderPerson();
+}
+let syncing=false,syncState='';
+async function syncNow(interactive){
+  const g=gState();if(!g.signedIn||syncing||!gReady()||!profile||!profile.hash)return;
+  syncing=true;setSyncStatus('busy');
+  try{
+    if(!await gEnsure(interactive)){setSyncStatus('reconnect');return}
+    const snap=await makeSnapshot(),h=snapHash(snap);
+    const localUpdated=h!==g.lastHash?Date.now():(g.localUpdated||0);
+    const f=await driveFind(),remoteUpdated=f?(+((f.appProperties||{}).updated)||0):0;
+    if(f&&remoteUpdated>(g.remoteSeen||0)&&remoteUpdated>localUpdated){
+      await applySnapshot(await driveGet(f.id),true);
+      gSave({lastHash:snapHash(await makeSnapshot()),localUpdated:remoteUpdated,remoteSeen:remoteUpdated,lastSync:Date.now()});
+      if(!$('homeView').hidden||!$('progressView').hidden)update();
+    }else if(!f||h!==g.lastHash){
+      snap.updated=localUpdated||Date.now();await drivePut(f&&f.id,snap);
+      gSave({lastHash:h,localUpdated:snap.updated,remoteSeen:snap.updated,lastSync:Date.now()});
+    }else gSave({lastSync:Date.now()});
+    setSyncStatus('ok');
+  }catch(e){setSyncStatus(e.message==='auth'?'reconnect':'error')}
+  finally{syncing=false;if(syncState==='busy')setSyncStatus('ok')}
+}
+function setSyncStatus(s){syncState=s;if($('gBody')&&!$('meView').hidden)renderG()}
+function renderG(){
+  const box=$('gBody'),g=gState(),sum=$('sumG');if(!box)return;
+  if(!GOOGLE_CLIENT_ID||(CAP&&!nativeGoogle())){sum.textContent='Not available yet';box.innerHTML='<p class="soft">Google sign-in isn’t switched on in this version of Sunshine yet. Your data stays on this phone; use Backup to keep a copy.</p>';return}
+  if(!g.signedIn){sum.textContent='Not connected';box.innerHTML=`<p class="soft">Sign in to keep a private copy of everything in your own Google Drive. Only Sunshine can see it, and you can restore it on a new phone.</p><button class="btn gbtn" data-g="in">${GLOGO}<span>Continue with Google</span></button><p class="pmsg" id="gMsg" aria-live="polite"></p>`;return}
+  const last=g.lastSync?new Date(g.lastSync).toLocaleString([], {day:'numeric',month:'short',hour:'numeric',minute:'2-digit'}):'not yet';
+  const st={busy:'Syncing…',reconnect:'Tap “Sync now” to reconnect Google.',error:'Couldn’t reach Google Drive. It will try again later.',ok:'',['']:''}[syncState]||'';
+  sum.textContent=g.email||'Connected';
+  box.innerHTML=`<p class="soft">Connected as <b>${esc(g.email||g.name||'your Google account')}</b>. Last saved to Drive: ${esc(last)}.</p>${st?`<p class="pmsg">${st}</p>`:''}
+    <div class="btns"><button class="btn sage" data-g="sync">Sync now</button><button class="btn ghost" data-g="out">Sign out</button></div><p class="pmsg" id="gMsg" aria-live="polite"></p>`;
+}
+document.addEventListener('click',async e=>{const b=e.target.closest('[data-g]');if(!b)return;const m=$('gMsg');
+  if(b.dataset.g==='in'){try{await gSignIn();await syncNow(false);renderG()}catch(err){if(m)m.textContent='Google sign-in didn’t finish. Please try again.'}}
+  else if(b.dataset.g==='sync'){await syncNow(true);renderG()}
+  else if(b.dataset.g==='out'){await gSignOut();renderG()}
+});
+function gInit(){
+  if(GOOGLE_CLIENT_ID&&!CAP&&location.protocol==='https:')loadGis().catch(()=>{});
+  document.addEventListener('visibilitychange',()=>{if(document.hidden)syncNow(false)});
+  setInterval(()=>{if(!document.hidden&&$('lock').hidden)syncNow(false)},3*60*1000);
+}
 
 /* Install prompt (Android Chrome) and offline support */
 let deferredInstall=null;
@@ -1835,55 +2185,42 @@ const CAP=window.Capacitor&&window.Capacitor.isNativePlatform&&window.Capacitor.
 const plug=name=>{try{const C=window.Capacitor;return(C.Plugins&&C.Plugins[name])||(C.registerPlugin&&C.registerPlugin(name))||null}catch(e){return null}};
 const LN=CAP?plug('LocalNotifications'):null;
 const REMKEY='sunshine-reminders';
-const REMINDERS=[
- {id:'wake',label:'Wake up',time:'07:00',card:'sleep',
-  t:['Good morning, {n} ☀️','Rise and shine, {n} 🌤️','Hello, sunshine ☀️'],
-  b:['A brand new day is here. Open a window and let the light in.','Take one slow breath before you get up. You’ve got this.','Today is a fresh page. Start gently.','Stretch, smile, and step into the morning.']},
- {id:'bfast',label:'Breakfast',time:'09:30',card:'meals',
-  t:['Breakfast time, {n} 🍳','Time to fuel up, {n} 🥣'],
-  b:['Your body has been waiting for you. Something warm would be lovely.','A good breakfast is a kind gift to yourself.','Sit down, eat slowly, and enjoy every bite.']},
- {id:'b12',label:'Vitamin B12',time:'09:45',card:'meds',
-  t:['Vitamin B12 time, {n} 💊'],
-  b:['A tiny step that keeps your energy steady. Take it with breakfast.','Quick one: your Vitamin B12. Small things add up.']},
- {id:'medam',label:'Morning medicine',time:'10:00',card:'meds',
-  t:['Morning medicine, {n} 🌼'],
-  b:['Time for your 10 AM medicine. Looking after yourself is strength.','Your morning medicine is due. You’re doing so well staying on track.']},
- {id:'vitd',label:'Vitamin D (Sundays)',time:'10:30',card:'meds',sunday:true,
-  t:['Sunday Vitamin D, {n} ☀️'],
-  b:['It’s Sunday, so it’s Vitamin D day. Maybe take it by a sunny window.']},
- {id:'lunch',label:'Lunch',time:'13:00',card:'meals',
-  t:['Lunch break, {n} 🍲','Time for lunch, {n} 🥗'],
-  b:['Pause whatever you’re doing. You deserve a proper meal.','Eat something nourishing and give your mind a little rest.']},
- {id:'water',label:'Water nudges',fixed:'Every 2 hours, 8 AM to 8 PM',hours:[8,10,12,14,16,18,20],card:'water',
-  t:['Sip sip, {n} 💧','Water break, {n} 💧','Hydration check 💧'],
-  b:['A glass of water now. Your body will thank you.','Little sips add up to 3 liters. Keep going!','Refill your bottle and take a few sips.']},
- {id:'dinner',label:'Dinner',time:'19:00',card:'meals',
-  t:['Dinner time, {n} 🍛'],
-  b:['Wind down with a warm dinner. You’ve earned it.','Time to eat. Let the day’s rush settle.']},
- {id:'checkin',label:'Evening check-in',time:'20:30',card:'wins',
-  t:['How was today, {n}? 🌙','Your wins are waiting, {n} ✨'],
-  b:['Take a minute to tick off what you did and check in with your mood.','Every small thing you did today counts. Come and see them.']},
- {id:'medpm',label:'Night medicine',time:'21:00',card:'meds',
-  t:['Night medicine, {n} 🌙'],
-  b:['Time for your 9 PM medicine. Rest is on its way.','Your night medicine is due. You did well today.']},
- {id:'wind',label:'Wind down for sleep',time:'22:30',card:'sleep',
-  t:['Time to wind down, {n} 🌌'],
-  b:['Screens down soon. Lights low by 10:45 for a good night’s sleep.','Your bed is calling. Rest well. Tomorrow is a fresh start.']}
-];
+/* Reminders follow each person's own routine; medicine reminders never show the medicine's name */
+const addMin=(t,d)=>{const[h,m]=tm(t);let x=(h*60+m+d+1440)%1440;return String(Math.floor(x/60)).padStart(2,'0')+':'+String(x%60).padStart(2,'0')};
+function getReminders(){
+  const c=CFG,on=id=>c.habits.includes(id),L=[];
+  if(on('sleep'))L.push({id:'wake',label:'Wake up',time:c.wake,card:'sleep',
+    t:['Good morning, {n} ☀️','Rise and shine, {n} 🌤️','Hello, sunshine ☀️'],
+    b:['A brand new day is here. Open a window and let the light in.','Take one slow breath before you get up. You’ve got this.','Today is a fresh page. Start gently.','Stretch, smile, and step into the morning.']});
+  if(on('meals')){
+    L.push({id:'bfast',label:'Breakfast',time:c.meals.bfast,card:'meals',t:['Breakfast time, {n} 🍳','Time to fuel up, {n} 🥣'],b:['Your body has been waiting for you. Something warm would be lovely.','A good breakfast is a kind gift to yourself.','Sit down, eat slowly, and enjoy every bite.']});
+    L.push({id:'lunch',label:'Lunch',time:c.meals.lunch,card:'meals',t:['Lunch break, {n} 🍲','Time for lunch, {n} 🥗'],b:['Pause whatever you’re doing. You deserve a proper meal.','Eat something nourishing and give your mind a little rest.']});
+    L.push({id:'dinner',label:'Dinner',time:c.meals.dinner,card:'meals',t:['Dinner time, {n} 🍛'],b:['Wind down with a warm dinner. You’ve earned it.','Time to eat. Let the day’s rush settle.']});
+  }
+  if(on('meds'))c.meds.forEach(m=>L.push({id:'med_'+m.id,label:m.name,time:m.time,days:m.days,card:'meds',
+    t:['Medicine time, {n} 💊','Gentle reminder, {n} 🌼'],b:[`It’s ${fmtT(m.time)}, time for your dose. Looking after yourself is strength.`,`Your ${fmtT(m.time)} medicine or vitamin is due. You’re doing so well.`]}));
+  if(on('water')){const[wh]=tm(c.wake),[bh]=tm(c.bed),hrs=[];for(let h=wh+1;h<=Math.min(bh-1,22);h+=2)hrs.push(h);
+    L.push({id:'water',label:'Water nudges',fixed:`Every 2 hours, ${fmtTs(String(hrs[0]||8)+':00')} to ${fmtTs(String(hrs[hrs.length-1]||20)+':00')}`,hours:hrs.length?hrs:[8,10,12,14,16,18,20],card:'water',
+      t:['Sip sip, {n} 💧','Water break, {n} 💧','Hydration check 💧'],b:['A glass of water now. Your body will thank you.',`Little sips add up to ${c.waterL} liters. Keep going!`,'Refill your bottle and take a few sips.']});}
+  L.push({id:'checkin',label:'Evening check-in',time:addMin(c.bed,-135),card:'wins',t:['How was today, {n}? 🌙','Your wins are waiting, {n} ✨'],b:['Take a minute to tick off what you did and check in with your mood.','Every small thing you did today counts. Come and see them.']});
+  if(on('sleep'))L.push({id:'wind',label:'Wind down for sleep',time:addMin(c.bed,-15),card:'sleep',t:['Time to wind down, {n} 🌌'],b:[`Screens down soon. Lights low by ${fmtT(c.bed)} for a good night’s sleep.`,'Your bed is calling. Rest well. Tomorrow is a fresh start.']});
+  return L.sort((a,b)=>(a.time||'00:00').localeCompare(b.time||'00:00'));
+}
 const DAYS_AHEAD=14;
 function remSettings(){let s=null;try{s=JSON.parse(localStorage.getItem(REMKEY))}catch(e){}
-  s=s||{on:true,items:{}};REMINDERS.forEach(r=>{s.items[r.id]=Object.assign({on:true,time:r.time||null},s.items[r.id]||{})});return s}
+  s=s||{on:true,items:{}};s.items=s.items||{};getReminders().forEach(r=>{s.items[r.id]=Object.assign({on:true},s.items[r.id]||{})});return s}
 function saveRem(s){try{localStorage.setItem(REMKEY,JSON.stringify(s))}catch(e){}}
 const fill=(t,n)=>t.replace('{n}',n);
 function buildNotifications(){
   const s=remSettings(),n=(profile&&profile.name)||'friend',now=Date.now(),list=[];let id=1;
   if(!s.on)return list;
+  const R=getReminders();
   for(let d=0;d<DAYS_AHEAD;d++){
     const day=new Date();day.setHours(0,0,0,0);day.setDate(day.getDate()+d);
-    REMINDERS.forEach((r,ri)=>{
-      const it=s.items[r.id];if(!it.on)return;
-      if(r.sunday&&day.getDay()!==0)return;
-      const times=r.hours?r.hours.map(h=>[h,0]):[it.time.split(':').map(Number)];
+    R.forEach((r,ri)=>{
+      const it=s.items[r.id];if(it&&!it.on)return;
+      if(r.days&&r.days!=='daily'&&!r.days.includes(day.getDay()))return;
+      const times=r.hours?r.hours.map(h=>[h,0]):[tm(r.time)];
       times.forEach(([hh,mm],k)=>{
         const at=new Date(day);at.setHours(hh,mm,0,0);if(at.getTime()<=now+30000)return;
         const pick=(arr,o)=>arr[(d+ri+k+o)%arr.length];
@@ -1895,6 +2232,7 @@ function buildNotifications(){
   }
   return list;
 }
+
 let remBusy=false;
 async function scheduleReminders(){
   if(!LN||remBusy)return;remBusy=true;
@@ -1927,7 +2265,8 @@ function renderRem(){
   if(!CAP){box.innerHTML='<p class="soft">Timed reminders work in the Sunshine Android app. Download it from the <a href="https://github.com/msja1729/sunshine/releases/latest" target="_blank" rel="noopener">Releases page</a>.</p>';return}
   const s=remSettings();
   box.innerHTML=`<label class="toggle-row"><input type="checkbox" id="remOn" ${s.on?'checked':''}> Send me gentle reminders</label>
-   <div class="rem-list" ${s.on?'':'hidden'}>${REMINDERS.map(r=>{const it=s.items[r.id];return`<div class="rem-row"><label><input type="checkbox" data-rem="${r.id}" ${it.on?'checked':''}>${r.label}</label>${r.fixed?`<span class="fixed">${r.fixed}</span>`:`<input type="time" data-remt="${r.id}" value="${it.time}" aria-label="${r.label} time">`}</div>`}).join('')}</div>
+   <div class="rem-list" ${s.on?'':'hidden'}>${getReminders().map(r=>{const it=s.items[r.id]||{on:true};return`<div class="rem-row"><label><input type="checkbox" data-rem="${esc(r.id)}" ${it.on?'checked':''}>${esc(r.label)}</label><span class="fixed">${r.fixed?esc(r.fixed):fmtT(r.time)+(r.days&&r.days!=='daily'?' · '+daysLabel(r.days):'')}</span></div>`}).join('')}</div>
+   <p class="soft">Times follow your routine. Change them in My routine.</p>
    <div class="btns"><button class="btn sage" id="remSave">Save reminders</button><button class="btn" id="remTest">Send a test</button></div>`;
 }
 $('remBox').addEventListener('change',e=>{if(e.target.id==='remOn')e.target.closest('.pbox').querySelector('.rem-list').hidden=!e.target.checked});
@@ -2064,6 +2403,7 @@ loadTrack();
 window.sunshineMusicStatus=()=>({playing,source:curSource,songPaused:audioEl?audioEl.paused:null,songVolume:audioEl?+audioEl.volume.toFixed(2):null,chimes:actx?actx.state:null});
 
 renderPerson();
+gInit();
 setLocked(true);
 showView();
 let lastDate=today();setInterval(()=>{if(TRIAL&&today()>=FIRST){location.reload();return}if(today()!==lastDate){lastDate=today();view=curDay();update()}},60000);

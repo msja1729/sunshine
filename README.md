@@ -19,9 +19,19 @@ To update, install the new APK over the old one. Your data stays.
 2. Tap **Install app** at the top of Sunshine, or Chrome's **⋮ menu → Install app**.
 3. The web version has every feature except timed reminders.
 
+## First-time setup and customising
+
+On first open, Sunshine walks you through a short setup: your name, your day (wake, meals, bed), your medicines and which days you take them, which habits you want, your prayer or mantra, water goal, theme and welcome song, then a PIN. Everything can be changed later under **Me → My routine**, and reminders follow your routine automatically.
+
+## Google Drive (optional)
+
+You can sign in with Google so your data is saved in your own Google Drive, in a private app folder only Sunshine can see. Signing in on a second phone or the web version offers to restore everything, and changes keep syncing. Your PIN is never uploaded; each device has its own.
+
+To switch this on, put the Web OAuth client ID into `const GOOGLE_CLIENT_ID=''` in `index.html`. The Android build picks it up automatically.
+
 ## Privacy
 
-- There is no server and no online account. Your profile, PIN, habits, moods, SOS log and photos are stored only on your phone, inside the app.
+- There is no Sunshine server. Your profile, PIN, habits, moods, SOS log and photos are stored on your phone, and in your own Google Drive only if you choose to sign in.
 - The PIN is never stored as typed. It is hashed with PBKDF2 (SHA-256) before saving.
 - A forgotten PIN can't be recovered. Use **Profile & backup → Export backup** now and then, and keep the file somewhere safe.
 - Clearing Chrome's site data for this address, or uninstalling the app, removes your data from the phone. Export a backup first.

@@ -1691,7 +1691,7 @@ $('memActions').addEventListener('click',async e=>{
   if(b.dataset.mem==='shuffle'){let n=idx;while(n===idx)n=Math.floor(Math.random()*photos.length);idx=n;capIdx++;confirmDel=false;showPhoto()}
   if(b.dataset.mem==='remove'){
     if(!confirmDel){confirmDel=true;showPhoto();setTimeout(()=>{if(confirmDel){confirmDel=false;showPhoto()}},4000);return}
-    confirmDel=false;try{await store.del(photos[idx].id)}catch(err){}photos=await store.all().catch(()=>photos.filter((_,i)=>i!==idx));showPhoto()}
+    confirmDel=false;try{await store.del(photos[idx].id)}catch(err){}markDirty();photos=await store.all().catch(()=>photos.filter((_,i)=>i!==idx));showPhoto()}
 });
 $('photoInput').addEventListener('change',async e=>{
   const files=[...e.target.files];e.target.value='';if(!files.length)return;
@@ -1704,7 +1704,7 @@ $('photoInput').addEventListener('change',async e=>{
       try{const ls=lsStore();if(!ls)throw err;const small=await fileToJpeg(f,800);await ls.add(small);store=ls;ok++}
       catch(err2){if(store.name!=='mem')store=memStore();await store.add(data);ok++;failedSave++}}
   }
-  try{photos=await store.all()}catch(err){}
+  try{photos=await store.all()}catch(err){}markDirty();
   idx=Math.max(0,photos.length-1);capIdx=0;showPhoto();
   msg.textContent=[ok?`Added ${ok} ${ok===1?'memory':'memories'}.`:'',bad?`${bad} photo${bad>1?'s':''} couldn't be opened. JPG or PNG works best.`:'',failedSave||store.name==='mem'?'This browser view won’t keep photos after it closes. Open Sunshine from its Claude link to keep them.':''].filter(Boolean).join(' ');
 });
@@ -2302,48 +2302,75 @@ const GLOGO='<svg class="glogo" viewBox="0 0 48 48" aria-hidden="true"><path fil
 const gState=()=>{try{return JSON.parse(localStorage.getItem(GKEY))||{}}catch(e){return{}}};
 const gSave=o=>{try{localStorage.setItem(GKEY,JSON.stringify(Object.assign(gState(),o)))}catch(e){}};
 let gToken=null,gExp=0,gisLoading=null;
+{const g=gState();if(g.tok&&g.texp>Date.now()+60000){gToken=g.tok;gExp=g.texp}}
 const nativeGoogle=()=>!!(CAP&&window.Capacitor&&window.Capacitor.isPluginAvailable&&window.Capacitor.isPluginAvailable('GoogleAuth'));
 function gReady(){return !!GOOGLE_CLIENT_ID&&(CAP?nativeGoogle():location.protocol==='https:')}
 function loadGis(){return gisLoading||(gisLoading=new Promise((res,rej)=>{if(window.google&&google.accounts&&google.accounts.oauth2)return res();
   const s=document.createElement('script');s.src='https://accounts.google.com/gsi/client';s.async=true;s.onload=()=>res();s.onerror=()=>{gisLoading=null;rej(new Error('gis'))};document.head.appendChild(s)}))}
+const gisReady=()=>!!(window.google&&google.accounts&&google.accounts.oauth2);
+function setToken(tok,secs){gToken=tok;gExp=Date.now()+(Math.max(300,(+secs||3600))-120)*1000;if(!CAP)gSave({tok:gToken,texp:gExp})}
+/* opens Google's window; with prompt '' and consent already given it closes by itself in a moment */
 function webToken(prompt){return new Promise((res,rej)=>{
-  const tc=google.accounts.oauth2.initTokenClient({client_id:GOOGLE_CLIENT_ID,scope:DRIVE_SCOPE+' openid email profile',
-    callback:r=>{if(r&&r.access_token){gToken=r.access_token;gExp=Date.now()+((+r.expires_in||3600)-120)*1000;res(true)}else rej(new Error((r&&r.error)||'denied'))},
+  const hint=gState().email||undefined;
+  const tc=google.accounts.oauth2.initTokenClient({client_id:GOOGLE_CLIENT_ID,scope:DRIVE_SCOPE+' openid email profile',login_hint:hint,hint,
+    callback:r=>{if(r&&r.access_token){setToken(r.access_token,r.expires_in);res(true)}else rej(new Error((r&&r.error)||'denied'))},
     error_callback:err=>rej(new Error((err&&err.type)||'closed'))});
   tc.requestAccessToken({prompt})})}
+async function nativeSignIn(){const GA=plug('GoogleAuth');try{await GA.initialize({clientId:GOOGLE_CLIENT_ID,scopes:['profile','email',DRIVE_SCOPE],grantOfflineAccess:false})}catch(e){}
+  const u=await GA.signIn();const tok=u&&u.authentication&&u.authentication.accessToken;if(!tok)throw new Error('no token');setToken(tok,3000);return u}
 async function gSignIn(){
-  if(CAP){const GA=plug('GoogleAuth');try{await GA.initialize({clientId:GOOGLE_CLIENT_ID,scopes:['profile','email',DRIVE_SCOPE],grantOfflineAccess:false})}catch(e){}
-    const u=await GA.signIn();gToken=u&&u.authentication&&u.authentication.accessToken;if(!gToken)throw new Error('no token');gExp=Date.now()+50*60*1000;
-    gSave({signedIn:true,email:u.email||'',name:u.givenName||u.name||''});return true}
-  if(!(window.google&&google.accounts&&google.accounts.oauth2))await loadGis();
+  if(CAP){const u=await nativeSignIn();gSave({signedIn:true,email:u.email||'',name:u.givenName||u.name||''});return true}
+  if(!gisReady())await loadGis();
   await webToken('');
   let info={};try{info=await (await fetch('https://www.googleapis.com/oauth2/v3/userinfo',{headers:{Authorization:'Bearer '+gToken}})).json()}catch(e){}
   gSave({signedIn:true,email:info.email||'',name:info.given_name||info.name||''});return true;
 }
 async function gEnsure(interactive){
   if(gToken&&Date.now()<gExp)return true;
-  try{if(CAP){const r=await plug('GoogleAuth').refresh();gToken=r&&r.accessToken;gExp=Date.now()+50*60*1000;return !!gToken}
-    if(!interactive)return false;if(!(window.google&&google.accounts))await loadGis();await webToken('');return true}catch(e){return false}
+  try{
+    if(CAP){try{const r=await plug('GoogleAuth').refresh();if(r&&r.accessToken){setToken(r.accessToken,3000);return true}}catch(e){}
+      if(!interactive)return false;await nativeSignIn();return true}
+    if(!interactive)return false;if(!gisReady())await loadGis();await webToken('');return true}catch(e){return false}
+}
+/* Stay signed in: when Google's short pass runs out, renew it quietly on the next tap. Only "Sign out" signs out. */
+let reauthArmed=false;
+function armReauth(){
+  if(reauthArmed||!gState().signedIn)return;reauthArmed=true;
+  const h=e=>{if(!$('lock').hidden||!gState().signedIn)return;
+    document.removeEventListener('click',h,true);document.removeEventListener('keydown',h,true);reauthArmed=false;
+    if(gToken&&Date.now()<gExp){syncNow(false);return}
+    let p;if(CAP)p=nativeSignIn();else if(gisReady())p=webToken('');else{loadGis().then(armReauth,armReauth);return}
+    p.then(()=>{setSyncStatus('ok');syncNow(false)},()=>{setSyncStatus('reconnect');setTimeout(armReauth,30000)})};
+  document.addEventListener('click',h,true);document.addEventListener('keydown',h,true);
 }
 async function gSignOut(){
-  try{if(CAP)await plug('GoogleAuth').signOut();else if(gToken&&window.google&&google.accounts)google.accounts.oauth2.revoke(gToken,()=>{})}catch(e){}
+  try{if(CAP)await plug('GoogleAuth').signOut();else if(gToken&&gisReady())google.accounts.oauth2.revoke(gToken,()=>{})}catch(e){}
   gToken=null;gExp=0;try{localStorage.removeItem(GKEY)}catch(e){}
 }
 async function dfetch(url,opt){opt=opt||{};const r=await fetch(url,Object.assign({},opt,{headers:Object.assign({Authorization:'Bearer '+gToken},opt.headers||{})}));
-  if(r.status===401){gToken=null;throw new Error('auth')}if(!r.ok)throw new Error('drive '+r.status);return r}
-async function driveFind(){const q=encodeURIComponent(`name='${DRIVE_FILE}'`);
+  if(r.status===401){gToken=null;gExp=0;throw new Error('auth')}if(!r.ok)throw new Error('drive '+r.status);return r}
+const DRIVE_PHOTOS='sunshine-photos.json';
+async function driveFind(name=DRIVE_FILE){const q=encodeURIComponent(`name='${name}'`);
   const j=await (await dfetch(`https://www.googleapis.com/drive/v3/files?spaces=appDataFolder&q=${q}&fields=files(id,modifiedTime,appProperties)&pageSize=5`)).json();return(j.files||[])[0]||null}
 async function driveGet(id){return(await dfetch(`https://www.googleapis.com/drive/v3/files/${encodeURIComponent(id)}?alt=media`)).json()}
-async function drivePut(id,data){const meta={name:DRIVE_FILE,mimeType:'application/json',appProperties:{updated:String(data.updated)}};if(!id)meta.parents=['appDataFolder'];
+async function drivePut(id,data,name=DRIVE_FILE){const meta={name,mimeType:'application/json',appProperties:{updated:String(data.updated||Date.now()),ph:String(data.photosHash||'')}};if(!id)meta.parents=['appDataFolder'];
   const bnd='sunshine'+Date.now().toString(36),body=`--${bnd}\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n${JSON.stringify(meta)}\r\n--${bnd}\r\nContent-Type: application/json\r\n\r\n${JSON.stringify(data)}\r\n--${bnd}--`;
   const r=await dfetch(`https://www.googleapis.com/upload/drive/v3/files${id?'/'+encodeURIComponent(id):''}?uploadType=multipart&fields=id`,{method:id?'PATCH':'POST',headers:{'Content-Type':'multipart/related; boundary='+bnd},body});return(await r.json()).id}
 const LSGET=k=>{try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}};
-async function makeSnapshot(){let pics=[];try{pics=await Promise.all((await store.all()).map(p=>toDataURL(p.src)))}catch(e){}
-  return{app:'sunshine',version:2,profile:profile?{name:profile.name,contactName:profile.contactName||'',contactPhone:profile.contactPhone||''}:null,
-    config:CFG,journey:LSGET(KEY),sos:LSGET(SOSKEY)||[],music:musicCfg(),comfort:loadMedia(),reminders:LSGET(REMKEY),theme:themePref(),study:Object.assign({},study,{run:null}),photos:pics}}
-function snapHash(d){const x=Object.assign({},d,{updated:0,photos:(d.photos||[]).map(p=>p.length+':'+p.slice(-24))});const s=JSON.stringify(x);let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)>>>0}return h.toString(16)}
+const fnv=s=>{let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)>>>0}return h.toString(16)};
+async function photoList(){try{return await Promise.all((await store.all()).map(p=>toDataURL(p.src)))}catch(e){return[]}}
+const photoHash=pics=>pics.length?fnv(pics.map(p=>p.length+':'+p.slice(-48)).join('|')):'none';
+/* Photos live in their own Drive file, so everyday syncs stay tiny and fast */
+async function makeSnapshot(){const pics=await photoList();
+  const snap={app:'sunshine',version:3,profile:profile?{name:profile.name,contactName:profile.contactName||'',contactPhone:profile.contactPhone||''}:null,
+    config:CFG,journey:LSGET(KEY),sos:LSGET(SOSKEY)||[],music:musicCfg(),comfort:loadMedia(),reminders:LSGET(REMKEY),theme:themePref(),study:Object.assign({},study,{run:null}),photosHash:photoHash(pics)};
+  Object.defineProperty(snap,'_pics',{value:pics,enumerable:false});return snap}
+function snapHash(d){const x=Object.assign({},d,{updated:0});if(Array.isArray(x.photos))x.photos=x.photos.map(p=>p.length+':'+p.slice(-24));return fnv(JSON.stringify(x))}
+let applying=false;
 async function applySnapshot(d,withProfile){
   if(!d||d.app!=='sunshine')throw new Error('not sunshine');
+  applying=true;
+  try{
   if(d.config)saveCfg(d.config);
   if(d.journey)localStorage.setItem(KEY,JSON.stringify(d.journey));
   localStorage.setItem(SOSKEY,JSON.stringify(d.sos||[]));
@@ -2352,41 +2379,55 @@ async function applySnapshot(d,withProfile){
   if(d.reminders)localStorage.setItem(REMKEY,JSON.stringify(d.reminders));
   if(d.theme)applyTheme(d.theme);
   if(d.study&&d.study.days){const cur=study.run;study=Object.assign(clone(SDEF),d.study,{run:cur});saveStudy()}
-  if(Array.isArray(d.photos)){try{for(const p of (await store.all()))await store.del(p.id)}catch(e){}
-    for(const src of d.photos)try{await store.add(src)}catch(e){}try{photos=await store.all()}catch(e){}idx=0;showPhoto()}
+  let pics=Array.isArray(d.photos)?d.photos:null;
+  if(!pics&&d.photosHash){if(d.photosHash==='none')pics=[];else if(d.photosHash!==photoHash(await photoList())){try{const pf=await driveFind(DRIVE_PHOTOS);if(pf){const pd=await driveGet(pf.id);if(pd&&Array.isArray(pd.photos))pics=pd.photos}}catch(e){}}}
+  if(pics){if(photoHash(pics)!==photoHash(await photoList())){try{for(const p of (await store.all()))await store.del(p.id)}catch(e){}
+    for(const src of pics)try{await store.add(src)}catch(e){}try{photos=await store.all()}catch(e){}idx=0;showPhoto()}gSave({photosUp:photoHash(pics)})}
   if(withProfile&&d.profile&&profile){profile.name=d.profile.name||profile.name;profile.contactName=d.profile.contactName||'';profile.contactPhone=d.profile.contactPhone||'';saveProfile()}
   state=load()||state;sosLog=LSGET(SOSKEY)||[];view=curDay();renderHabitCards();renderPerson();
+  }finally{applying=false}
 }
-let syncing=false,syncState='';
+/* ---------- near-instant sync ---------- */
+/* Any change is saved to Drive about a second later; open devices check Drive every few seconds and pull changes. */
+const SYNC_PUSH_MS=1000,SYNC_POLL_MS=4000;
+let syncing=false,syncAgain=false,syncState='',dirtyAt=0,pushT=null;
+const WATCH=new Set(['sanctuary21-v1','sunshine-trial-v1','sunshine-config','sanctuary21-sos-v1','sunshine-reminders','sanctuary_comfort_media','sunshine-music','sunshine-theme','sunshine-study','sunshine-profile']);
+{const orig=Storage.prototype.setItem;Storage.prototype.setItem=function(k,v){const watched=this===localStorage&&WATCH.has(k),before=watched?this.getItem(k):null;orig.call(this,k,v);
+  if(watched&&!applying&&before!==String(v))markDirty()}}
+function markDirty(){if(!gState().signedIn)return;if(!dirtyAt)dirtyAt=Date.now();clearTimeout(pushT);pushT=setTimeout(()=>syncNow(false),SYNC_PUSH_MS)}
 async function syncNow(interactive){
-  const g=gState();if(!g.signedIn||syncing||!gReady()||!profile||!profile.hash)return;
-  syncing=true;setSyncStatus('busy');
+  const g=gState();if(!g.signedIn||!gReady()||!profile||!profile.hash)return;
+  if(syncing){syncAgain=true;return}
+  syncing=true;if(interactive||!g.lastSync)setSyncStatus('busy');
   try{
-    if(!await gEnsure(interactive)){setSyncStatus('reconnect');return}
-    const snap=await makeSnapshot(),h=snapHash(snap);
-    const localUpdated=h!==g.lastHash?Date.now():(g.localUpdated||0);
+    if(!await gEnsure(interactive)){setSyncStatus('renew');armReauth();return}
     const f=await driveFind(),remoteUpdated=f?(+((f.appProperties||{}).updated)||0):0;
-    if(f&&remoteUpdated>(g.remoteSeen||0)&&remoteUpdated>localUpdated){
-      await applySnapshot(await driveGet(f.id),true);
+    if(f&&remoteUpdated>(g.remoteSeen||0)&&(!dirtyAt||remoteUpdated>dirtyAt)){
+      await applySnapshot(await driveGet(f.id),true);dirtyAt=0;
       gSave({lastHash:snapHash(await makeSnapshot()),localUpdated:remoteUpdated,remoteSeen:remoteUpdated,lastSync:Date.now()});
-      if(!$('homeView').hidden||!$('progressView').hidden)update();
-    }else if(!f||h!==g.lastHash){
-      snap.updated=localUpdated||Date.now();await drivePut(f&&f.id,snap);
-      gSave({lastHash:h,localUpdated:snap.updated,remoteSeen:snap.updated,lastSync:Date.now()});
+      if(!$('homeView').hidden||!$('progressView').hidden)update();if(!$('studyView').hidden&&typeof renderStudyHead==='function')renderStudyHead();
+    }else if(dirtyAt||!f||!g.lastHash){
+      const since=dirtyAt;const snap=await makeSnapshot(),h=snapHash(snap);
+      if(h!==g.lastHash||!f){
+        if(snap.photosHash!==g.photosUp&&snap.photosHash!=='none'){const pf=await driveFind(DRIVE_PHOTOS);await drivePut(pf&&pf.id,{app:'sunshine-photos',photos:snap._pics,updated:Date.now(),photosHash:snap.photosHash},DRIVE_PHOTOS);gSave({photosUp:snap.photosHash})}
+        snap.updated=Date.now();await drivePut(f&&f.id,snap);
+        gSave({lastHash:h,localUpdated:snap.updated,remoteSeen:snap.updated,lastSync:Date.now()})}
+      else gSave({lastSync:Date.now()});
+      if(dirtyAt===since)dirtyAt=0;
     }else gSave({lastSync:Date.now()});
     setSyncStatus('ok');
-  }catch(e){setSyncStatus(e.message==='auth'?'reconnect':'error')}
-  finally{syncing=false;if(syncState==='busy')setSyncStatus('ok')}
+  }catch(e){if(e.message==='auth'){setSyncStatus('renew');armReauth()}else setSyncStatus('error')}
+  finally{syncing=false;if(syncState==='busy')setSyncStatus('ok');if(syncAgain){syncAgain=false;setTimeout(()=>syncNow(false),200)}}
 }
 function setSyncStatus(s){syncState=s;if($('gBody')&&!$('meView').hidden)renderG()}
+const agoText=ms=>{const s=Math.max(0,Math.round((Date.now()-ms)/1000));return s<5?'just now':s<60?`${s} seconds ago`:s<3600?`${Math.round(s/60)} min ago`:new Date(ms).toLocaleString([],{day:'numeric',month:'short',hour:'numeric',minute:'2-digit'})};
 function renderG(){
   const box=$('gBody'),g=gState(),sum=$('sumG');if(!box)return;
   if(!GOOGLE_CLIENT_ID||(CAP&&!nativeGoogle())){sum.textContent='Not available yet';box.innerHTML='<p class="soft">Google sign-in isn’t switched on in this version of Sunshine yet. Your data stays on this phone; use Backup to keep a copy.</p>';return}
-  if(!g.signedIn){sum.textContent='Not connected';box.innerHTML=`<p class="soft">Sign in to keep a private copy of everything in your own Google Drive. Only Sunshine can see it, and you can restore it on a new phone.</p><button class="btn gbtn" data-g="in">${GLOGO}<span>Continue with Google</span></button><p class="pmsg" id="gMsg" aria-live="polite"></p>`;return}
-  const last=g.lastSync?new Date(g.lastSync).toLocaleString([], {day:'numeric',month:'short',hour:'numeric',minute:'2-digit'}):'not yet';
-  const st={busy:'Syncing…',reconnect:'Tap “Sync now” to reconnect Google.',error:'Couldn’t reach Google Drive. It will try again later.',ok:'',['']:''}[syncState]||'';
+  if(!g.signedIn){sum.textContent='Not connected';box.innerHTML=`<p class="soft">Sign in to keep a private copy of everything in your own Google Drive. Only Sunshine can see it, and it stays in sync on your phone and the website.</p><button class="btn gbtn" data-g="in">${GLOGO}<span>Continue with Google</span></button><p class="pmsg" id="gMsg" aria-live="polite"></p>`;return}
+  const st={busy:'Syncing…',renew:'Still signed in. Google’s pass is being renewed; it finishes on your next tap.',reconnect:'Tap “Sync now” to reconnect Google.',error:'Couldn’t reach Google Drive just now. It keeps trying every few seconds.'}[syncState]||'';
   sum.textContent=g.email||'Connected';
-  box.innerHTML=`<p class="soft">Connected as <b>${esc(g.email||g.name||'your Google account')}</b>. Last saved to Drive: ${esc(last)}.</p>${st?`<p class="pmsg">${st}</p>`:''}
+  box.innerHTML=`<p class="soft">Connected as <b>${esc(g.email||g.name||'your Google account')}</b>. Changes sync within a few seconds. Last synced <span id="gAgo">${g.lastSync?agoText(g.lastSync):'not yet'}</span>.</p>${st?`<p class="pmsg">${st}</p>`:''}
     <div class="btns"><button class="btn sage" data-g="sync">Sync now</button><button class="btn ghost" data-g="out">Sign out</button></div><p class="pmsg" id="gMsg" aria-live="polite"></p>`;
 }
 document.addEventListener('click',async e=>{const b=e.target.closest('[data-g]');if(!b)return;const m=$('gMsg');
@@ -2396,8 +2437,9 @@ document.addEventListener('click',async e=>{const b=e.target.closest('[data-g]')
 });
 function gInit(){
   if(GOOGLE_CLIENT_ID&&!CAP&&location.protocol==='https:')loadGis().catch(()=>{});
-  document.addEventListener('visibilitychange',()=>{if(document.hidden)syncNow(false)});
-  setInterval(()=>{if(!document.hidden&&$('lock').hidden)syncNow(false)},3*60*1000);
+  document.addEventListener('visibilitychange',()=>{if($('lock').hidden)syncNow(false)});
+  window.addEventListener('online',()=>syncNow(false));
+  setInterval(()=>{if(!document.hidden&&$('lock').hidden)syncNow(false);const a=$('gAgo'),g=gState();if(a&&g.lastSync)a.textContent=agoText(g.lastSync)},SYNC_POLL_MS);
 }
 
 /* Install prompt (Android Chrome) and offline support */

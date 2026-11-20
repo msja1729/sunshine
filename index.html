@@ -867,20 +867,20 @@ body{background-color:var(--bg);background-image:radial-gradient(120% 50% at 50%
 
 /* full-screen focus */
 body.focusing{overflow:hidden}
-.focus{position:fixed;inset:0;z-index:90;background:#0E1230;color:#fff;overflow:hidden;user-select:none;-webkit-user-select:none;touch-action:manipulation}
-.focus canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
-.focus .f-top{position:absolute;top:calc(12px + env(safe-area-inset-top,0px));left:max(16px,env(safe-area-inset-left,0px));right:max(16px,env(safe-area-inset-right,0px));display:flex;justify-content:space-between;gap:10px;font-weight:800;font-size:.84rem;transition:opacity .6s}
-.focus .f-top span{background:rgba(10,12,30,.32);border:1px solid rgba(255,255,255,.18);padding:6px 12px;border-radius:999px;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);max-width:60%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fz{position:fixed;inset:0;z-index:90;background:#0E1230;color:#fff;overflow:hidden;user-select:none;-webkit-user-select:none;touch-action:manipulation}
+.fz canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.fz .f-top{position:absolute;top:calc(12px + env(safe-area-inset-top,0px));left:max(16px,env(safe-area-inset-left,0px));right:max(16px,env(safe-area-inset-right,0px));display:flex;justify-content:space-between;gap:10px;font-weight:800;font-size:.84rem;transition:opacity .6s}
+.fz .f-top span{background:rgba(10,12,30,.32);border:1px solid rgba(255,255,255,.18);padding:6px 12px;border-radius:999px;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);max-width:60%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .f-mid{position:absolute;left:0;right:0;top:calc(58px + env(safe-area-inset-top,0px));display:flex;flex-direction:column;align-items:center;gap:6px;text-shadow:0 2px 14px rgba(0,0,0,.45);pointer-events:none}
 .f-phase{font-size:.8rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;opacity:.85}
 .f-time{font-family:var(--f-display);font-weight:400;font-size:clamp(3.4rem,15vw,5.6rem);line-height:1;font-variant-numeric:tabular-nums;letter-spacing:-.02em;transition:color 1.5s}
-.focus[data-phase="break"] .f-time{color:#FFE2A0}.focus[data-phase="paused"] .f-time{opacity:.6}
+.fz[data-phase="break"] .f-time{color:#FFE2A0}.fz[data-phase="paused"] .f-time{opacity:.6}
 .f-bar{width:min(220px,60vw);height:4px;border-radius:4px;background:rgba(255,255,255,.2);overflow:hidden}
 .f-bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#9BD5F2,#F4C25B);border-radius:4px;transition:width 1s linear}
 .f-sub{font-size:.78rem;font-weight:700;opacity:.75}
 .f-ctrl{position:absolute;left:0;right:0;bottom:calc(22px + env(safe-area-inset-bottom,0px));display:flex;justify-content:center;align-items:center;gap:14px;flex-wrap:wrap;padding:0 16px;transition:opacity .6s}
-.focus.idle .f-ctrl,.focus.idle .f-top{opacity:0;pointer-events:none}
-.focus.idle .f-mid{opacity:.8;transition:opacity 1s}
+.fz.idle .f-ctrl,.fz.idle .f-top{opacity:0;pointer-events:none}
+.fz.idle .f-mid{opacity:.8;transition:opacity 1s}
 .fbtn{width:54px;height:54px;border-radius:50%;border:1px solid rgba(255,255,255,.28);background:rgba(255,255,255,.12);color:#fff;display:grid;place-items:center;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
 .fbtn svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .fbtn .i-play{display:none}.fbtn.on .i-play{display:block;fill:currentColor}.fbtn.on .i-pause{display:none}
@@ -970,6 +970,36 @@ body.focusing{overflow:hidden}
 .wa-down{animation:waDown 1.6s ease-in-out infinite}@keyframes waDown{0%,100%{transform:translateY(-4px)}50%{transform:translateY(4px)}}
 .wnav .btn.sage{animation:beginGlow 3s ease-in-out infinite}
 .gbtn{transition:transform .2s}.gbtn:active{transform:scale(.97)}
+
+/* tidy Study page */
+.st-head h1{font-size:1.9rem}.st-head p{margin:0}
+.st-stage{height:min(46vh,360px)}
+.st-plan{gap:14px}
+.st-label{font-size:1rem;padding:13px 14px}
+.st-field{display:flex;flex-direction:column;gap:8px}
+.st-lab{font-weight:800;font-size:.86rem;color:var(--muted);letter-spacing:.02em}
+.opt-grid{display:grid;gap:8px}.opt-grid.c3{grid-template-columns:repeat(3,minmax(0,1fr))}.opt-grid.c2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.opt{border:1.5px solid var(--line);background:var(--bg);color:var(--ink);border-radius:14px;padding:12px 6px;font-weight:800;font-size:.9rem;min-height:48px;transition:background .18s,border-color .18s,transform .12s}
+.opt.two{display:flex;flex-direction:column;align-items:flex-start;gap:2px;padding:10px 12px;text-align:left}.opt.two small{font-size:.74rem;font-weight:600;color:var(--muted)}
+.opt[aria-pressed="true"]{background:color-mix(in srgb,var(--sage) 24%,var(--surface));border-color:var(--sage);color:var(--sage-ink);box-shadow:inset 0 0 0 1px var(--sage)}.opt[aria-pressed="true"] small{color:var(--sage-ink)}
+.st-custom .num{display:flex;flex-direction:column;gap:4px;font-weight:800;font-size:.78rem;color:var(--muted)}.st-custom input{width:100%;text-align:center;font-size:1rem}
+.st-plantext{margin:0;font-size:.86rem;color:var(--muted)}
+.btn.st-begin{position:relative;animation:none;box-shadow:0 10px 24px -14px #2F9A6B}
+.st-acc{background:var(--surface);border:1px solid var(--line);border-radius:22px}
+.st-acc .acc-body{gap:12px}
+.sw-row{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:12px 0 2px;border-top:1px solid var(--line);cursor:pointer}
+.sw-row>span{display:flex;flex-direction:column;gap:2px;min-width:0}.sw-row b{font-size:.93rem}.sw-row small{font-size:.78rem;color:var(--muted);line-height:1.35}
+.sw{appearance:none;-webkit-appearance:none;flex:none;width:48px;height:28px;border-radius:99px;background:var(--line);position:relative;cursor:pointer;transition:background .2s;margin:0}
+.sw::after{content:"";position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.3);transition:transform .22s cubic-bezier(.3,1.3,.5,1)}
+.sw:checked{background:var(--sage)}.sw:checked::after{transform:translateX(20px)}
+.stepper{display:flex;align-items:center;gap:6px;flex:none}
+.stepper button{width:38px;height:38px;border-radius:50%;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);font-size:1.2rem;font-weight:800;line-height:1}
+.stepper b{min-width:62px;text-align:center;font-family:var(--f-display);font-weight:500;font-size:1.1rem}
+.grove span{white-space:nowrap}
+#studyView button,#studyView .sw,.fz button{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+#studyView button:active,.fz button:active{transform:scale(.96)}
+@media (max-width:360px){.opt-grid.c3{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.wnav .btn.sage{animation:none}
 @media (prefers-reduced-motion: reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 </style>
 </head>
@@ -1188,7 +1218,7 @@ body.focusing{overflow:hidden}
   <button data-go="sos" aria-selected="false"><svg viewBox="0 0 24 24"><path d="M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.5-7 10-7 10z"/></svg>SOS</button>
   <button data-go="me" aria-selected="false"><svg viewBox="0 0 24 24"><circle cx="12" cy="8.5" r="3.5"/><path d="M5 20c1.2-3.6 4-5.5 7-5.5s5.8 1.9 7 5.5"/></svg>Me</button>
 </nav>
-<div class="focus" id="focus" hidden data-phase="focus">
+<div class="fz" id="focus" hidden data-phase="focus">
   <canvas id="fCanvas" aria-hidden="true"></canvas>
   <div class="f-top"><span class="f-label" id="fLabel">Focus</span><span class="f-day" id="fDay"></span></div>
   <div class="f-mid"><span class="f-phase" id="fPhase"></span><b class="f-time" id="fTime">25:00</b><div class="f-bar"><i id="fBar"></i></div><span class="f-sub" id="fSub"></span></div>
@@ -2034,7 +2064,7 @@ function medRow(m,kind){const daily=m.days==='daily',rt=kind==='routine';return`
 function medsHTML(c){return`<div class="mlist-wrap"><div class="med-list" data-list="meds">${c.meds.map(m=>medRow(m)).join('')}</div>
   <button type="button" class="btn" data-act="addMed">+ Add a medicine or vitamin</button>
   <p class="soft">Nothing to add? That’s fine; the medicine card stays hidden. Names stay private: reminders only say “medicine time”.</p></div>`}
-const RT_SUGG=['Skincare','Journal','Revise notes','Read 10 pages','Walk the dog','Call family','Tidy my room','Gym','Plan tomorrow','Water the plants','Practise music','Screen-free hour'];
+const RT_SUGG=['Skincare','Journal','Revise notes','Read 10 pages','Gym','Plan tomorrow'];
 function routinesHTML(c){return`<div class="mlist-wrap rt"><div class="med-list" data-list="routines">${c.routines.map(m=>medRow(m,'routine')).join('')}</div>
   <div class="chips rt-sugg">${RT_SUGG.map(x=>`<button type="button" class="chip" data-rsugg="${x}">+ ${x}</button>`).join('')}</div>
   <button type="button" class="btn" data-act="addRoutine">+ Add my own routine</button>
@@ -2723,11 +2753,11 @@ function TreeScene(cv,o){
   o=o||{};const ctx=cv.getContext('2d');
   let W=1,H=1,dpr=1,raf=0,running=false,tree=null,seed=0,t=0,last=0;
   let G=0,Gd=0,pour=false,sun=false,pourAmt=0,sunAmt=o.sun?1:0,wet=0,mile=-1,cloud=1,cl=1,goalMin=180,gText='',leftText='',drops=[],rainAcc=0,cloudPuffs=[];
-  let S=80,baseX=0,groundY=0,bbox=null,sky0=null,bgc=[],hills=[],grass=[],stars=[],flies=[],butter=[],parts=[],ripples=[],sap=[],falling=[],pulses=[],birds=null,sparkT=0,dropT=0,sapT=0,leafT=0;
+  let hiddenView=false,io=null;let S=80,baseX=0,groundY=0,bbox=null,sky0=null,bgc=[],hills=[],grass=[],stars=[],flies=[],butter=[],parts=[],ripples=[],sap=[],falling=[],pulses=[],birds=null,sparkT=0,dropT=0,sapT=0,leafT=0;
   let X0,Y0,X1,Y1,AN,LP,OFF;
   const leafPts=[];
 
-  function setSeed(sd){if(sd===seed&&tree)return;seed=sd;tree=genTree(sd);const n=tree.B.length;[X0,Y0,X1,Y1,AN,LP,OFF]=[0,0,0,0,0,0,0].map(()=>new Float32Array(n));bbox=measure();layout()}
+  function setSeed(sd){if(sd===seed&&tree)return;seed=sd;tree=genTree(sd);sap.length=0;parts.length=0;falling.length=0;ripples.length=0;drops.length=0;leafPts.length=0;const n=tree.B.length;[X0,Y0,X1,Y1,AN,LP,OFF]=[0,0,0,0,0,0,0].map(()=>new Float32Array(n));bbox=measure();layout()}
   /* lay out the branches for growth g at time tt; fills the position arrays */
   function place(g,tt,bx,by,sc,sway){
     const B=tree.B,wind=.65+.35*Math.sin(tt*.23)+.25*Math.sin(tt*.71+1.3);
@@ -2761,7 +2791,7 @@ function TreeScene(cv,o){
     flies=Array.from({length:mini?6:14},()=>({ph:R()*TAU,sp:.15+R()*.3,rx:.2+R()*.5,ry:.15+R()*.45,k:R()}));
     butter=Array.from({length:mini?1:3},(_,i)=>({ph:R()*TAU,sp:.18+R()*.12,c:['#F6B44C','#F8E08E','#F2F2F2'][i%3]}));
   }
-  function resize(){const r=cv.getBoundingClientRect();dpr=Math.min(2,window.devicePixelRatio||1);W=Math.max(1,r.width);H=Math.max(1,r.height);cv.width=Math.round(W*dpr);cv.height=Math.round(H*dpr);layout();if(!running)draw()}
+  function resize(){const r=cv.getBoundingClientRect();dpr=Math.min(o.mini?1.5:1.75,window.devicePixelRatio||1);W=Math.max(1,r.width);H=Math.max(1,r.height);cv.width=Math.round(W*dpr);cv.height=Math.round(H*dpr);layout();draw()}
 
   function step(dt){
     if(G<Gd-.05)Gd=G;Gd+=(G-Gd)*Math.min(1,dt*(o.fast?4:1.4));
@@ -2783,7 +2813,7 @@ function TreeScene(cv,o){
           if(Math.abs(d.x-baseX)<S*.45&&Math.random()<.3)ripples.push({k:0,x:d.x})}}}
     // sap rising through the tree while it drinks
     sapT-=dt;if((wet>.35||o.timelapse&&pour)&&sapT<=0&&sap.length<(o.mini?10:28)){sapT=o.mini?.25:.12;const tp=tree.tips[Math.random()*tree.tips.length|0];if(LP[tp]>.5){const path=[];let k=tp;while(k>=0){path.unshift(k);k=tree.B[k].p}sap.push({path,s:0,sp:1.6+Math.random()*1.2})}}
-    for(let i=sap.length-1;i>=0;i--){const p=sap[i];p.s+=dt*p.sp;if(p.s>=p.path.length||LP[p.path[Math.floor(p.s)]]<=0)sap.splice(i,1)}
+    for(let i=sap.length-1;i>=0;i--){const p=sap[i];p.s+=dt*p.sp;const q=p.path[Math.floor(p.s)];if(p.s>=p.path.length||q===undefined||q>=LP.length||LP[q]<=0)sap.splice(i,1)}
     // a leaf drifts down now and then
     leafT-=dt;if(Gd>.55&&leafT<=0&&leafPts.length&&!o.still){leafT=3+Math.random()*6;const lp=leafPts[Math.random()*leafPts.length|0];falling.push({x:lp[0],y:lp[1],vx:8+Math.random()*14,ph:Math.random()*TAU,r:0,c:lp[2]})}
     for(let i=falling.length-1;i>=0;i--){const f=falling[i];f.y+=dt*(18+Math.sin(t*2+f.ph)*6);f.x+=Math.sin(t*1.6+f.ph)*dt*26+f.vx*dt;f.r+=dt*2;if(f.y>groundAt(f.x)+3)falling.splice(i,1)}
@@ -2881,8 +2911,8 @@ function TreeScene(cv,o){
       for(let p=0;p<5;p++){const a=f.ph+p*TAU/5+t*.1;ctx.beginPath();ctx.ellipse(x+Math.cos(a)*r*.7,y+Math.sin(a)*r*.7,r*.62,r*.4,a,0,TAU);ctx.fill()}
       ctx.fillStyle='#F4C25B';ctx.beginPath();ctx.arc(x,y,r*.32,0,TAU);ctx.fill()});
     // sap: tiny lights travelling from the roots up to the leaves
-    if(sap.length){ctx.save();ctx.globalCompositeOperation='lighter';sap.forEach(p=>{const kk=Math.floor(p.s),f=p.s-kk,i=p.path[kk];if(i===undefined||LP[i]<=0)return;
-      const x=X0[i]+(X1[i]-X0[i])*f,y=Y0[i]+(Y1[i]-Y0[i])*f,r=S*.022,gr=ctx.createRadialGradient(x,y,0,x,y,r*2.2);gr.addColorStop(0,'rgba(200,245,255,.9)');gr.addColorStop(1,'rgba(120,220,255,0)');ctx.fillStyle=gr;ctx.fillRect(x-r*2.2,y-r*2.2,r*4.4,r*4.4)});ctx.restore()}
+    if(sap.length){ctx.save();ctx.globalCompositeOperation='lighter';sap.forEach(p=>{const kk=Math.floor(p.s),f=p.s-kk,i=p.path[kk];if(i===undefined||i>=LP.length||LP[i]<=0)return;
+      const x=X0[i]+(X1[i]-X0[i])*f,y=Y0[i]+(Y1[i]-Y0[i])*f,r=S*.022;if(!isFinite(x+y+r))return;const gr=ctx.createRadialGradient(x,y,0,x,y,r*2.2);gr.addColorStop(0,'rgba(200,245,255,.9)');gr.addColorStop(1,'rgba(120,220,255,0)');ctx.fillStyle=gr;ctx.fillRect(x-r*2.2,y-r*2.2,r*4.4,r*4.4)});ctx.restore()}
     if(Gd>.98&&!o.still){sparkT-=1/60;if(sparkT<=0){sparkT=.12;parts.push({x:cx+(Math.random()-.5)*S*1.4,y:cy+(Math.random()-.3)*S*.8,vx:(Math.random()-.5)*8,vy:-10-Math.random()*16,g:0,life:2+Math.random(),r:1+Math.random()*1.5,c:'g'})}}
     return[cx,cy];
   }
@@ -2936,16 +2966,17 @@ function TreeScene(cv,o){
     [0,1].forEach(ci=>{ctx.strokeStyle=c[ci];ctx.lineWidth=o.mini?1:1.4;ctx.lineCap='round';ctx.beginPath();
       grass.forEach(g=>{if(g.c!==ci)return;const sw=o.still?0:Math.sin(t*1.7+g.x*.04+g.ph*.3)*g.h*.28*wind;ctx.moveTo(g.x,g.y);ctx.quadraticCurveTo(g.x+g.l*g.h*.3,g.y-g.h*.6,g.x+g.l*g.h+sw,g.y-g.h)});ctx.stroke()});
   }
-  function draw(){
-    if(!tree)return;ctx.setTransform(dpr,0,0,dpr,0,0);
+  function draw(){try{drawFrame()}catch(e){ctx.setTransform(1,0,0,1,0,0);sap.length=0;parts.length=0}}
+  function drawFrame(){
+    if(!tree||!isFinite(S)||S<=0)return;ctx.setTransform(dpr,0,0,dpr,0,0);
     sky();land();gauge();const[cx,cy]=drawTree();rain();drawCloud();grassDraw();life(cx,cy);
     if(!o.mini){const v=ctx.createRadialGradient(W/2,H*.55,Math.min(W,H)*.35,W/2,H*.55,Math.max(W,H)*.8);v.addColorStop(0,'rgba(0,0,0,0)');v.addColorStop(1,'rgba(0,0,0,.28)');ctx.fillStyle=v;ctx.fillRect(0,0,W,H)}
   }
-  function frame(now){if(!running)return;raf=requestAnimationFrame(frame);const dt=Math.min(.05,((now-(last||now))/1000));last=now;t+=dt;if(o.tick)o.tick(dt);step(dt);draw()}
+  function frame(now){if(!running)return;raf=requestAnimationFrame(frame);if(hiddenView||(o.mini&&now-last<31))return;const dt=Math.min(.05,((now-(last||now))/1000));last=now;t+=dt;if(o.tick)o.tick(dt);step(dt);draw()}
   const api={
     set(st){if(st.seed!==undefined)setSeed(st.seed);if(st.G!==undefined)G=clamp(st.G,0,1);if(st.pour!==undefined)pour=st.pour;if(st.sun!==undefined)sun=st.sun;if(st.cloud!==undefined)cloud=clamp(st.cloud);if(st.goal)goalMin=st.goal;if(st.gauge!==undefined)gText=st.gauge;if(st.left!==undefined)leftText=st.left;if(st.jump){Gd=G;mile=-1}if(!running)draw();return api},
-    start(){if(running)return api;running=true;last=0;resize();raf=requestAnimationFrame(frame);return api},
-    stop(){running=false;cancelAnimationFrame(raf);return api},
+    start(){if(running)return api;running=true;last=0;resize();raf=requestAnimationFrame(frame);if(o.mini&&'IntersectionObserver' in window&&!io){io=new IntersectionObserver(es=>{hiddenView=!es[0].isIntersecting});io.observe(cv)}return api},
+    stop(){running=false;cancelAnimationFrame(raf);if(io){io.disconnect();io=null}return api},
     resize,get pourAmt(){return pourAmt},get shown(){return Gd},get running(){return running}
   };
   return api;
@@ -3197,59 +3228,60 @@ document.addEventListener('visibilitychange',async()=>{
 
 /* ---------- Study page ---------- */
 let stTimelapse=null;
+const ICO_SND='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"/></svg>',
+  ICO_SET='<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M5.3 18.7l2.1-2.1M16.6 7.4l2.1-2.1"/></svg>',
+  ICO_TREE='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21v-6"/><path d="M12 15c-4.5 0-7-2.3-7-5.3S7.6 4 12 4s7 2.7 7 5.7-2.5 5.3-7 5.3z"/></svg>',
+  CHEV='<svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>';
+const RHY=[[15,3,'Gentle','15 min · 3 break'],[25,5,'Classic','25 min · 5 break'],[50,10,'Deep','50 min · 10 break']];
+const stOpen=new Set();
+function swRow(key,title,hint){return`<label class="sw-row"><span><b>${title}</b>${hint?`<small>${hint}</small>`:''}</span><input type="checkbox" class="sw" data-sb="${key}" ${study[key]?'checked':''}></label>`}
+function soundSum(){const a=AMBS.find(x=>x[0]===study.sound);return(a?a[2]:'Silence')+(study.beat!=='off'?' · '+BEATS[study.beat].name.split(' ')[0]+' beats':'')}
 function renderStudy(){
   const d=sday(),g=growth(),box=$('studyView');
-  const ch=(attr,val,cur,label)=>`<button type="button" data-${attr}="${val}" aria-pressed="${cur==val}">${label}</button>`;
-  const preset=[[15,3,'Gentle 15·3'],[25,5,'Classic 25·5'],[50,10,'Deep 50·10']];const isP=preset.find(p=>p[0]===study.focus&&p[1]===study.brk);
-  box.innerHTML=`<section class="page-head"><span class="eyebrow">Study garden</span><h1>Tree of Knowledge</h1><p class="soft">While you focus, a rain cloud waters today’s tree. The cloud holds this sitting’s rain and shrinks as it falls; the rain gauge fills toward today’s goal. Breaks bring the sunlight.</p></section>
+  const isP=RHY.find(p=>p[0]===study.focus&&p[1]===study.brk);
+  const acc=(id,ico,cls,title,sum,body)=>`<details class="pbox acc st-acc" data-acc="${id}" ${stOpen.has(id)?'open':''}><summary><span class="acc-ico ${cls}">${ico}</span><span class="acc-t"><b>${title}</b><small id="sum-${id}">${sum}</small></span>${CHEV}</summary><div class="acc-body">${body}</div></details>`;
+  box.innerHTML=`<section class="page-head st-head"><span class="eyebrow">Study garden</span><h1>Tree of Knowledge</h1><p class="soft">Focus brings the rain, breaks bring the sun. Reach today’s goal and your tree stands fully grown.</p></section>
   ${study.run?`<section class="panel st-resume"><div><b>A sitting is waiting for you</b><span class="soft">${fmtDur(study.run.doneMs)} of ${fmtDur(study.run.planMs)} done${study.run.label?' · '+esc(study.run.label):''}</span></div><div class="btns"><button class="btn sage" id="stResume">Continue</button><button class="btn ghost" id="stDrop">End it</button></div></section>`:''}
   <section class="panel st-hero">
     <div class="st-stage"><canvas id="stCanvas" aria-label="Today’s tree, ${Math.round(g*100)} percent grown"></canvas><button class="st-tl" id="stTl" type="button">▶ Watch a tree grow</button></div>
-    <div class="st-stats"><div><b>${fmtDur(d.ms)}</b><span>studied today</span></div><div><b>${fmtDur(d.goal*60000)}</b><span>today’s goal</span></div><div><b>${Math.round(g*100)}%</b><span>${g>=1?'fully grown':'grown'}</span></div></div>
+    <div class="st-stats"><div><b>${fmtDur(d.ms)}</b><span>today</span></div><div><b>${fmtDur(d.goal*60000)}</b><span>goal</span></div><div><b>${Math.round(g*100)}%</b><span>${g>=1?'fully grown':'grown'}</span></div></div>
     <div class="st-meter"><i style="width:${Math.min(100,g*100)}%"></i></div>
   </section>
   <section class="panel st-plan">
-    <h2>This sitting</h2>
-    <div class="field"><label for="stLabel">What are you studying? <span class="hint">(optional)</span></label><input id="stLabel" class="note" maxlength="40" value="${esc(study.label)}" placeholder="e.g. Linear algebra, Chapter 4"></div>
-    <div class="field"><label>How long will you sit?</label><div class="seg2 wrapc">${[[25,'25 min'],[50,'50 min'],[60,'1 h'],[90,'1½ h'],[120,'2 h'],[180,'3 h']].map(([v,l])=>ch('plan',v,study.plan,l)).join('')}</div></div>
-    <div class="field"><label>Rhythm</label><div class="seg2 wrapc">${preset.map(p=>`<button type="button" data-rhythm="${p[0]},${p[1]}" aria-pressed="${!!isP&&isP===p}">${p[2]}</button>`).join('')}<button type="button" data-rhythm="custom" aria-pressed="${!isP}">Custom</button></div></div>
-    <div class="row4" id="stCustom" ${isP?'hidden':''}>
-      <div class="field"><label>Focus</label><input type="number" class="note" inputmode="numeric" min="5" max="120" data-sn="focus" value="${study.focus}"></div>
-      <div class="field"><label>Break</label><input type="number" class="note" inputmode="numeric" min="1" max="30" data-sn="brk" value="${study.brk}"></div>
-      <div class="field"><label>Long break</label><input type="number" class="note" inputmode="numeric" min="5" max="45" data-sn="longBrk" value="${study.longBrk}"></div>
-      <div class="field"><label>Long every</label><input type="number" class="note" inputmode="numeric" min="2" max="8" data-sn="longEvery" value="${study.longEvery}"></div></div>
-    <p class="soft st-plantext" id="stPlanText">${planEndText()}</p>
+    <h2>Start a sitting</h2>
+    <input id="stLabel" class="note st-label" maxlength="40" value="${esc(study.label)}" placeholder="What are you studying? (optional)" aria-label="What are you studying?">
+    <div class="st-field"><span class="st-lab">How long</span><div class="opt-grid c3">${[[25,'25 min'],[50,'50 min'],[60,'1 hour'],[90,'1½ hours'],[120,'2 hours'],[180,'3 hours']].map(([v,l])=>`<button type="button" class="opt" data-plan="${v}" aria-pressed="${study.plan===v}">${l}</button>`).join('')}</div></div>
+    <div class="st-field"><span class="st-lab">Rhythm</span><div class="opt-grid c2">${RHY.map(p=>`<button type="button" class="opt two" data-rhythm="${p[0]},${p[1]}" aria-pressed="${isP===p}"><b>${p[2]}</b><small>${p[3]}</small></button>`).join('')}<button type="button" class="opt two" data-rhythm="custom" aria-pressed="${!isP}"><b>Custom</b><small>${isP?'set your own':study.focus+' min · '+study.brk+' break'}</small></button></div></div>
+    <div class="opt-grid c2 st-custom" id="stCustom" ${isP?'hidden':''}>
+      ${[['focus','Focus (min)',5,120],['brk','Break (min)',1,30],['longBrk','Long break (min)',5,45],['longEvery','Long break every',2,8]].map(([k,l,mn,mx])=>`<label class="num"><span>${l}</span><input type="number" class="note" inputmode="numeric" min="${mn}" max="${mx}" data-sn="${k}" value="${study[k]}"></label>`).join('')}</div>
+    <p class="st-plantext" id="stPlanText">${planEndText()}</p>
     <button class="btn sage wide st-begin" id="stBegin" type="button"><span>🌧</span> Let it rain</button>
   </section>
-  <section class="panel st-sound">
-    <h2>Sounds while you focus</h2><p class="soft">Tap one to hear it.</p>
+  ${acc('sound',ICO_SND,'c','Sounds',soundSum(),`
     <div class="amb-grid">${AMBS.map(a=>`<button type="button" data-amb="${a[0]}" aria-pressed="${study.sound===a[0]}"><span>${a[1]}</span>${a[2]}</button>`).join('')}</div>
     <label class="f-range">Ambience volume<input type="range" id="stVol" min="0" max="100" value="${Math.round(study.vol*100)}"></label>
-    <h3 class="sub-h">Binaural beats <span class="hint">· use headphones</span></h3>
+    <span class="st-lab">Binaural beats <span class="hint">· best with headphones</span></span>
     <div class="beat-list">${[['off','Off','just the ambience'],...Object.entries(BEATS).map(([k,b])=>[k,b.name,b.d])].map(([k,n,dd])=>`<button type="button" data-beat="${k}" aria-pressed="${study.beat===k}"><b>${n}</b><span>${dd}</span></button>`).join('')}</div>
     <label class="f-range">Beats volume<input type="range" id="stBVol" min="0" max="100" value="${Math.round(study.beatVol*100)}"></label>
-    <label class="toggle-row"><input type="checkbox" data-sb="bells" ${study.bells?'checked':''}> A singing bowl at the start, and soft chimes at breaks</label>
-    <label class="toggle-row"><input type="checkbox" data-sb="water" ${study.water?'checked':''}> The soft sound of rain on the leaves</label>
-    <div class="btns"><button class="btn ghost" id="stStopPrev" type="button" hidden>■ Stop preview</button></div>
-  </section>
-  <section class="panel st-set">
-    <h2>Focus settings</h2>
-    <div class="field"><label>Daily study goal</label><div class="seg2 wrapc">${[60,120,180,240,300,360,480].map(v=>ch('goal',v,goalMin(),fmtDur(v*60000))).join('')}</div></div>
-    <label class="toggle-row"><input type="checkbox" data-sb="lock" ${study.lock?'checked':''}> ${CAP?'Lock my phone to Sunshine while I focus (no YouTube, Instagram or other apps until I end the sitting)':'Go full screen while I focus'}</label>
-    ${CAP?'<p class="hint">The first time, Android asks you to allow “App pinning”. To end early, hold “Hold to end”.</p>':''}
-    <label class="toggle-row"><input type="checkbox" data-sb="away" ${study.away?'checked':''}> Only count time while Sunshine is open on screen</label>
-    <label class="toggle-row"><input type="checkbox" data-sb="autoNext" ${study.autoNext?'checked':''}> Start the next round by itself after a break</label>
-  </section>
-  <section class="panel st-log">
-    <h2>Today’s sittings</h2>
-    ${d.sessions.length?`<ul class="st-sess">${d.sessions.map(s=>`<li><b>${fmtDur(s.ms)}</b><span>${esc(s.label||'Focus')}</span><time>${new Date(s.at).toLocaleTimeString([],{hour:'numeric',minute:'2-digit'})}</time></li>`).join('')}</ul>`:'<p class="soft">Nothing yet. Your first sitting will appear here.</p>'}
-    <h2 class="mt">Your grove</h2><p class="soft">One tree for each day you studied.</p>
+    ${swRow('bells','Bowl & chimes','A singing bowl at the start, soft chimes at breaks')}
+    ${swRow('water','Rain on the leaves','The soft sound of the rain falling on your tree')}
+    <button class="btn ghost" id="stStopPrev" type="button" hidden>■ Stop preview</button>`)}
+  ${acc('set',ICO_SET,'t','Goal & focus',`Goal ${fmtDur(goalMin()*60000)} · ${study.lock?(CAP?'phone lock on':'full screen'):'no lock'}`,`
+    <div class="sw-row"><span><b>Daily study goal</b><small>Your tree is fully grown when you reach it</small></span>
+      <div class="stepper"><button type="button" data-goalstep="-30" aria-label="Less">−</button><b id="stGoalV">${fmtDur(goalMin()*60000)}</b><button type="button" data-goalstep="30" aria-label="More">+</button></div></div>
+    ${swRow('lock',CAP?'Lock my phone while I focus':'Full screen while I focus',CAP?'No YouTube, Instagram or other apps until the sitting ends. Android asks once to allow “App pinning”.':'Hides everything else on the screen')}
+    ${swRow('away','Count only on-screen time','Leaving Sunshine pauses the rain')}
+    ${swRow('autoNext','Start the next round by itself','After each sunlight break')}`)}
+  ${acc('log',ICO_TREE,'s','Today & your grove',d.sessions.length?`${d.sessions.length} sitting${d.sessions.length>1?'s':''} · ${fmtDur(d.ms)}`:'Your sittings and the last 14 days',`
+    ${d.sessions.length?`<ul class="st-sess">${d.sessions.map(s=>`<li><b>${fmtDur(s.ms)}</b><span>${esc(s.label||'Focus')}</span><time>${new Date(s.at).toLocaleTimeString([],{hour:'numeric',minute:'2-digit'})}</time></li>`).join('')}</ul>`:'<p class="soft">No sittings yet today.</p>'}
     <div class="grove">${Array.from({length:14},(_,i)=>{const dt=new Date();dt.setDate(dt.getDate()-13+i);const k=ymd(dt),gg=growth(k),dd=study.days[k];
-      return`<div class="gtree${k===today()?' today':''}" title="${dt.toLocaleDateString()}: ${dd?fmtDur(dd.ms):'0m'}"><canvas data-k="${k}" data-g="${gg}" width="60" height="80"></canvas><span>${dt.toLocaleDateString(undefined,{weekday:'narrow'})}</span><small>${dd&&dd.ms>=60000?fmtDur(dd.ms):'·'}</small></div>`}).join('')}</div>
-  </section>`;
-  box.querySelectorAll('.grove canvas').forEach(c=>{const g=+c.dataset.g;if(g>0)drawStillTree(c,treeSeed(c.dataset.k),Math.max(.06,g));else{const x=c.getContext('2d');x.fillStyle='rgba(141,185,143,.18)';x.beginPath();x.ellipse(30,72,16,4,0,0,TAU);x.fill()}});
+      return`<div class="gtree${k===today()?' today':''}" title="${dt.toLocaleDateString()}: ${dd?fmtDur(dd.ms):'0m'}"><canvas data-k="${k}" data-g="${gg}" width="60" height="80"></canvas><span>${dt.toLocaleDateString(undefined,{weekday:'narrow'})}${dt.getDate()}</span></div>`}).join('')}</div>`)}`;
+  drawGrove();
   if(pscene)pscene.stop();pscene=TreeScene($('stCanvas'),{mini:true,sun:true});pscene.set({seed:treeSeed(today()),G:g,sun:true,jump:true,goal:d.goal,gauge:fmtDur(d.ms),cloud:1}).start();
 }
+function drawGrove(){const box=$('studyView').querySelector('[data-acc="log"]');if(!box||!box.open||box.dataset.drawn)return;box.dataset.drawn=1;
+  box.querySelectorAll('.grove canvas').forEach(c=>{const g=+c.dataset.g;if(g>0)drawStillTree(c,treeSeed(c.dataset.k),Math.max(.06,g));else{const x=c.getContext('2d');x.fillStyle='rgba(141,185,143,.22)';x.beginPath();x.ellipse(30,72,14,3.5,0,0,TAU);x.fill()}})}
+$('studyView').addEventListener('toggle',e=>{const d=e.target.closest&&e.target.closest('[data-acc]');if(!d)return;d.open?stOpen.add(d.dataset.acc):stOpen.delete(d.dataset.acc);if(d.dataset.acc==='log')drawGrove()},true);
 function stopStudyPreview(){if(pscene){pscene.stop();pscene=null}clearInterval(stTimelapse);stTimelapse=null;if(!run)soundsOff(.6)}
 $('studyView').addEventListener('click',e=>{
   const b=e.target.closest('button');if(!b)return;
@@ -3258,15 +3290,15 @@ $('studyView').addEventListener('click',e=>{
   if(b.id==='stDrop'){run=study.run;finishSitting(false);renderStudy();return}
   if(b.id==='stTl'){timelapse(b);return}
   if(b.dataset.plan){study.plan=+b.dataset.plan;pressOnly(b)}
-  if(b.dataset.rhythm){if(b.dataset.rhythm==='custom'){$('stCustom').hidden=false}else{const[f,k]=b.dataset.rhythm.split(',').map(Number);study.focus=f;study.brk=k;study.longBrk=f>=50?20:15;$('stCustom').hidden=true}pressOnly(b)}
-  if(b.dataset.goal){CFG.studyGoal=+b.dataset.goal;saveCfg(CFG);pressOnly(b);renderHabitCards();update();renderStudyHead()}
-  if(b.dataset.amb){study.sound=b.dataset.amb;pressOnly(b);sctx();setAmb(study.sound,study.vol);$('stStopPrev').hidden=study.sound==='off'}
-  if(b.dataset.beat){study.beat=b.dataset.beat;pressOnly(b);sctx();setBeat(study.beat,study.beatVol);$('stStopPrev').hidden=false}
+  if(b.dataset.rhythm){if(b.dataset.rhythm==='custom'){$('stCustom').hidden=false;$('stCustom').querySelector('input').focus()}else{const[f,k]=b.dataset.rhythm.split(',').map(Number);study.focus=f;study.brk=k;study.longBrk=f>=50?20:15;$('stCustom').hidden=true}pressOnly(b)}
+  if(b.dataset.goalstep){CFG.studyGoal=Math.min(720,Math.max(30,goalMin()+ +b.dataset.goalstep));saveCfg(CFG);$('stGoalV').textContent=fmtDur(goalMin()*60000);renderHabitCards();update();renderStudyHead();setSum()}
+  if(b.dataset.amb){study.sound=b.dataset.amb;pressOnly(b);sctx();setAmb(study.sound,study.vol);$('stStopPrev').hidden=study.sound==='off';setSum()}
+  if(b.dataset.beat){study.beat=b.dataset.beat;pressOnly(b);sctx();setBeat(study.beat,study.beatVol);$('stStopPrev').hidden=false;setSum()}
   if(b.id==='stStopPrev'){soundsOff(.6);b.hidden=true}
   saveStudy();const pt=$('stPlanText');if(pt)pt.textContent=planEndText();
 });
 function pressOnly(b){b.parentElement.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b))}
-function renderStudyHead(){const d=sday(),g=growth(),st=$('studyView').querySelectorAll('.st-stats b');if(st.length){st[0].textContent=fmtDur(d.ms);st[1].textContent=fmtDur(d.goal*60000);st[2].textContent=Math.round(g*100)+'%'}
+function renderStudyHead(){const d=sday(),g=growth(),st=$('studyView').querySelectorAll('.st-stats b');if(pscene)pscene.set({goal:d.goal,gauge:fmtDur(d.ms)});if(st.length){st[0].textContent=fmtDur(d.ms);st[1].textContent=fmtDur(d.goal*60000);st[2].textContent=Math.round(g*100)+'%'}
   const m=$('studyView').querySelector('.st-meter i');if(m)m.style.width=Math.min(100,g*100)+'%';if(pscene)pscene.set({G:g})}
 function readStudyForm(){const v=$('stLabel');if(v)study.label=v.value.trim().slice(0,40);
   $('studyView').querySelectorAll('[data-sn]').forEach(i=>{const lim={focus:[5,120],brk:[1,30],longBrk:[5,45],longEvery:[2,8]}[i.dataset.sn];study[i.dataset.sn]=Math.min(lim[1],Math.max(lim[0],Math.round(+i.value)||SDEF[i.dataset.sn]))});saveStudy()}
@@ -3274,7 +3306,8 @@ $('studyView').addEventListener('input',e=>{const t=e.target;
   if(t.id==='stVol'){study.vol=+t.value/100;if(SND.amb)setAmb(study.sound,study.vol)}
   if(t.id==='stBVol'){study.beatVol=+t.value/100;if(SND.beat)setBeat(study.beat,study.beatVol)}
   if(t.dataset.sn||t.id==='stLabel'){readStudyForm();$('stPlanText').textContent=planEndText()}});
-$('studyView').addEventListener('change',e=>{const t=e.target;if(t.dataset.sb){study[t.dataset.sb]=t.checked;if(t.dataset.sb==='water'&&!t.checked&&SND.trick){SND.trick.stop();SND.trick=null}}saveStudy()});
+function setSum(){const a=$('sum-sound'),b=$('sum-set');if(a)a.textContent=soundSum();if(b)b.textContent=`Goal ${fmtDur(goalMin()*60000)} · ${study.lock?(CAP?'phone lock on':'full screen'):'no lock'}`}
+$('studyView').addEventListener('change',e=>{const t=e.target;if(t.dataset.sb){study[t.dataset.sb]=t.checked;setSum();if(t.dataset.sb==='water'&&!t.checked&&SND.trick){SND.trick.stop();SND.trick=null}}saveStudy()});
 function timelapse(btn){
   if(!pscene)return;clearInterval(stTimelapse);const t0=Date.now(),T=14000;btn.disabled=true;btn.textContent='Growing…';
   const pr=TreeScene($('stCanvas'),{mini:true,fast:true,timelapse:true});pscene.stop();pscene=pr;pr.set({seed:treeSeed(today())+1,G:0,jump:true,pour:true,sun:false}).start();

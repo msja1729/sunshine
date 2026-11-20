@@ -32,7 +32,7 @@ To update, install the new APK over the old one. Your data stays.
 - 10 daily habits in two groups (Basics and Care), a 21-day garden and a 21-day tracker.
 - Daily wins, a gratitude and hope quote, mood check-in and a gentle healing step.
 - A private memory frame for family photos.
-- A Gentle SOS & Grounding page with guided actions, breathing circle, timers and a log.
+- Gentle Grounding & Rescue Rituals (SOS page): 9 feelings, 7–8 evidence-based rituals each (CBT, DBT, ACT, somatic), shown 4 at a time with shuffle; live breathing circles, countdown timers, a write-and-release scratchpad that is never saved, and your own Spotify/YouTube comfort links. Every finished ritual is logged by day.
 - Your trusted person's number as a Call button on the SOS page.
 
 ## Files

@@ -629,6 +629,60 @@ body{background-color:var(--bg);background-image:radial-gradient(120% 50% at 50%
 .mood{background:linear-gradient(165deg,color-mix(in srgb,var(--sage-bg) 70%,var(--surface)),var(--surface) 75%)}
 .quote-box{border-top-color:color-mix(in srgb,var(--sage) 45%,transparent)}
 .bottomnav{border-top-color:color-mix(in srgb,var(--sage) 25%,var(--line))}
+
+/* ---------- Gentle Grounding & Rescue Rituals ---------- */
+.feelings{grid-template-columns:repeat(3,minmax(0,1fr))}
+.acts{grid-template-columns:repeat(auto-fill,minmax(300px,1fr))}
+.act{gap:10px;transition:border-color .35s,box-shadow .35s,background .35s,opacity .35s}
+.act.fresh{animation:actIn .5s ease}
+@keyframes actIn{from{opacity:0;transform:translateY(10px) scale(.98)}}
+.act-top{display:flex;align-items:flex-start;gap:10px}
+.act-top h3{flex:1}
+.act-check{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:var(--fc);color:#fff;font-weight:900;flex:none;animation:pop .5s cubic-bezier(.3,1.6,.5,1)}
+.act.is-done{border-color:var(--fc);background:color-mix(in srgb,var(--fc) 10%,var(--surface))}
+.act.is-done .how,.act.is-done .why{opacity:.75}
+.encourage{font-family:var(--f-display);font-style:italic;font-size:1.05rem;color:var(--ink);border-left:3px solid var(--fc);padding-left:10px}
+.donebtn{width:100%;padding:12px;font-size:.98rem;margin-top:auto}
+.tool-box{display:flex;flex-direction:column;align-items:center;gap:10px;background:color-mix(in srgb,var(--fc) 9%,var(--bg));border-radius:16px;padding:14px}
+.tctl{display:flex;gap:8px}
+.tctl .btn{min-width:92px}
+.breather.sm{width:170px;height:170px}
+.breather.sm .ring2{width:150px;height:150px}
+.breather.sm .orb{width:64px;height:64px}
+.timer .clock{font-size:2.2rem}
+.timer.running .clock{color:var(--fc)}
+.timer.finished .clock{color:var(--sage-ink);animation:pulseDone 1.6s ease-in-out 2}
+@keyframes pulseDone{50%{transform:scale(1.08)}}
+.tmsg{text-align:center}
+.dumpbox{display:flex;flex-direction:column;gap:8px}
+.dump.release{opacity:0;transform:translateY(-18px) scale(.97);filter:blur(3px)}
+.dump{transition:opacity .9s,transform .9s,filter .9s}
+.media{display:flex;flex-direction:column;gap:7px;background:color-mix(in srgb,var(--fc) 8%,var(--bg));border-radius:16px;padding:12px}
+.mtitle{font-weight:800;font-size:.9rem}
+.mnote{font-size:.8rem}
+.mideas{display:flex;flex-direction:column;gap:6px;opacity:.9}
+.mrow{display:flex;align-items:center;gap:6px}
+.mbtn{flex:1;min-width:0;display:flex;align-items:center;gap:9px;text-decoration:none;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 12px;font-weight:700;font-size:.9rem;transition:transform .15s,border-color .2s}
+.mbtn:hover{transform:translateY(-1px);border-color:var(--fc)}
+.mbadge{font-size:.66rem;font-weight:900;letter-spacing:.05em;text-transform:uppercase;border-radius:99px;padding:3px 8px;color:#fff;background:#8A7F72;flex:none}
+.mbtn.spotify .mbadge{background:#1DB954}
+.mbtn.youtube .mbadge{background:#E0302E}
+.mlabel{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mplay{color:var(--fc);font-size:.8rem}
+.mdel{width:36px;height:36px;border-radius:50%;border:1px solid var(--line);background:var(--surface);color:var(--muted);font-size:1.2rem;line-height:1;flex:none}
+.madd summary{cursor:pointer;font-weight:800;font-size:.86rem;color:var(--fc);padding:4px 0;list-style:none}
+.madd summary::-webkit-details-marker{display:none}
+.maddf{display:flex;flex-direction:column;gap:8px;padding-top:6px}
+.sos-after{display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px;padding:14px;border-radius:18px;background:color-mix(in srgb,var(--fc) 10%,var(--surface))}
+.sos-after .sun{width:48px;height:48px}
+@media (max-width:759px){
+  .feelings{gap:7px}
+  .feel{min-height:112px;padding:12px 9px;gap:6px;border-radius:16px}
+  .feel .em{width:36px;height:36px;font-size:1.2rem}
+  .feel b{font-size:.84rem;line-height:1.2}
+  .feel small{display:none}
+  .acts{grid-template-columns:1fr}
+}
 @media (prefers-reduced-motion: reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 </style>
 </head>
@@ -744,7 +798,7 @@ body{background-color:var(--bg);background-image:radial-gradient(120% 50% at 50%
     <ol class="stepper" id="stepper">
       <li><b>1</b><span>How you feel</span></li>
       <li><b>2</b><span>One small thing</span></li>
-      <li><b>3</b><span>Done</span></li>
+      <li><b>3</b><span>Cared for</span></li>
     </ol>
 
     <section class="panel sos-main" id="sosMain"></section>
@@ -1244,60 +1298,152 @@ const SOSKEY='sanctuary21-sos-v1';
 let sosLog=[];try{sosLog=JSON.parse(localStorage.getItem(SOSKEY))||[]}catch(e){}
 const saveSos=()=>{try{localStorage.setItem(SOSKEY,JSON.stringify(sosLog))}catch(e){}};
 if(!TRIAL){const kept=sosLog.filter(x=>x.date>=FIRST);if(kept.length!==sosLog.length){sosLog=kept;saveSos()}}
-const BOX=[['Breathe in',4,2.1],['Hold',4,2.1],['Breathe out',4,1],['Hold',4,1]];
-const SLOW=[['Breathe in',4,2.1],['Breathe out slowly',7,1]];
+const BREATHS={
+ box:[['Inhale…',4,2.1],['Hold…',4,2.1],['Exhale…',4,1],['Hold…',4,1]],
+ sigh:[['Inhale deeply…',2,1.8],['Top-off inhale…',1,2.2],['Long exhale…',6,1]],
+ slow:[['Inhale…',4,2.1],['Exhale slowly…',7,1]],
+ belly:[['Belly rises…',4,2],['Belly falls…',6,1]]
+};
+const R=(t,how,why,tool)=>({t,how,why,tool});
 const FEEL=[
- {id:'anx',em:'🌊',name:'Anxious or Panicky',short:'Anxious',c:'#5E95AB',sub:'Calm the nervous system',acts:[
-  {t:'Cold Water Dive Reflex',how:'Splash cold water on your face, or hold a cold glass in your hands for 30 seconds.',why:'Cold on the face triggers the dive reflex, which naturally slows your heart rate.',tool:'timer:30'},
-  {t:'Box Breathing (4-4-4-4)',how:'Inhale for 4, hold for 4, exhale for 4, hold for 4. Follow the circle.',why:'Even, paced breathing steadies the body’s alarm response.',tool:'breath:box'},
-  {t:'5-4-3-2-1 Sensory Anchor',how:'Name 5 things you see, 4 you can touch, 3 sounds you hear, 2 things you smell, and take 1 slow breath.',why:'Your senses pull attention back into the present moment.',tool:'senses'},
-  {t:'Physiological Sigh',how:'Two quick inhales through your nose (one deep, one tiny top-off), then one extra-long, slow exhale through your mouth. Repeat 3 times.',why:'A long exhale is one of the fastest ways to settle the body.'}]},
- {id:'dep',em:'🌧️',name:'Depressed, Heavy, or Empty',short:'Depressed/Heavy',c:'#8A96A8',sub:'Gentle activation',acts:[
-  {t:'2-Minute Sunlight & Sky Check',how:'Sit right next to a bright window or step outside for 2 minutes.',why:'Natural light supports mood without asking for energy.',tool:'timer:120'},
-  {t:'Micro-Shift Your Posture',how:'If you’re lying down, sit up on the edge of the bed and plant both feet flat on the floor for 60 seconds.',why:'A tiny change in position is a real first step.',tool:'timer:60'},
-  {t:'Comfort Sensory Boost',how:'Wash your face with cool water, apply a soothing moisturizer or lip balm, or wrap up in your softest blanket.',why:'Soothing touch tells your body it is being cared for.'},
-  {t:'Low-Energy Comfort Audio',how:'Play a familiar movie soundtrack or a favorite calming song. Nothing else is required of you while it plays.',why:'Familiar sound brings comfort without effort.'}]},
- {id:'lone',em:'🫂',name:'Lonely or Disconnected',short:'Lonely',c:'#C47E8C',sub:'Warmth, low pressure',acts:[
-  {t:'Zero-Effort Reach Out',how:'Send a single heart, a cute animal reel, or a “thinking of you” to one family member or friend. No long conversation needed.',why:'Small contact still builds connection.',tool:'text'},
-  {t:'Revisit a Happy Memory',how:'Look at a childhood or family photo for 30 seconds and remember you are deeply loved.',why:'Memories of belonging can soften loneliness.',tool:'memory'},
-  {t:'Nature & Animal Connection',how:'Look outside for birds, squirrels, or trees, or watch a 2-minute video of baby animals.',why:'Living things spark gentle warmth.'},
-  {t:'Hand-on-Heart Self-Compassion',how:'Place one warm hand over your chest and take 3 slow breaths.',why:'Warm touch and kind words calm the body’s threat system.',tool:'affirm'}]},
- {id:'tired',em:'🪫',name:'Exhausted or Burned Out',short:'Exhausted',c:'#B08F55',sub:'Guilt-free rest',acts:[
-  {t:'Hydrate & Nourish Check',how:'Drink one full glass of water, slowly.',why:'Dehydration often disguises itself as deep fatigue.'},
-  {t:'Legs-Up or Eye Rest (3 Minutes)',how:'Close your eyes away from all screens, or rest with your legs up against the wall or bed.',why:'A short, real rest lets your body settle.',tool:'timer:180'},
-  {t:'Drop Non-Essentials Today',how:'You have full permission to focus only on your 5 basic anchors today. Everything else can wait.',why:'Lowering the load is a valid way to recover.',tool:'anchors'},
-  {t:'Gentle Neck & Shoulder Release',how:'Roll your shoulders back 5 times, then slowly tilt each ear toward its shoulder.',why:'Releases tension your body has been holding.'}]},
- {id:'over',em:'🌀',name:'Overwhelmed or Overthinking',short:'Overwhelmed',c:'#9C8BB8',sub:'Unload and ground',acts:[
-  {t:'One-Line Brain Dump',how:'Write the single heaviest thought in the box, then release it from view.',why:'Putting a thought outside your head makes it easier to set down. Nothing you write is saved.',tool:'dump'},
-  {t:'The “Next 5 Minutes Only” Rule',how:'Forget the rest of the day. Ask only: what is one tiny, gentle thing I can do in the next 5 minutes?',why:'A smaller horizon makes action possible again.',tool:'timer:300'},
-  {t:'Temperature & Texture Focus',how:'Hold a warm mug or touch a plant leaf, and give all your attention to its warmth and texture.',why:'Full sensory focus quiets racing thoughts.'},
-  {t:'Slow Exhale Breathing',how:'Breathe in for 4 seconds and exhale slowly for 7. Follow the circle.',why:'Longer exhales help switch off the stress response.',tool:'breath:slow'}]},
- {id:'numb',em:'😶‍🌫️',name:'Numb or Unmotivated',short:'Numb',c:'#7FA08F',sub:'A tiny spark, no pressure',acts:[
-  {t:'5-Minute Comfort Movie Scene',how:'Put on one favorite cozy scene from a movie you already love. No need to finish the film.',why:'Familiar joy can gently wake feeling.',tool:'timer:300'},
-  {t:'Tend to One Plant',how:'Check its soil, mist its leaves, or gently wipe a dusty leaf.',why:'Caring for something alive is a small, real act.'},
-  {t:'Change One Sensory Input',how:'Open a window for fresh air, turn on a warm lamp, or put on a comforting scent.',why:'A small change in surroundings shifts how a moment feels.'},
-  {t:'Celebrate Tiny Motion',how:'Do just 10% of something: 3 sips of water or 30 seconds of stretching.',why:'Momentum follows action, not the other way around.',tool:'timer:30'}]}
+ {id:'anx',em:'🌊',name:'Anxious or Panicky',short:'Anxious',c:'#5E95AB',sub:'Calm the nervous system',pool:[
+  R('Cold Water Dive Reflex','Splash ice-cold water on your face, or hold an ice cube or a cold glass for 30 seconds.','Cold on the face triggers the dive reflex, which naturally slows your heart rate. A DBT “TIPP” skill.','timer:30'),
+  R('Box Breathing (4-4-4-4)','Inhale for 4, hold for 4, exhale for 4, hold for 4. Follow the circle.','Even, paced breathing steadies the body’s alarm response.','breath:box'),
+  R('5-4-3-2-1 Sensory Anchor','Name 5 things you see, 4 you can touch, 3 sounds you hear, 2 things you smell, and take 1 slow breath.','Your senses pull attention back into the present moment.','chips:5 see|4 touch|3 hear|2 smell|1 breath'),
+  R('Physiological Sigh','Two quick inhales through your nose (one deep, one tiny top-off), then one extra-long, slow exhale through your mouth.','Studied at Stanford: a long exhale after a double inhale is one of the fastest ways to calm the body.','breath:sigh'),
+  R('Paired Muscle Relaxation','Squeeze your fists and shoulders tight for 5 seconds as you breathe in, then let them go completely as you breathe out. Repeat 3 times.','Tensing then releasing shows your muscles what “safe and loose” feels like.','timer:30'),
+  R('Orient to the Room','Slowly turn your head and let your eyes rest on 3 things around you. Notice the light, the colours and the door.','Orienting tells your nervous system that you are safe here, now.',''),
+  R('Name It to Tame It','Say quietly to yourself the words below.','Putting a feeling into words can lower its intensity.','affirm:This is anxiety. It’s uncomfortable, and it will pass.'),
+  R('Gentle Belly Breathing','Rest one hand on your belly. Breathe in for 4 so your hand rises, out for 6 so it falls.','Slow belly breathing switches on the body’s rest response.','breath:belly')]},
+ {id:'dep',em:'🌧️',name:'Depressed, Heavy, or Empty',short:'Depressed/Heavy',c:'#8A96A8',sub:'Gentle activation',pool:[
+  R('2-Minute Sunlight & Sky Check','Sit right next to a bright window or step outside for 2 minutes.','Daylight supports your body clock and mood, and asks almost no energy.','timer:120'),
+  R('Micro-Shift Your Posture','If you’re lying down, sit up on the edge of the bed and plant both feet flat on the floor for 60 seconds.','A tiny change in position is a real first step.','timer:60'),
+  R('Comfort Sensory Boost','Wash your face with cool water, put on a soothing moisturizer or lip balm, or wrap up in your softest blanket.','Soothing touch tells your body it is being cared for.',''),
+  R('Low-Energy Comfort Audio','Play a familiar movie soundtrack or a favourite calming song. Nothing else is asked of you while it plays.','Familiar sound brings comfort without effort.','media:music'),
+  R('Half-Smile','Relax your face and let the corners of your lips turn up just slightly. Hold it gently for a minute while you breathe.','A DBT “opposite action” skill: softly acting opposite to the low feeling can ease it.','timer:60'),
+  R('Sip Something Warm','Make a warm drink, hold it in both hands, and sip slowly.','Warmth in your hands and chest is a quick comfort signal for the body.',''),
+  R('One Tiny Win','Do the smallest possible task: put one cup in the sink, open the curtains, or brush your teeth. Then stop.','Small actions come before motivation, not after.','')]},
+ {id:'lone',em:'🫂',name:'Lonely or Disconnected',short:'Lonely',c:'#C47E8C',sub:'Warmth, low pressure',pool:[
+  R('Zero-Effort Reach Out','Send a single heart, a cute animal reel, or a “thinking of you” to one loved one. No long conversation needed.','Small contact still builds connection.','text'),
+  R('Revisit a Happy Memory','Look at a childhood or family photo for 30 seconds and remember that you are deeply loved.','Memories of belonging can soften loneliness.','memory'),
+  R('Nature & Animal Connection','Look outside for birds, squirrels or trees, or watch a 2-minute video of baby animals.','Living things spark gentle warmth.','media:animals'),
+  R('Hand-on-Heart Self-Compassion','Place one warm hand over your chest, take 3 slow breaths, and say the words below.','From Kristin Neff’s self-compassion work: warm touch and kind words calm the body’s threat system.','affirm:This feeling is temporary, and I am not alone in feeling it.'),
+  R('Loving-Kindness Wishes','Silently offer these wishes to yourself, then to someone you love.','Loving-kindness practice grows feelings of connection, even when you’re alone.','affirm:May I be safe. May I be well. May you be safe. May you be well.'),
+  R('Hug Something Soft','Hug a pillow, a soft toy or a heavy blanket tightly for one slow minute.','Deep pressure and warmth help release calming, bonding hormones like oxytocin.','timer:60'),
+  R('Be Near Gentle Life','Sit somewhere you can hear life around you: a balcony, a window, a park bench or a café.','Being near others, even quietly, eases the sting of isolation.','')]},
+ {id:'tired',em:'🪫',name:'Exhausted or Burned Out',short:'Exhausted',c:'#B08F55',sub:'Guilt-free rest',pool:[
+  R('Hydrate & Nourish Check','Drink one full glass of water, slowly.','Mild dehydration often disguises itself as heavy fatigue.',''),
+  R('Legs-Up or Eye Rest (3 Minutes)','Close your eyes away from all screens, or rest with your legs up against the wall or bed.','A short, real rest lets your body settle.','timer:180'),
+  R('Drop Non-Essentials Today','You have full permission to focus only on your 5 basic anchors today. Everything else can wait.','Lowering the load is a valid way to recover.','chips:Sleep|Meals|Water|Medicines|Prayer'),
+  R('Gentle Neck & Shoulder Release','Roll your shoulders back 5 times, then slowly tilt each ear toward its shoulder.','Releases tension your body has been storing.',''),
+  R('Warm Palms over Eyes','Rub your palms together until warm, then cup them over your closed eyes. Breathe slowly for one minute.','Darkness and warmth give tired eyes and a busy mind a true pause.','timer:60'),
+  R('Non-Sleep Deep Rest','Lie down and play a 10-minute guided NSDR or yoga nidra recording. You don’t need to fall asleep.','Deep rest practices restore energy without a full nap.','media:rest'),
+  R('Say One Kind “No”','Choose one thing you can cancel, postpone or ask for help with today, and let it go.','Protecting your energy is part of healing, not a failure.','')]},
+ {id:'over',em:'🌀',name:'Overwhelmed or Overthinking',short:'Overwhelmed',c:'#9C8BB8',sub:'Unload and ground',pool:[
+  R('One-Line Brain Dump','Write the single heaviest thought in the box, then release it.','Putting a thought outside your head makes it easier to set down. Nothing you write is saved.','dump:dump'),
+  R('The “Next 5 Minutes Only” Rule','Forget the rest of the day. Ask only: what is one tiny, gentle thing I can do in the next 5 minutes?','A smaller horizon makes action possible again.','timer:300'),
+  R('Temperature & Texture Focus','Hold a warm mug or touch a plant leaf, and give all your attention to its warmth and texture.','Full sensory focus quiets racing thoughts.',''),
+  R('Slow Exhale Breathing (4-7)','Breathe in for 4 seconds and out slowly for 7. Follow the circle.','Longer exhales press the body’s calming brake.','breath:slow'),
+  R('Leaves on a Stream','Close your eyes. Picture each thought landing on a leaf and floating away down a stream. Don’t push them; just watch them drift.','An ACT practice: you notice thoughts without getting pulled in.','timer:120'),
+  R('“I’m Having the Thought That…”','Take your loudest thought and put these words in front of it. Say it once more, slowly.','It reminds you that a thought is just a thought, not a fact.','affirm:I’m having the thought that…'),
+  R('Choose Just One','Picture everything on your plate, then pick only ONE thing that truly matters today. Let the rest wait.','Choosing a single priority calms an overloaded brain.','')]},
+ {id:'numb',em:'😶‍🌫️',name:'Numb or Unmotivated',short:'Numb',c:'#7FA08F',sub:'A tiny spark, no pressure',pool:[
+  R('5-Minute Comfort Scene or Song','Put on one favourite cozy movie scene or uplifting song you already love. No need to finish anything.','Familiar joy can gently wake feeling.','media:movie'),
+  R('Tend to One Plant','Check its soil, mist its leaves, or gently wipe a dusty leaf.','Caring for something alive is a small, real act.',''),
+  R('Change One Sensory Input','Open a window for fresh air, turn on a warm lamp, or put on a comforting scent.','A small change in surroundings shifts how a moment feels.',''),
+  R('Celebrate Tiny Motion (10%)','Do just 10% of something: 3 sips of water or 30 seconds of stretching.','Momentum follows action, not the other way around.','timer:30'),
+  R('Strong Taste Wake-Up','Taste something sour, minty or spicy: a lemon slice, a mint, or a little ginger. Notice it fully.','Strong flavours gently wake up a numb nervous system.',''),
+  R('Barefoot Grounding','Stand barefoot on the floor or grass and notice the temperature and texture under your feet.','Direct sensation brings you back into your body.','timer:30'),
+  R('Shake It Out','Shake your hands, arms and legs loosely, like shaking off water.','Gentle movement helps the body come out of shutdown.','timer:30')]},
+ {id:'hurt',em:'🩹',name:'Hurt or Let Down by Someone',short:'Hurt',c:'#D9737F',sub:'Emotional first aid',pool:[
+  R('RAIN Self-Compassion','Recognize the hurt. Allow it to be here without judging yourself. Investigate gently where you feel it in your body. Nurture yourself with kindness.','Tara Brach’s practice for meeting pain with care instead of criticism.','chips:R · Recognize|A · Allow|I · Investigate|N · Nurture'),
+  R('Unsent Letter Release','Write what you wish you could say, or what hurt you, then release the words without sending them.','Expressing hurt safely lightens it. Nothing you write is saved or sent.','dump:letter'),
+  R('Butterfly Hug','Cross your arms over your chest so each hand rests on the opposite shoulder. Gently tap left, right, left, right for 60 seconds.','Bilateral tapping, used in EMDR therapy, can soothe strong emotion.','timer:60'),
+  R('Separate Their Behaviour from Your Worth','Place a hand on your heart, take 3 slow breaths, and remind yourself of the words below.','Their actions say something about them, not about your value.','affirm:How someone treats me reflects their capacity, not my value.'),
+  R('Radical Acceptance','Say these words slowly, even if you don’t fully believe them yet.','A DBT skill: accepting what happened reduces the extra suffering on top of the pain.','affirm:This happened. I don’t have to like it. I can still take care of myself.'),
+  R('Cool Compress for Heartache','Hold a cool, damp cloth to your neck or chest and breathe slowly.','Cool touch calms the body’s stress surge.','timer:30'),
+  R('Soothing Comfort Playlist','Put on songs that feel like a warm hug and let them hold you for a while.','Music can carry feelings that are hard to put into words.','media:music')]},
+ {id:'trig',em:'🕰️',name:'Triggered by Past Pain or Memories',short:'Triggered',c:'#7C8DB5',sub:'Back to the safe present',pool:[
+  R('Dual Awareness (Then vs. Now)','Look around your room and say these words out loud.','Separating past from present helps the body realise the danger is over.','affirm:That happened in the past. Right now, I am safe here, and that moment is over.'),
+  R('Feet-on-Floor Gravity Anchor','Press both feet firmly into the floor, notice the ground holding you, and grip the edge of your chair or bed.','Feeling solid support tells the body you are here, now.','timer:30'),
+  R('Cool Touch & Wide Vision','Hold something cool, then soften your gaze to notice the far left and far right edges of the room at the same time.','Widening your gaze can help the body step out of high alert.',''),
+  R('Protective Container','Name the memory in a few words below, then imagine locking it in a strong wooden chest. You don’t have to process it right now.','A trauma-informed skill: you can set a memory aside safely until you have support.','dump:container'),
+  R('Name 5 Colours','Look around and say out loud 5 colours you can see.','Naming what’s in front of you anchors you in the present.','chips:1|2|3|4|5'),
+  R('Unclench & Sigh','Let your jaw drop slightly, rest your tongue, drop your shoulders, and let out one long sigh.','Releasing the jaw and shoulders signals safety to the whole body.',''),
+  R('Heavy Blanket Wrap','Wrap yourself snugly in a heavy blanket, or hold a pillow firmly against your chest.','Firm, even pressure helps the body feel held and contained.',''),
+  R('Gentle Belly Breathing','Rest one hand on your belly. Breathe in for 4 so your hand rises, out for 6 so it falls.','Slow belly breathing switches on the body’s rest response.','breath:belly')]},
+ {id:'period',em:'🩸',name:'Period Pain, Cramps, or PMS Low',short:'Period / PMS',c:'#C2668A',sub:'Warmth and self-kindness',pool:[
+  R('Warmth Therapy for Cramps','Place a heating pad, hot water bag or warm mug over your lower belly or lower back.','Heat relaxes cramping muscles and is well proven to ease period pain. If pain is severe or unusual, please see a doctor.',''),
+  R('2-Minute Pelvic & Hip Release','Lie down with knees bent, or rest in a supported butterfly or child’s pose.','Gentle positions ease lower-back and pelvic tightness.','timer:120'),
+  R('Warm Sip & Gentle Nourishment','Sip warm water or herbal tea, or have an easy, comforting snack.','Your body needs a little more energy and care right now.',''),
+  R('Cozy Movie & Audio Cocoon','Curl up in your softest clothes and play a comfort scene, soft rain or a soothing playlist. Resting is allowed.','Comfort and rest are real care, not laziness.','media:cozy'),
+  R('Belly-Softening Breathing','Let your belly go soft. Breathe in for 4, out for 6, and let each exhale loosen the cramp.','Slow breathing relaxes muscles and eases pain signals.','breath:belly'),
+  R('Hormone Dip Reality Check','Remind yourself of the words below.','PMS and period lows come from shifting hormones, and they pass.','affirm:This low is temporary body chemistry, not personal failure. It will lift.'),
+  R('Warm Washcloth Refresh','Press a warm washcloth to your face and neck, then smooth on a soft moisturizer.','A small skincare ritual is a gentle way to feel cared for.','')]}
 ];
-let sos={feel:null,chosen:null,done:false,suggest:null},sosTimers=[],timerLeft=0,timerRun=false;
-const clearSos=()=>{sosTimers.forEach(clearInterval);sosTimers=[];timerRun=false};
+const ENCOURAGE=['You took care of yourself in a hard moment. That counts.','Your nervous system is thanking you right now.','That was a real act of kindness toward yourself.','Small and gentle still counts. Well done.','You showed up for yourself. That matters.','Breathe that in: you just helped yourself.'];
+
+/* Comfort links (Spotify / YouTube), kept apart from all other data */
+const MEDIAKEY='sanctuary_comfort_media';
+const MEDIA_IDEAS={
+ music:[['Peaceful piano','https://open.spotify.com/search/peaceful%20piano'],['Calming songs','https://www.youtube.com/results?search_query=calming+songs']],
+ animals:[['Baby animals','https://www.youtube.com/results?search_query=baby+animals+compilation'],['Birdsong','https://www.youtube.com/results?search_query=birdsong+nature+sounds']],
+ rest:[['10-min yoga nidra','https://www.youtube.com/results?search_query=10+minute+yoga+nidra'],['NSDR','https://www.youtube.com/results?search_query=non+sleep+deep+rest+10+minutes']],
+ movie:[['Comfort movie scenes','https://www.youtube.com/results?search_query=comforting+movie+scenes'],['Feel-good songs','https://open.spotify.com/search/feel%20good']],
+ cozy:[['Soft rain sounds','https://www.youtube.com/results?search_query=soft+rain+sounds'],['Cozy playlist','https://open.spotify.com/search/cozy%20chill']]
+};
+const loadMedia=()=>{try{const a=JSON.parse(localStorage.getItem(MEDIAKEY));return Array.isArray(a)?a:[]}catch(e){return[]}};
+const saveMedia=a=>{try{localStorage.setItem(MEDIAKEY,JSON.stringify(a))}catch(e){}};
+function mediaKind(u){try{const h=new URL(u).hostname.replace(/^www\./,'');
+  if(h==='spotify.com'||h.endsWith('.spotify.com')||h==='spotify.link')return'spotify';
+  if(h==='youtu.be'||h==='youtube.com'||h.endsWith('.youtube.com'))return'youtube';}catch(e){}return'link'}
+function safeUrl(u){try{const x=new URL(u.trim());return(x.protocol==='https:'||x.protocol==='http:')?x.href:null}catch(e){return null}}
+const BADGE={spotify:'Spotify',youtube:'YouTube',link:'Link'};
+function mediaHTML(hint){
+  const list=loadMedia(),ideas=MEDIA_IDEAS[hint]||MEDIA_IDEAS.music;
+  const btn=(label,url,id)=>{const k=mediaKind(url);return`<div class="mrow"><a class="mbtn ${k}" href="${esc(url)}" target="_blank" rel="noopener noreferrer"><span class="mbadge">${BADGE[k]}</span><span class="mlabel">${esc(label)}</span><span class="mplay" aria-hidden="true">▶</span></a>${id?`<button class="mdel" data-mdel="${esc(id)}" aria-label="Remove ${esc(label)}">×</button>`:''}</div>`};
+  return`<div class="media"><span class="mtitle">My Comfort Links 🎵</span>
+   ${list.length?list.map(m=>btn(m.label,m.url,m.id)).join(''):'<p class="soft mnote">Save your own songs, playlists or scenes. Until then, try these:</p>'}
+   <div class="mideas">${ideas.map(([l,u])=>btn(l,u)).join('')}</div>
+   <details class="madd"><summary>+ Add a Spotify or YouTube link</summary>
+     <div class="maddf"><input class="note mlab" maxlength="40" placeholder="Name, e.g. Comfort piano playlist" aria-label="Link name">
+     <input class="note murl" type="url" inputmode="url" placeholder="Paste the Spotify or YouTube link" aria-label="Link">
+     <button class="btn fc" data-sos="madd">Save link</button><p class="soft mmsg" aria-live="polite"></p></div></details></div>`;
+}
+
+let sos={feel:null,shown:[],done:new Set(),queue:[],fresh:new Set()},tools={};
+const clearSos=()=>{Object.values(tools).forEach(t=>t.iv&&clearInterval(t.iv));tools={}};
 const sosDay=d=>Math.round((parse(d)-parse(state.start))/864e5)+1;
 const mmss=n=>Math.floor(n/60)+':'+String(n%60).padStart(2,'0');
 const SUN='<svg class="sun" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="7" fill="#F4C25B"/><g stroke="#F08A3C" stroke-width="2" stroke-linecap="round"><path d="M16 2.5v4M16 25.5v4M2.5 16h4M25.5 16h4M6.4 6.4l2.8 2.8M22.8 22.8l2.8 2.8M6.4 25.6l2.8-2.8M22.8 9.2l2.8-2.8"/></g></svg>';
+const DUMPS={dump:['The heaviest thought right now…','Released. It doesn’t need your attention right now. 🍃'],letter:['What I wish I could say…','Released. Those words are gone now, and you are still here. 🍃'],container:['Name the memory in a few words…','Locked away safely. You can return to it with support, only when you choose. 🍃']};
 function toolHTML(tool){
-  if(!tool)return'<p class="soft">Take your time. Tap Done whenever you’re ready.</p>';
-  if(tool.startsWith('breath'))return'<div class="breather"><div class="ring2"></div><div class="orb"></div><div class="t"><span class="phase">Get comfortable</span><span class="count"></span></div></div>';
-  if(tool.startsWith('timer')){const n=+tool.split(':')[1];return`<span class="clock" id="sosClock">${mmss(n)}</span><button class="btn fc" data-sos="timer" id="sosTimerBtn">Start timer</button><span class="soft" id="sosTimerMsg"></span>`}
-  if(tool==='text')return'<div class="copyrow"><span class="msg">Thinking of you 💛</span><button class="btn" data-sos="copy">Copy</button></div><p class="soft">Paste it to anyone you trust.</p>';
-  if(tool==='memory')return'<button class="btn fc" data-sos="memory">Open my memory frame</button>';
-  if(tool==='affirm')return'<p class="affirm">This feeling is temporary, and I am not alone in feeling it.</p>';
-  if(tool==='anchors')return'<p class="soft">Today, only these:</p><div class="anchors"><span>Sleep</span><span>Meals</span><span>Water</span><span>Medicines</span><span>Prayer</span></div>';
-  if(tool==='senses')return'<div class="anchors"><span>5 see</span><span>4 touch</span><span>3 hear</span><span>2 smell</span><span>1 breath</span></div>';
-  if(tool==='dump')return'<textarea class="note dump" id="dump" rows="3" maxlength="200" placeholder="The heaviest thought right now…" aria-label="Brain dump"></textarea><button class="btn" data-sos="release">Release thought</button><span class="soft" id="dumpMsg"></span>';
+  if(!tool)return'';
+  const [k,arg]=[tool.split(':')[0],tool.slice(tool.indexOf(':')+1)];
+  if(k==='breath')return`<div class="tool-box"><div class="breather sm" data-breath="${arg}"><div class="ring2"></div><div class="orb"></div><div class="t"><span class="phase">Ready when you are</span><span class="count"></span></div></div><div class="tctl"><button class="btn fc" data-tool="go">Start</button><button class="btn" data-tool="reset">Reset</button></div></div>`;
+  if(k==='timer')return`<div class="tool-box timer" data-total="${arg}"><span class="clock">${mmss(+arg)}</span><div class="tctl"><button class="btn fc" data-tool="go">Start</button><button class="btn" data-tool="reset">Reset</button></div><span class="soft tmsg" aria-live="polite"></span></div>`;
+  if(k==='text')return'<div class="copyrow"><span class="msg">Thinking of you 💛</span><button class="btn" data-sos="copy">Copy</button></div>';
+  if(k==='memory')return'<button class="btn fc" data-sos="memory">Open my memory frame</button>';
+  if(k==='affirm')return`<p class="affirm">${arg}</p>`;
+  if(k==='chips')return`<div class="anchors">${arg.split('|').map(x=>`<span>${x}</span>`).join('')}</div>`;
+  if(k==='dump'){const d=DUMPS[arg];return`<div class="dumpbox"><textarea class="note dump" rows="3" maxlength="400" placeholder="${d[0]}" aria-label="${d[0]}"></textarea><button class="btn" data-sos="release" data-kind="${arg}">Release &amp; Let Go 🍃</button><span class="soft dmsg" aria-live="polite"></span></div>`}
+  if(k==='media')return mediaHTML(arg);
   return'';
+}
+function pickInitial(f){const n=f.pool.length;sos.shown=[0,1,2,3].filter(i=>i<n);sos.queue=[];for(let i=4;i<n;i++)sos.queue.push(i);sos.done=new Set();sos.fresh=new Set()}
+function shuffleRituals(f){
+  const n=f.pool.length,fresh=new Set();
+  sos.shown=sos.shown.map(cur=>{
+    if(sos.done.has(cur))return cur;
+    const k=sos.queue.findIndex(i=>!sos.shown.includes(i)&&!sos.done.has(i)&&!fresh.has(i));
+    if(k<0)return cur;
+    const nx=sos.queue.splice(k,1)[0];sos.queue.push(cur);fresh.add(nx);return nx;
+  });
+  sos.fresh=fresh;
 }
 function renderSos(){
   clearSos();const main=$('sosMain'),f=FEEL.find(x=>x.id===sos.feel);
-  const stage=!f?0:sos.done?2:1;
+  const stage=!f?0:sos.done.size?2:1;
   [...$('stepper').children].forEach((li,i)=>{li.className=i===stage?'on':i<stage?'past':''});
   if(!f){
     main.style.removeProperty('--fc');
@@ -1305,29 +1451,49 @@ function renderSos(){
       FEEL.map(x=>`<button class="feel" data-feel="${x.id}" style="--fc:${x.c}"><span class="em" aria-hidden="true">${x.em}</span><b>${x.name}</b><small>${x.sub}</small></button>`).join('')+'</div>';
     return}
   main.style.setProperty('--fc',f.c);
-  const chip=`<div class="feeling-chip"><span class="fc"><span aria-hidden="true">${f.em}</span>${f.name}</span><button class="linkbtn" data-sos="change">Change feeling</button></div>`;
-  if(sos.done){
-    main.innerHTML=`<div class="sos-done">${SUN}<h3>You took care of yourself in a hard moment. That counts.</h3><p class="soft">Saved to your log for Day ${curDay()}.</p><div class="row"><button class="btn fc big" data-sos="okay">I'm okay for now</button><button class="btn big" data-sos="again">Try one more thing</button></div></div>`;return}
-  if(sos.chosen!==null){
-    const a=f.acts[sos.chosen];
-    main.innerHTML=`${chip}<div class="focus"><div class="info"><button class="linkbtn" data-sos="unpick">← See the other ideas</button><span class="tag-pick">Your one thing</span><h3>${a.t}</h3><p class="how">${a.how}</p><p class="soft">${a.why}</p></div><div class="tool">${toolHTML(a.tool)}</div><div class="actions"><button class="btn fc big" data-sos="done">Done ✓</button></div></div>`;
-    if(a.tool&&a.tool.startsWith('breath'))startBreath(main.querySelector('.breather'),a.tool==='breath:box'?BOX:SLOW);
-    if(a.tool&&a.tool.startsWith('timer'))timerLeft=+a.tool.split(':')[1];
-    return}
-  main.innerHTML=`${chip}<div class="pick-banner"><p>You don't have to do all of these. Just pick ONE tiny thing that feels easiest right now.</p><button class="btn" data-sos="shuffle">Give me another idea ✨</button></div>
-   <div class="acts">${f.acts.map((a,i)=>`<article class="act${sos.suggest===i?' suggest':''}">${sos.suggest===i?'<span class="tag-pick">Try this one</span>':''}<h3>${a.t}</h3><p class="how">${a.how}</p><p class="why">${a.why}</p><button class="btn${sos.suggest===i?' fc':''}" data-pick="${i}">I'll do this one</button></article>`).join('')}</div>`;
+  main.innerHTML=`<div class="feeling-chip"><span class="fc"><span aria-hidden="true">${f.em}</span>${f.name}</span><button class="linkbtn" data-sos="change">Change feeling</button></div>
+   <div class="pick-banner"><p>You don't have to do all of these. Just pick ONE tiny thing that feels easiest right now.</p><button class="btn" data-sos="shuffle">Give me another idea ✨</button></div>
+   <div class="acts">${sos.shown.map(ri=>{const a=f.pool[ri],dn=sos.done.has(ri);
+     return`<article class="act${dn?' is-done':''}${sos.fresh.has(ri)?' fresh':''}" data-ri="${ri}">
+       <div class="act-top"><h3>${a.t}</h3>${dn?'<span class="act-check" aria-label="Done">✓</span>':''}</div>
+       <p class="how">${a.how}</p><p class="why">${a.why}</p>
+       ${dn?'':toolHTML(a.tool)}
+       ${dn?`<p class="encourage">${sos.msg[ri]}</p>`:`<button class="btn fc donebtn" data-sos="done">Done ✓</button>`}
+     </article>`}).join('')}</div>
+   ${sos.done.size?`<div class="sos-after">${SUN}<p>Saved to your log for Day ${curDay()}. Try another if you’d like, or rest here.</p><button class="btn fc big" data-sos="okay">I'm okay for now</button></div>`:''}`;
+  sos.fresh=new Set();
 }
-function startBreath(el,ph){let i=0,left=ph[0][1];const orb=el.querySelector('.orb'),p=el.querySelector('.phase'),c=el.querySelector('.count');
-  const set=()=>{p.textContent=ph[i][0];orb.style.transitionDuration=ph[i][1]+'s';orb.style.transform=`scale(${ph[i][2]})`;c.textContent=left};
-  requestAnimationFrame(()=>requestAnimationFrame(set));
-  sosTimers.push(setInterval(()=>{left--;if(left<=0){i=(i+1)%ph.length;left=ph[i][1];set()}else c.textContent=left},1000))}
+function cardOf(el){return el.closest('.act')}
+function toolState(card){const ri=card.dataset.ri;return tools[ri]||(tools[ri]={iv:null,run:false})}
+function breathGo(card,btn){
+  const t=toolState(card),el=card.querySelector('.breather'),ph=BREATHS[el.dataset.breath],orb=el.querySelector('.orb'),p=el.querySelector('.phase'),c=el.querySelector('.count');
+  if(t.run){clearInterval(t.iv);t.iv=null;t.run=false;btn.textContent='Resume';p.textContent='Paused';return}
+  if(t.i===undefined){t.i=0;t.left=ph[0][1]}
+  const set=()=>{p.textContent=ph[t.i][0];orb.style.transitionDuration=ph[t.i][1]+'s';orb.style.transform=`scale(${ph[t.i][2]})`;c.textContent=t.left};
+  t.run=true;btn.textContent='Pause';requestAnimationFrame(set);
+  t.iv=setInterval(()=>{t.left--;if(t.left<=0){t.i=(t.i+1)%ph.length;t.left=ph[t.i][1];set()}else c.textContent=t.left},1000);
+}
+function breathReset(card){const t=toolState(card),el=card.querySelector('.breather');clearInterval(t.iv);Object.assign(t,{iv:null,run:false,i:undefined});
+  const orb=el.querySelector('.orb');orb.style.transitionDuration='.6s';orb.style.transform='scale(1)';el.querySelector('.phase').textContent='Ready when you are';el.querySelector('.count').textContent='';card.querySelector('[data-tool="go"]').textContent='Start'}
+function timerGo(card,btn){
+  const t=toolState(card),box=card.querySelector('.timer'),total=+box.dataset.total,clock=box.querySelector('.clock'),msg=box.querySelector('.tmsg');
+  if(t.left===undefined)t.left=total;
+  if(t.run){clearInterval(t.iv);t.iv=null;t.run=false;btn.textContent='Resume';return}
+  if(t.left<=0)return;
+  t.run=true;btn.textContent='Pause';msg.textContent='';box.classList.add('running');
+  t.iv=setInterval(()=>{t.left--;clock.textContent=mmss(t.left);
+    if(t.left<=0){clearInterval(t.iv);t.iv=null;t.run=false;box.classList.remove('running');box.classList.add('finished');btn.textContent='Start';msg.textContent='Time’s up. Gently done 🌿 Tap Done ✓ when you’re ready.'}},1000);
+}
+function timerReset(card){const t=toolState(card),box=card.querySelector('.timer');clearInterval(t.iv);Object.assign(t,{iv:null,run:false,left:undefined});
+  box.querySelector('.clock').textContent=mmss(+box.dataset.total);box.querySelector('.tmsg').textContent='';box.classList.remove('running','finished');card.querySelector('[data-tool="go"]').textContent='Start'}
+
 function renderLog(){
   const t=today(),ev=sosLog.filter(e=>{const d=sosDay(e.date);return d>=1&&d<=21});
   const byId=id=>FEEL.find(f=>f.id===id),cnt=list=>FEEL.map(f=>[f,list.filter(e=>e.feel===f.id).length]).filter(x=>x[1]>0);
   const todayC=cnt(sosLog.filter(e=>e.date===t)),allC=cnt(ev).sort((a,b)=>b[1]-a[1]),max=Math.max(1,...allC.map(x=>x[1])),raw=rawDay();
   let h='<div class="log-grid"><div class="log-card"><h3>Today</h3>';
   h+=todayC.length?`<div class="today-chips">${todayC.map(([f,n])=>`<span style="--fc:${f.c}">${f.em} ${f.short} (${n})</span>`).join('')}</div>`:'<p class="soft">Nothing logged today. Whenever a hard moment comes, this page is here.</p>';
-  h+=`</div><div class="log-card"><h3>21-day overview</h3><div style="display:flex;align-items:baseline;gap:10px"><span class="big-total">${ev.length}</span><span class="soft">moments you showed up to comfort yourself</span></div>`;
+  h+=`</div><div class="log-card"><h3>21-day overview</h3><div style="display:flex;align-items:baseline;gap:10px"><span class="big-total">${ev.length}</span><span class="soft">${ev.length===1?'moment':'moments'} you showed up to comfort yourself</span></div>`;
   h+=allC.length?allC.map(([f,n])=>`<div class="fbar" style="--fc:${f.c}"><div class="top"><span>${f.em} ${f.short}</span><span>${n} moment${n>1?'s':''} cared for</span></div><div class="track"><i style="width:${n/max*100}%"></i></div></div>`).join(''):'<p class="soft">Each time you finish a gentle action, it is counted here with care.</p>';
   h+='</div></div><div class="log-card"><h3>Across your 21 days</h3><div class="daystrip">';
   for(let d=1;d<=21;d++){const de=ev.filter(e=>sosDay(e.date)===d);h+=`<div class="dcell${d===raw?' tod':''}" title="Day ${d}: ${de.length} moment${de.length===1?'':'s'}"><b>${d}</b><span class="ds">${de.slice(0,8).map(e=>`<i style="background:${(byId(e.feel)||{}).c}"></i>`).join('')}</span></div>`}
@@ -1339,25 +1505,34 @@ function renderLog(){
 $('sosView').addEventListener('click',e=>{
   const b=e.target.closest('button');if(!b)return;const f=FEEL.find(x=>x.id===sos.feel);
   const top=()=>$('stepper').scrollIntoView({behavior:reduce?'auto':'smooth',block:'start'});
-  if(b.dataset.feel){sos={feel:b.dataset.feel,chosen:null,done:false,suggest:null};renderSos();top();return}
-  if(b.dataset.pick!==undefined){sos.chosen=+b.dataset.pick;renderSos();top();return}
+  if(b.dataset.feel){sos.feel=b.dataset.feel;pickInitial(FEEL.find(x=>x.id===sos.feel));sos.msg={};renderSos();top();return}
+  if(b.dataset.tool){const card=cardOf(b);if(!card)return;
+    const isBreath=!!card.querySelector('.breather');
+    if(b.dataset.tool==='go')isBreath?breathGo(card,b):timerGo(card,b);else isBreath?breathReset(card):timerReset(card);return}
+  if(b.dataset.mdel){const id=b.dataset.mdel;saveMedia(loadMedia().filter(m=>String(m.id)!==id));refreshMedia();return}
   const a=b.dataset.sos;
-  if(a==='change'){sos={feel:null,chosen:null,done:false,suggest:null};renderSos()}
-  else if(a==='shuffle'){let n;do{n=Math.floor(Math.random()*4)}while(n===sos.suggest);sos.suggest=n;renderSos()}
-  else if(a==='unpick'){sos.chosen=null;renderSos()}
-  else if(a==='done'){sosLog.push({ts:Date.now(),date:today(),day:curDay(),feel:f.id,act:f.acts[sos.chosen].t});saveSos();celebrate(b,3);sos.done=true;renderSos();renderLog()}
-  else if(a==='again'){sos.done=false;sos.chosen=null;sos.suggest=null;renderSos()}
-  else if(a==='okay'){sos={feel:null,chosen:null,done:false,suggest:null};renderSos();window.scrollTo({top:0,behavior:reduce?'auto':'smooth'})}
-  else if(a==='timer'){
-    if(timerRun){clearSos();timerRun=false;b.textContent='Resume'}
-    else{if(timerLeft<=0)return;timerRun=true;b.textContent='Pause';sosTimers.push(setInterval(()=>{timerLeft--;const c=$('sosClock');if(!c)return;c.textContent=mmss(timerLeft);
-      if(timerLeft<=0){clearSos();b.hidden=true;$('sosTimerMsg').textContent='Time’s up. Gently done.'}},1000))}}
+  if(a==='change'){sos.feel=null;renderSos()}
+  else if(a==='shuffle'){shuffleRituals(f);renderSos()}
+  else if(a==='done'){const card=cardOf(b),ri=+card.dataset.ri;
+    sosLog.push({ts:Date.now(),date:today(),day:curDay(),feel:f.id,act:f.pool[ri].t});saveSos();
+    sos.done.add(ri);sos.msg[ri]=ENCOURAGE[(sosLog.length-1)%ENCOURAGE.length];celebrate(b,3);
+    const keep=window.scrollY;renderSos();renderLog();window.scrollTo({top:keep})}
+  else if(a==='okay'){sos.feel=null;renderSos();window.scrollTo({top:0,behavior:reduce?'auto':'smooth'})}
   else if(a==='copy'){const m=b.parentElement.querySelector('.msg');
     const sel=()=>{const r=document.createRange();r.selectNodeContents(m);getSelection().removeAllRanges();getSelection().addRange(r)};
     try{navigator.clipboard.writeText(m.textContent).then(()=>{b.textContent='Copied'},sel)}catch(err){sel()}}
-  else if(a==='memory'){location.hash='home';setTimeout(()=>document.querySelector('.memory').scrollIntoView({behavior:reduce?'auto':'smooth',block:'center'}),80)}
-  else if(a==='release'){const d=$('dump');if(!d.value.trim())return;d.classList.add('release');setTimeout(()=>{d.value='';d.classList.remove('release');$('dumpMsg').textContent='Released. It doesn’t need your attention right now.'},650)}
+  else if(a==='memory'){location.hash='home';setTimeout(()=>{const el=document.querySelector('.memory');if(el)el.scrollIntoView({behavior:reduce?'auto':'smooth',block:'center'})},120)}
+  else if(a==='release'){const box=b.closest('.dumpbox'),d=box.querySelector('.dump'),m=box.querySelector('.dmsg');if(!d.value.trim()){m.textContent='Write a few words first, then let them go.';return}
+    d.classList.add('release');setTimeout(()=>{d.value='';d.classList.remove('release');m.textContent=DUMPS[b.dataset.kind][1]},900)}
+  else if(a==='madd'){const box=b.closest('.maddf'),lab=box.querySelector('.mlab').value.trim(),raw=box.querySelector('.murl').value,msg=box.querySelector('.mmsg');
+    const url=safeUrl(raw||'');
+    if(!url){msg.textContent='Please paste a full link starting with https://';return}
+    const list=loadMedia();list.push({id:Date.now().toString(36),label:lab||(mediaKind(url)==='spotify'?'My Spotify pick':mediaKind(url)==='youtube'?'My YouTube pick':'My comfort link'),url});
+    saveMedia(list);refreshMedia('Saved. Tap it any time to play. 🎵')}
 });
+function refreshMedia(note){document.querySelectorAll('#sosMain .act').forEach(card=>{const old=card.querySelector('.media');if(!old)return;
+  const f=FEEL.find(x=>x.id===sos.feel),tool=f.pool[+card.dataset.ri].tool;const tmp=document.createElement('div');tmp.innerHTML=mediaHTML(tool.split(':')[1]);
+  const nw=tmp.firstElementChild;old.replaceWith(nw);if(note){const m=nw.querySelector('.mmsg');if(m){nw.querySelector('details').open=true;m.textContent=note}}})}
 
 /* ---------- page switching ---------- */
 const VIEWS=['home','progress','sos','me'];

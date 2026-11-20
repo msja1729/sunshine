@@ -2,7 +2,6 @@
 // Google sign-in on for the Android app when a client ID is set in index.html.
 const fs = require('fs');
 const path = require('path');
-const { execSync } = require('child_process');
 
 const root = path.resolve(__dirname, '..', '..');
 const appDir = path.resolve(__dirname, '..');
@@ -29,11 +28,6 @@ if (clientId) {
     serverClientId: clientId,
     forceCodeForRefreshToken: false
   };
-  const pluginDir = path.join(appDir, 'node_modules', '@codetrix-studio', 'capacitor-google-auth');
-  if (!fs.existsSync(pluginDir)) {
-    console.log('Installing the Google sign-in plugin…');
-    execSync('npm install @codetrix-studio/capacitor-google-auth@3.4.0-rc.4 --no-save --legacy-peer-deps --no-audit --no-fund', { cwd: appDir, stdio: 'inherit' });
-  }
   console.log('Google sign-in is ON for the Android app.');
 } else {
   delete cfg.plugins.GoogleAuth;

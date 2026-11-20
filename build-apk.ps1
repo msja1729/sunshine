@@ -51,6 +51,9 @@ try {
   }
   npx cap sync android
   if ($LASTEXITCODE -ne 0) { Fail 'Syncing the Android project failed.' }
+  $settings = Get-Content (Join-Path $app 'android\capacitor.settings.gradle') -Raw
+  if ($settings -match 'capacitor-google-auth') { Write-Host 'Google sign-in plugin: included' -ForegroundColor Green }
+  else { Fail 'The Google sign-in plugin was not added to the Android project. Send this message to Claude.' }
 
   Step 'Applying Sunshine icons, splash and reminder permissions'
   npm run customize

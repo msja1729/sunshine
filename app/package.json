@@ -1,6 +1,6 @@
 {
   "name": "sunshine-android",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "private": true,
   "description": "Android wrapper for Sunshine with on-device reminders",
   "scripts": {
@@ -12,7 +12,8 @@
     "@capacitor/core": "^6.0.0",
     "@capacitor/filesystem": "^6.0.0",
     "@capacitor/local-notifications": "^6.0.0",
-    "@capacitor/share": "^6.0.0"
+    "@capacitor/share": "^6.0.0",
+    "@codetrix-studio/capacitor-google-auth": "3.4.0-rc.4"
   },
   "devDependencies": {
     "@capacitor/cli": "^6.0.0"

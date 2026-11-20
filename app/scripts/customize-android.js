@@ -114,9 +114,10 @@ public class MainActivity extends BridgeActivity {
 }
 `);
 
-// 6. Version: name from package.json, code from the CI run number so updates install over older ones.
+// 6. Version: name and code both come from package.json, so each new version installs as an update.
 const pkg = JSON.parse(fs.readFileSync(path.join(appDir, 'package.json'), 'utf8'));
-const code = parseInt(process.env.GITHUB_RUN_NUMBER || '1', 10) + 100;
+const [maj, min, pat] = pkg.version.split('.').map(n => parseInt(n, 10) || 0);
+const code = maj * 10000 + min * 100 + pat; // 1.1.2 -> 10102, always higher than older builds
 const gradlePath = path.join(appDir, 'android', 'app', 'build.gradle');
 let gradle = fs.readFileSync(gradlePath, 'utf8');
 gradle = gradle.replace(/versionCode\s+\d+/, `versionCode ${code}`)

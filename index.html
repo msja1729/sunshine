@@ -1012,6 +1012,28 @@ body.focusing{overflow:hidden}
 #studyView button:active,.fz button:active{transform:scale(.96)}
 @media (max-width:360px){.opt-grid.c3{grid-template-columns:repeat(2,minmax(0,1fr))}}
 .wnav .btn.sage{animation:none}
+
+/* study playlist */
+.pl{display:flex;flex-direction:column;gap:10px;padding:12px;border-radius:16px;background:var(--bg);border:1px solid var(--line)}
+.pl-add{display:flex;gap:8px}.pl-add input{flex:1;min-width:0}
+.pl-files{align-self:flex-start}
+.pl-rows{display:flex;flex-direction:column;gap:6px;max-height:300px;overflow:auto}
+.pl-row{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:12px;background:var(--surface);border:1px solid var(--line)}
+.pl-row.now{border-color:var(--sage);box-shadow:inset 0 0 0 1px var(--sage)}
+.pl-ico{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;background:var(--sage-bg);flex:none;font-size:.95rem}.pl-ico.yt{background:#E53935;color:#fff;font-size:.75rem}
+.pl-t{flex:1;min-width:0;display:flex;flex-direction:column}.pl-t b{font-size:.88rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.pl-t small{font-size:.74rem;color:var(--muted)}
+.pl-b{width:36px;height:36px;border-radius:50%;border:1px solid var(--line);background:var(--bg);color:var(--ink);font-weight:800;flex:none;display:grid;place-items:center}
+.pl-b.del{color:var(--muted)}
+.pl-ctl{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.pl-shuf{margin-left:auto;display:flex;align-items:center;gap:8px;font-weight:800;font-size:.86rem}
+.pl-empty{margin:4px 0}
+.yt-box{position:fixed;z-index:95;left:max(12px,env(safe-area-inset-left,0px));bottom:calc(84px + env(safe-area-inset-bottom,0px));width:200px;border-radius:16px;overflow:hidden;background:#000;box-shadow:0 14px 34px -12px rgba(0,0,0,.7);border:1px solid rgba(255,255,255,.18)}
+.yt-box iframe{width:200px;height:200px;display:block;border:0}
+.yt-head{display:flex;align-items:center;justify-content:space-between;height:30px;padding:0 4px 0 10px;background:#111;color:#eee;font-size:.76rem;font-weight:800}
+.yt-head button{width:28px;height:28px;border:0;border-radius:50%;background:rgba(255,255,255,.12);color:#fff;font-size:1rem;line-height:1}
+body.focusing .yt-box{bottom:calc(150px + env(safe-area-inset-bottom,0px))}
+.f-now{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:14px;background:rgba(255,255,255,.08)}
+.f-now span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:700;font-size:.88rem}
+.f-now button{width:38px;height:38px;border-radius:50%;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.1);color:#fff;font-weight:800}
 @media (prefers-reduced-motion: reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 </style>
 </head>
@@ -1243,6 +1265,7 @@ body.focusing{overflow:hidden}
   </div>
   <div class="f-sheet" id="fSheet" hidden><div class="f-sheet-head"><b>Sounds</b><button class="linkc" id="fSheetClose">Done</button></div><div id="fSheetBody"></div></div>
 </div>
+<div class="yt-box" id="ytBox" hidden><div class="yt-head"><span>▶ YouTube</span><button type="button" id="ytClose" aria-label="Stop and close">×</button></div><div id="ytFrame"></div></div>
 <div class="joy" id="joy" hidden><div class="joy-card" role="dialog" aria-modal="true" aria-labelledby="joyT">
   <div class="joy-art" id="joyArt"></div><span class="eyebrow" id="joyEy"></span><h2 id="joyT"></h2><p class="joy-line" id="joyLine"></p><p class="soft joy-sub" id="joySub"></p><div class="joy-btns" id="joyBtns"></div>
 </div></div>
@@ -2743,7 +2766,7 @@ $('mFile').addEventListener('change',async e=>{
 });
 loadTrack();
 window.sunshineDebug={record:ms=>new Promise(res=>{const d=actx.createMediaStreamDestination();SND.out.connect(d);const r=new MediaRecorder(d.stream),ch=[];r.ondataavailable=e=>ch.push(e.data);
-  r.onstop=()=>{SND.out.disconnect(d);const f=new FileReader();f.onload=()=>res(f.result.split(',')[1]);f.readAsDataURL(new Blob(ch,{type:'audio/webm'}))};r.start();setTimeout(()=>r.stop(),ms)}),level:()=>{if(!SND.out||!actx)return null;if(!SND.an){SND.an=actx.createAnalyser();SND.an.fftSize=2048;SND.out.connect(SND.an)}const d=new Float32Array(2048);SND.an.getFloatTimeDomainData(d);let r=0;for(const x of d)r+=x*x;return Math.sqrt(r/d.length)},snd:()=>({amb:SND.ambKind,trick:!!SND.trick,beat:SND.beatKind,mine:!!studyTrack}),notifDone:(ex,a)=>notifDone(ex,a),growth:()=>growth(),run:()=>run&&{phase:run.phase,left:run.left,done:run.doneMs,cycle:run.cycle}};
+  r.onstop=()=>{SND.out.disconnect(d);const f=new FileReader();f.onload=()=>res(f.result.split(',')[1]);f.readAsDataURL(new Blob(ch,{type:'audio/webm'}))};r.start();setTimeout(()=>r.stop(),ms)}),level:()=>{if(!SND.out||!actx)return null;if(!SND.an){SND.an=actx.createAnalyser();SND.an.fftSize=2048;SND.out.connect(SND.an)}const d=new Float32Array(2048);SND.an.getFloatTimeDomainData(d);let r=0;for(const x of d)r+=x*x;return Math.sqrt(r/d.length)},snd:()=>({amb:SND.ambKind,trick:!!SND.trick,beat:SND.beatKind,pl:plList().length,plOn:PL.on,plI:PL.i,plPaused:PL.paused}),notifDone:(ex,a)=>notifDone(ex,a),growth:()=>growth(),run:()=>run&&{phase:run.phase,left:run.left,done:run.doneMs,cycle:run.cycle}};
 window.sunshineMusicStatus=()=>({playing,source:curSource,songPaused:audioEl?audioEl.paused:null,songVolume:audioEl?+audioEl.volume.toFixed(2):null,chimes:actx?actx.state:null});
 
 /* ================= Tree of Knowledge: a living, procedurally grown tree ================= */
@@ -3076,7 +3099,7 @@ async function snoozeNotif(nf){if(!LN||!nf)return;const at=new Date(Date.now()+1
 
 /* ================= Study garden ================= */
 const STUDYKEY='sunshine-study';
-const SDEF={focus:25,brk:5,longBrk:15,longEvery:4,plan:50,label:'',mineName:'',sound:'piano',beat:'off',vol:.6,beatVol:.35,bells:true,water:true,lock:true,away:true,autoNext:true,days:{},run:null};
+const SDEF={playlist:[],shuffle:false,focus:25,brk:5,longBrk:15,longEvery:4,plan:50,label:'',mineName:'',sound:'piano',beat:'off',vol:.6,beatVol:.35,bells:true,water:true,lock:true,away:true,autoNext:true,days:{},run:null};
 function loadStudy(){let s=null;try{s=JSON.parse(localStorage.getItem(STUDYKEY))}catch(e){}const o=Object.assign(clone(SDEF),s||{});o.days=o.days||{};return o}
 let study=loadStudy(),studyT=0;
 function saveStudy(){const cut=ymd(new Date(Date.now()-90*864e5));Object.keys(study.days).forEach(k=>{if(k<cut)delete study.days[k]});try{localStorage.setItem(STUDYKEY,JSON.stringify(study))}catch(e){}}
@@ -3165,18 +3188,84 @@ function buildTrickle(){const c=sctx();if(!c)return null;const g=c.createGain();
   s.connect(b1);b1.connect(b2);b2.connect(am);am.connect(g);s.start();o.start();return{g,stop(){try{s.stop();o.stop()}catch(e){}}}}
 const ramp=(node,v,sec=.8)=>{if(!node||!actx)return;const p=node.g.gain,now=actx.currentTime;p.cancelScheduledValues(now);p.setValueAtTime(p.value,now);p.linearRampToValueAtTime(v,now+sec)};
 const NATURE=new Set(['rain','forest','stream','waves']);
-let studyTrack=null,studyAudio=null;
-async function loadStudyTrack(){try{const db=await mdb();studyTrack=await new Promise(res=>{const r=db.transaction('tracks').objectStore('tracks').get('study');r.onsuccess=()=>res(r.result||null);r.onerror=()=>res(null)})}catch(e){studyTrack=null}}
-async function storeStudyTrack(blob){const db=await mdb();await new Promise((res,rej)=>{const tx=db.transaction('tracks','readwrite');tx.objectStore('tracks').put(blob,'study');tx.oncomplete=res;tx.onerror=()=>rej(tx.error)})}
-function buildMine(){if(!studyTrack)return null;if(!studyAudio){studyAudio=new Audio(URL.createObjectURL(studyTrack));studyAudio.loop=true}
-  const a=studyAudio;let fade=null;a.volume=0;const p=a.play();if(p&&p.catch)p.catch(()=>{});
-  const to=(v,sec)=>{clearInterval(fade);const st=a.volume,n=Math.max(1,Math.round(sec*10));let k=0;fade=setInterval(()=>{k++;a.volume=Math.max(0,Math.min(1,st+(v-st)*k/n));if(k>=n)clearInterval(fade)},100)};
-  return{lvl:1,mine:true,set:(v,sec)=>to(v,sec),stop(sec=1.2){to(0,sec);setTimeout(()=>{if(SND.ambKind!=='mine')a.pause()},sec*1000+150)}}}
-function setAmb(kind,vol){if(SND.ambKind!==kind){if(SND.amb)SND.amb.stop();SND.amb=kind==='mine'?buildMine():buildAmb(kind);SND.ambKind=kind}
+/* ---------- My playlist: songs from this phone, YouTube links (videos or whole playlists) and song links ---------- */
+async function idbGet(key){try{const db=await mdb();return await new Promise(res=>{const r=db.transaction('tracks').objectStore('tracks').get(key);r.onsuccess=()=>res(r.result||null);r.onerror=()=>res(null)})}catch(e){return null}}
+async function idbPut(key,blob){const db=await mdb();await new Promise((res,rej)=>{const tx=db.transaction('tracks','readwrite');tx.objectStore('tracks').put(blob,key);tx.oncomplete=res;tx.onerror=()=>rej(tx.error)})}
+async function idbDel(key){try{const db=await mdb();await new Promise(res=>{const tx=db.transaction('tracks','readwrite');tx.objectStore('tracks').delete(key);tx.oncomplete=res;tx.onerror=res})}catch(e){}}
+function ytParse(u){try{const x=new URL(u.trim()),h=x.hostname.replace(/^(www|m|music)\./,'');
+  if(h==='youtu.be'){const v=x.pathname.slice(1).split('/')[0];return v?{v,list:x.searchParams.get('list')||''}:null}
+  if(h==='youtube.com'||h==='youtube-nocookie.com'){const v=x.searchParams.get('v')||(x.pathname.match(/\/(?:embed|shorts|live|v)\/([\w-]{6,})/)||[])[1]||'',list=x.searchParams.get('list')||'';return v||list?{v,list}:null}}catch(e){}return null}
+function parseLink(raw){const u=(raw||'').trim();if(!/^https:\/\/\S+$/i.test(u))return{err:'Paste a full link starting with https://'};
+  const y=ytParse(u);if(y)return{type:'yt',v:y.v,list:y.list,url:u,title:y.list&&!y.v?'YouTube playlist':'YouTube video'};
+  if(/spotify\.|music\.apple\.|jiosaavn|gaana\.|wynk|amazon\.\S*music|soundcloud/i.test(u))return{err:'That music app doesn’t let its songs play inside other apps. Use a YouTube link, or add song files from your phone.'};
+  let t='Song link';try{t=decodeURIComponent(new URL(u).pathname.split('/').pop()).replace(/\.[a-z0-9]{2,4}$/i,'').replace(/[_-]+/g,' ').trim()||t}catch(e){}
+  return{type:'url',url:u,title:t.slice(0,60)}}
+const plList=()=>study.playlist||(study.playlist=[]);
+const PL={i:-1,on:false,paused:false,vol:.6,audio:null,yt:null,ytApi:null,blobUrl:null,fails:0,fade:null,ytTitle:{}};
+function plMsg(t){['plMsg'].forEach(id=>{const m=$(id);if(m)m.textContent=t});if(run&&!$('focus').hidden&&t)fToast(t)}
+function loadYT(){return PL.ytApi||(PL.ytApi=new Promise((res,rej)=>{if(window.YT&&YT.Player)return res();const prev=window.onYouTubeIframeAPIReady;window.onYouTubeIframeAPIReady=()=>{if(prev)try{prev()}catch(e){}res()};
+  const sc=document.createElement('script');sc.src='https://www.youtube.com/iframe_api';sc.onerror=()=>{PL.ytApi=null;rej(new Error('yt'))};document.head.appendChild(sc);setTimeout(()=>{if(!(window.YT&&YT.Player)){PL.ytApi=null;rej(new Error('yt'))}},20000)}))}
+document.addEventListener('click',e=>{if(e.target.closest('#ytClose')){plStop();if(SND.ambKind==='list'){SND.amb=null;SND.ambKind=null}}});
+function ytBox(show){const b=$('ytBox');if(b)b.hidden=!show;document.body.classList.toggle('yt-on',!!show)}
+function plApplyVol(){const v=Math.max(0,Math.min(1,PL.vol));if(PL.audio)PL.audio.volume=v;try{if(PL.yt&&PL.yt.setVolume)PL.yt.setVolume(Math.round(v*100))}catch(e){}}
+function plFade(v,sec){clearInterval(PL.fade);const st=PL.vol,n=Math.max(1,Math.round(sec*10));let k=0;PL.fade=setInterval(()=>{k++;PL.vol=st+(v-st)*k/n;plApplyVol();if(k>=n)clearInterval(PL.fade)},100)}
+function plPause(){PL.paused=true;try{if(PL.audio)PL.audio.pause()}catch(e){}try{if(PL.yt&&PL.yt.pauseVideo)PL.yt.pauseVideo()}catch(e){}plRender()}
+function plResume(){if(!PL.on||PL.i<0)return plPlay(0);PL.paused=false;const it=plList()[PL.i];
+  if(it&&it.type==='yt'){ytBox(true);try{PL.yt.playVideo()}catch(e){}}else if(PL.audio){const p=PL.audio.play();if(p&&p.catch)p.catch(()=>{})}plRender()}
+function plStop(){PL.on=false;PL.paused=false;clearInterval(PL.fade);try{if(PL.audio){PL.audio.pause()}}catch(e){}try{if(PL.yt&&PL.yt.stopVideo)PL.yt.stopVideo()}catch(e){}ytBox(false);plRender()}
+function plNext(dir=1){const L=plList();if(!L.length)return plStop();let i;if(study.shuffle&&L.length>1&&dir>0){do{i=Math.random()*L.length|0}while(i===PL.i)}else i=PL.i+dir;plPlay(i)}
+async function plPlay(i){
+  const L=plList();if(!L.length){plMsg('Your playlist is empty. Add a song or a link first.');return}
+  PL.on=true;PL.paused=false;PL.i=((i%L.length)+L.length)%L.length;const it=L[PL.i],tok=PL.tok=(PL.tok||0)+1;plRender();
+  const skip=msg=>{plMsg(msg);PL.fails++;if(PL.fails>=L.length){PL.fails=0;plMsg('None of the songs in your playlist could play right now.');plStop();return}setTimeout(()=>{if(PL.tok===tok&&PL.on)plNext()},1400)};
+  if(it.type==='yt'){
+    try{if(PL.audio)PL.audio.pause()}catch(e){}
+    try{await loadYT()}catch(e){return skip('YouTube couldn’t load. Check your internet connection.')}
+    if(PL.tok!==tok)return;ytBox(true);
+    if(!PL.yt){const vars={autoplay:1,playsinline:1,rel:0,modestbranding:1,origin:location.origin};if(it.list&&!it.v){vars.listType='playlist';vars.list=it.list}
+      PL.yt=new YT.Player('ytFrame',{width:'200',height:'200',videoId:it.v||undefined,playerVars:vars,events:{
+        onReady:e=>{plApplyVol();try{e.target.playVideo()}catch(err){}},
+        onStateChange:e=>{const cur=plList()[PL.i];if(e.data===1){PL.fails=0;try{const d=e.target.getVideoData();if(d&&d.title&&cur){PL.ytTitle[cur.id]=d.title;if(/^YouTube (video|playlist)$/.test(cur.title)){cur.title=d.title.slice(0,80);saveStudy()}plRender()}}catch(err){}}
+          if(e.data===0){let more=false;try{const pl=e.target.getPlaylist();more=!!(pl&&pl.length&&e.target.getPlaylistIndex()<pl.length-1)}catch(err){}if(!more&&PL.on)plNext()}},
+        onError:()=>skip('This YouTube video can’t be played inside apps. Skipping to the next song…')}})}
+    else{try{if(it.list&&!it.v)PL.yt.loadPlaylist({list:it.list,listType:'playlist',index:0});else if(it.list)PL.yt.loadPlaylist({list:it.list,listType:'playlist',index:0});else PL.yt.loadVideoById(it.v);plApplyVol()}catch(e){skip('That YouTube link couldn’t play.')}}
+    return}
+  try{if(PL.yt&&PL.yt.pauseVideo)PL.yt.pauseVideo()}catch(e){}ytBox(false);
+  const a=PL.audio||(PL.audio=new Audio());a.preload='auto';
+  a.onended=()=>{if(PL.on)plNext()};a.onerror=()=>{if(PL.tok===tok)skip('That song couldn’t play. Skipping…')};a.onplaying=()=>{PL.fails=0};
+  if(it.type==='file'){const blob=await idbGet(it.key);if(PL.tok!==tok)return;if(!blob)return skip(`“${it.title}” is saved on another phone. Skipping…`);
+    if(PL.blobUrl)URL.revokeObjectURL(PL.blobUrl);PL.blobUrl=URL.createObjectURL(blob);a.src=PL.blobUrl}else a.src=it.url;
+  plApplyVol();const p=a.play();if(p&&p.catch)p.catch(()=>{});
+}
+function buildList(){if(!plList().length)return null;if(PL.on&&PL.paused)plResume();else if(!PL.on)plPlay(study.shuffle?Math.random()*plList().length|0:Math.max(0,PL.i));
+  return{lvl:1,mine:true,set:(v,sec)=>plFade(v,sec),stop(sec=1.2){plFade(0,sec);setTimeout(()=>{if(SND.ambKind!=='list')plPause()},sec*1000+150)}}}
+function setAmb(kind,vol){if(SND.ambKind!==kind){if(SND.amb)SND.amb.stop();SND.amb=kind==='list'?buildList():buildAmb(kind);SND.ambKind=kind}
   if(SND.amb){if(SND.amb.mine)SND.amb.set(Math.min(1,vol),1.5);else ramp(SND.amb,vol*SND.amb.lvl,1.5)}}
-loadStudyTrack();
+/* bring over a song chosen with the earlier single "My music" option */
+(async()=>{if(study.sound==='mine')study.sound='list';const old=await idbGet('study');if(old&&!plList().some(x=>x.key==='study')){plList().push({id:'p'+Date.now().toString(36),type:'file',key:'study',title:study.mineName||'My music'});saveStudy()}})();
+const PL_ICON={yt:'<span class="pl-ico yt">▶</span>',file:'<span class="pl-ico">🎵</span>',url:'<span class="pl-ico">🔗</span>'};
+function plRowsHTML(){const L=plList();if(!L.length)return'<p class="soft pl-empty">No songs yet. Paste a YouTube link or add songs from your phone.</p>';
+  return L.map((it,i)=>`<div class="pl-row${PL.on&&PL.i===i?' now':''}">${PL_ICON[it.type]}<span class="pl-t"><b>${esc(it.title)}</b><small>${it.type==='yt'?(it.list&&!it.v?'YouTube playlist':'YouTube'):it.type==='file'?'On this phone':'Song link'}</small></span>
+    <button type="button" class="pl-b" data-plgo="${i}" aria-label="Play">${PL.on&&PL.i===i&&!PL.paused?'❚❚':'▶'}</button><button type="button" class="pl-b del" data-pldel="${esc(it.id)}" aria-label="Remove">×</button></div>`).join('')}
+function plRender(){const l=$('plRows');if(l)l.innerHTML=plRowsHTML();const t=$('plToggle');if(t)t.textContent=PL.on&&!PL.paused?'❚❚ Pause':'▶ Play';
+  const n=$('fNow');if(n){const it=plList()[PL.i];n.textContent=PL.on&&it?(PL.paused?'Paused · ':'')+it.title:'Nothing playing'}
+  const fp=$('fPlay');if(fp)fp.textContent=PL.on&&!PL.paused?'❚❚':'▶';if(typeof setSum==='function'&&$('sum-sound'))setSum()}
+function plEditorHTML(){return`<div class="pl" id="stPl" ${study.sound==='list'?'':'hidden'}>
+    <div class="pl-add"><input id="plUrl" class="note" inputmode="url" placeholder="Paste a YouTube or song link" aria-label="Paste a YouTube or song link"><button type="button" class="btn sage" id="plAdd">Add</button></div>
+    <label class="btn pl-files" for="plFiles" role="button" tabindex="0">＋ Add songs from this phone</label><input type="file" id="plFiles" class="sr" multiple accept="audio/*,.mp3,.m4a,.aac,.wav,.ogg,.opus,.flac">
+    <div class="pl-rows" id="plRows">${plRowsHTML()}</div>
+    <div class="pl-ctl"><button type="button" class="pl-b" id="plPrev" aria-label="Previous">⏮</button><button type="button" class="btn" id="plToggle">${PL.on&&!PL.paused?'❚❚ Pause':'▶ Play'}</button><button type="button" class="pl-b" id="plNextB" aria-label="Next">⏭</button>
+      <label class="pl-shuf"><input type="checkbox" class="sw" data-sb="shuffle" ${study.shuffle?'checked':''}> Shuffle</label></div>
+    <p class="hint" id="plMsg">YouTube plays in a small window while you study. Songs from this phone stay on this phone.</p></div>`}
+async function plAddFiles(files){let n=0;for(const f of files){if(!/^audio\//.test(f.type)&&!/\.(mp3|m4a|aac|wav|ogg|opus|flac)$/i.test(f.name))continue;
+    if(f.size>60*1024*1024){plMsg(`“${f.name}” is over 60 MB and was skipped.`);continue}
+    const id='p'+Date.now().toString(36)+Math.random().toString(36).slice(2,6),key='pl_'+id;try{await idbPut(key,f)}catch(e){plMsg('This phone is out of space for songs.');break}
+    plList().push({id,type:'file',key,title:f.name.replace(/\.[^.]+$/,'').slice(0,80)});n++}
+  saveStudy();plRender();if(n)plMsg(`Added ${n} song${n>1?'s':''}.`);else plMsg('Those files aren’t songs. Choose MP3 or M4A files.')}
+function plAddLink(){const inp=$('plUrl'),r=parseLink(inp.value);if(r.err){plMsg(r.err);return}
+  plList().push(Object.assign({id:'p'+Date.now().toString(36)},r));saveStudy();inp.value='';plRender();plMsg(r.type==='yt'?'Added from YouTube.':'Added.')}
 function setBeat(kind,vol){if(SND.beatKind!==kind){if(SND.beat)SND.beat.stop();SND.beat=buildBeat(kind);SND.beatKind=kind}if(SND.beat)ramp(SND.beat,vol*SND.beat.lvl,2)}
-function soundsOff(sec=1.5){if(SND.amb)SND.amb.stop(sec);if(SND.beat)SND.beat.stop(sec);if(SND.trick){ramp(SND.trick,0,.4);const t=SND.trick;setTimeout(()=>t.stop(),600)}SND.amb=SND.beat=SND.trick=null;SND.ambKind=SND.beatKind=null}
+function soundsOff(sec=1.5){if(SND.amb)SND.amb.stop(sec);if(SND.ambKind==='list')setTimeout(()=>{if(SND.ambKind!=='list')plStop()},sec*1000+200);if(SND.beat)SND.beat.stop(sec);if(SND.trick){ramp(SND.trick,0,.4);const t=SND.trick;setTimeout(()=>t.stop(),600)}SND.amb=SND.beat=SND.trick=null;SND.ambKind=SND.beatKind=null}
 function bowl(f=196,vol=.22){const c=sctx();if(!c)return;const now=c.currentTime;
   [[1,1],[2.76,.42],[5.4,.18],[8.93,.07]].forEach(([m,a])=>{const o=c.createOscillator();o.frequency.value=f*m;const e=c.createGain();e.gain.setValueAtTime(0,now);e.gain.linearRampToValueAtTime(vol*a,now+.012);e.gain.exponentialRampToValueAtTime(.0001,now+9/Math.pow(m,.45));
     const l=c.createOscillator();l.frequency.value=1.6+Math.random()*1.4;const lg=c.createGain();lg.gain.value=vol*a*.25;l.connect(lg);lg.connect(e.gain);o.connect(e);e.connect(SND.out);o.start(now);l.start(now);o.stop(now+10);l.stop(now+10)})}
@@ -3280,17 +3369,18 @@ $('focus').addEventListener('click',e=>{const b=e.target.closest('button');if(!b
   else if(b.id==='fSkip'){run.left=0;nextPhase()}
   else if(b.id==='fGo'){run.phase='focus';run.left=focusLen();applySounds();if(study.bells)BELL.start()}
   else if(b.id==='fSound'){const s=$('fSheet');s.hidden=!s.hidden;if(!s.hidden)renderSheet()}
-  else if(b.dataset.famb){if(b.dataset.famb==='mine'&&!studyTrack){fToast('Choose your music first on the Study page, under Sounds.');return}study.sound=b.dataset.famb;saveStudy();if(study.sound==='off')soundsOff(.5);applySounds();renderSheet()}
+  else if(b.dataset.fpl){const a=b.dataset.fpl;if(a==='prev')plNext(-1);else if(a==='next')plNext(1);else if(PL.on&&!PL.paused)plPause();else plResume();return}
+  else if(b.dataset.famb){if(b.dataset.famb==='list'&&!plList().length){fToast('Add songs or YouTube links first on the Study page, under Sounds → My playlist.');return}if(study.sound==='list'&&b.dataset.famb!=='list')plStop();study.sound=b.dataset.famb;saveStudy();if(study.sound==='off')soundsOff(.5);applySounds();renderSheet()}
   else if(b.dataset.fbeat){study.beat=b.dataset.fbeat;saveStudy();applySounds();renderSheet()}
   else if(b.id==='fSheetClose')$('fSheet').hidden=true;
 });
 $('focus').addEventListener('input',e=>{if(e.target.id==='fVol'){study.vol=+e.target.value/100;applySounds()}if(e.target.id==='fBVol'){study.beatVol=+e.target.value/100;applySounds()}});
 $('focus').addEventListener('change',()=>saveStudy());
-const AMBS=[['piano','🎹','Calm piano'],['lofi','🎧','Lo-fi'],['bowls','🔔','Singing bowls'],['pad','🌙','Warm pad'],['rain','🌧','Rain'],['forest','🌲','Forest'],['stream','🏞','Stream'],['waves','🌊','Waves'],['fire','🔥','Fireplace'],['brown','🟤','Brown noise'],['mine','🎵','My music'],['off','🔇','Silence']];
-function renderSheet(){$('fSheetBody').innerHTML=`<div class="amb-grid sm">${AMBS.map(a=>`<button data-famb="${a[0]}" aria-pressed="${study.sound===a[0]}"><span>${a[1]}</span>${a[2]}</button>`).join('')}</div>
+const AMBS=[['piano','🎹','Calm piano'],['lofi','🎧','Lo-fi'],['bowls','🔔','Singing bowls'],['pad','🌙','Warm pad'],['rain','🌧','Rain'],['forest','🌲','Forest'],['stream','🏞','Stream'],['waves','🌊','Waves'],['fire','🔥','Fireplace'],['brown','🟤','Brown noise'],['list','🎵','My playlist'],['off','🔇','Silence']];
+function renderSheet(){$('fSheetBody').innerHTML=`${study.sound==='list'?`<div class="f-now"><span id="fNow"></span><button type="button" data-fpl="prev" aria-label="Previous">⏮</button><button type="button" data-fpl="toggle" id="fPlay">▶</button><button type="button" data-fpl="next" aria-label="Next">⏭</button></div>`:''}<div class="amb-grid sm">${AMBS.map(a=>`<button data-famb="${a[0]}" aria-pressed="${study.sound===a[0]}"><span>${a[1]}</span>${a[2]}</button>`).join('')}</div>
   <label class="f-range">Ambience<input type="range" id="fVol" min="0" max="100" value="${Math.round(study.vol*100)}"></label>
   <div class="seg2 beats">${[['off','Off'],...Object.entries(BEATS).map(([k,b])=>[k,b.name.split(' ')[0]])].map(([k,n])=>`<button data-fbeat="${k}" aria-pressed="${study.beat===k}">${n}</button>`).join('')}</div>
-  <label class="f-range">Binaural beats<input type="range" id="fBVol" min="0" max="100" value="${Math.round(study.beatVol*100)}"></label>`}
+  <label class="f-range">Binaural beats<input type="range" id="fBVol" min="0" max="100" value="${Math.round(study.beatVol*100)}"></label>`;plRender()}
 /* hold to end */
 (()=>{const b=$('fEnd');let t=null,st=0;const ring=b.querySelector('i');
   const down=e=>{e.preventDefault();st=Date.now();b.classList.add('holding');t=setInterval(()=>{const k=Math.min(1,(Date.now()-st)/1400);ring.style.setProperty('--k',k);if(k>=1){up();finishSitting(false)}},30)};
@@ -3316,7 +3406,7 @@ const ICO_SND='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3.5L1
 const RHY=[[15,3,'Gentle','15 min · 3 break'],[25,5,'Classic','25 min · 5 break'],[50,10,'Deep','50 min · 10 break']];
 const stOpen=new Set();
 function swRow(key,title,hint){return`<label class="sw-row"><span><b>${title}</b>${hint?`<small>${hint}</small>`:''}</span><input type="checkbox" class="sw" data-sb="${key}" ${study[key]?'checked':''}></label>`}
-function soundSum(){const a=AMBS.find(x=>x[0]===study.sound);if(study.sound==='off')return'Silence · no sounds';return(study.sound==='mine'&&study.mineName?study.mineName:a?a[2]:'Silence')+(study.beat!=='off'?' · '+BEATS[study.beat].name.split(' ')[0]+' beats':'')}
+function soundSum(){const a=AMBS.find(x=>x[0]===study.sound);if(study.sound==='off')return'Silence · no sounds';return(study.sound==='list'?`My playlist · ${plList().length} song${plList().length===1?'':'s'}`:a?a[2]:'Silence')+(study.beat!=='off'?' · '+BEATS[study.beat].name.split(' ')[0]+' beats':'')}
 function renderStudy(){
   const d=sday(),g=growth(),box=$('studyView');
   const isP=RHY.find(p=>p[0]===study.focus&&p[1]===study.brk);
@@ -3340,7 +3430,7 @@ function renderStudy(){
   </section>
   ${acc('sound',ICO_SND,'c','Sounds',soundSum(),`
     <div class="amb-grid">${AMBS.map(a=>`<button type="button" data-amb="${a[0]}" aria-pressed="${study.sound===a[0]}"><span>${a[1]}</span>${a[2]}</button>`).join('')}</div>
-    <div class="st-mine" id="stMine" ${study.sound==='mine'?'':'hidden'}><span id="stMineName">${studyTrack?'🎵 '+esc(study.mineName||'Your music'):'Choose a song or playlist file (MP3/M4A) from your phone.'}</span><label class="btn terra" for="stMineFile" role="button" tabindex="0">Choose music</label><input type="file" id="stMineFile" class="sr" accept="audio/*,.mp3,.m4a,.aac,.wav,.ogg"></div>
+    ${plEditorHTML()}
     <p class="hint st-silence">${study.sound==='off'?'Silence: no sounds at all while you study.':'Tap a sound to hear it. Choose Silence for complete quiet.'}</p>
     <label class="f-range">Volume<input type="range" id="stVol" min="0" max="100" value="${Math.round(study.vol*100)}"></label>
     <span class="st-lab">Binaural beats <span class="hint">· best with headphones</span></span>
@@ -3375,11 +3465,16 @@ $('studyView').addEventListener('click',e=>{
   if(b.dataset.plan){study.plan=+b.dataset.plan;pressOnly(b)}
   if(b.dataset.rhythm){if(b.dataset.rhythm==='custom'){$('stCustom').hidden=false;$('stCustom').querySelector('input').focus()}else{const[f,k]=b.dataset.rhythm.split(',').map(Number);study.focus=f;study.brk=k;study.longBrk=f>=50?20:15;$('stCustom').hidden=true}pressOnly(b)}
   if(b.dataset.goalstep){CFG.studyGoal=Math.min(720,Math.max(30,goalMin()+ +b.dataset.goalstep));saveCfg(CFG);$('stGoalV').textContent=fmtDur(goalMin()*60000);renderHabitCards();update();renderStudyHead();setSum()}
-  if(b.dataset.amb){study.sound=b.dataset.amb;pressOnly(b);sctx();$('stMine').hidden=study.sound!=='mine';
+  if(b.dataset.amb){if(study.sound==='list'&&b.dataset.amb!=='list')plStop();study.sound=b.dataset.amb;pressOnly(b);sctx();$('stPl').hidden=study.sound!=='list';
     const sl=$('studyView').querySelector('.st-silence');if(sl)sl.textContent=study.sound==='off'?'Silence: no sounds at all while you study.':'Tap a sound to hear it. Choose Silence for complete quiet.';
-    if(study.sound==='off'){soundsOff(.5)}else if(study.sound==='mine'&&!studyTrack){}else setAmb(study.sound,study.vol);$('stStopPrev').hidden=study.sound==='off';setSum()}
+    if(study.sound==='off'){soundsOff(.5)}else if(study.sound==='list'&&!plList().length){if(SND.amb)soundsOff(.5);plMsg('Add songs or links below, then press Play.')}else setAmb(study.sound,study.vol);$('stStopPrev').hidden=study.sound==='off';setSum()}
   if(b.dataset.beat){study.beat=b.dataset.beat;pressOnly(b);sctx();setBeat(study.beat,study.beatVol);$('stStopPrev').hidden=false;setSum()}
   if(b.id==='stStopPrev'){soundsOff(.6);b.hidden=true}
+  if(b.id==='plAdd'){plAddLink();return}
+  if(b.id==='plToggle'){sctx();if(PL.on&&!PL.paused)plPause();else{study.sound='list';if(SND.ambKind!=='list')setAmb('list',study.vol);else plResume()}$('stStopPrev').hidden=false;return}
+  if(b.id==='plPrev'){plNext(-1);return}if(b.id==='plNextB'){plNext(1);return}
+  if(b.dataset.plgo!==undefined){sctx();const i=+b.dataset.plgo;if(PL.on&&PL.i===i&&!PL.paused){plPause();return}study.sound='list';if(SND.ambKind!=='list'){SND.amb&&SND.amb.stop(.3);SND.amb={lvl:1,mine:true,set:(v,sec)=>plFade(v,sec),stop(sec=1.2){plFade(0,sec);setTimeout(()=>{if(SND.ambKind!=='list')plPause()},sec*1000+150)}};SND.ambKind='list'}PL.vol=study.vol;plPlay(i);$('stStopPrev').hidden=false;return}
+  if(b.dataset.pldel){const L=plList(),k=L.findIndex(x=>x.id===b.dataset.pldel);if(k<0)return;const it=L[k];if(PL.on&&PL.i===k){plStop()}else if(PL.i>k)PL.i--;L.splice(k,1);if(it.type==='file')idbDel(it.key);saveStudy();plRender();return}
   saveStudy();const pt=$('stPlanText');if(pt)pt.textContent=planEndText();
 });
 function pressOnly(b){b.parentElement.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b))}
@@ -3392,11 +3487,9 @@ $('studyView').addEventListener('input',e=>{const t=e.target;
   if(t.id==='stBVol'){study.beatVol=+t.value/100;if(SND.beat)setBeat(study.beat,study.beatVol)}
   if(t.dataset.sn||t.id==='stLabel'){readStudyForm();$('stPlanText').textContent=planEndText()}});
 function setSum(){const a=$('sum-sound'),b=$('sum-set');if(a)a.textContent=soundSum();if(b)b.textContent=`Goal ${fmtDur(goalMin()*60000)} · ${study.lock?(CAP?'phone lock on':'full screen'):'no lock'}`}
+$('studyView').addEventListener('keydown',e=>{if(e.target.id==='plUrl'&&e.key==='Enter'){e.preventDefault();plAddLink()}});
 $('studyView').addEventListener('change',async e=>{const t=e.target;
-  if(t.id==='stMineFile'){const f=t.files[0];t.value='';if(!f)return;const nm=$('stMineName');
-    if(!/^audio\//.test(f.type)&&!/\.(mp3|m4a|aac|wav|ogg|opus|flac)$/i.test(f.name)){nm.textContent='That file isn’t music. Choose an MP3 or M4A file.';return}
-    try{await storeStudyTrack(f)}catch(err){}studyTrack=f;if(studyAudio){try{studyAudio.pause()}catch(err){}studyAudio=null}if(SND.ambKind==='mine'){SND.amb=null;SND.ambKind=null}
-    study.mineName=f.name.replace(/\.[^.]+$/,'');saveStudy();nm.textContent='🎵 '+study.mineName;sctx();setAmb('mine',study.vol);$('stStopPrev').hidden=false;setSum();return}
+  if(t.id==='plFiles'){const fs=[...t.files];t.value='';if(fs.length)await plAddFiles(fs);return}
   if(t.dataset.sb){study[t.dataset.sb]=t.checked;setSum();if(t.dataset.sb==='water'&&!t.checked&&SND.trick){SND.trick.stop();SND.trick=null}}saveStudy()});
 function timelapse(btn){
   if(!pscene)return;clearInterval(stTimelapse);const t0=Date.now(),T=14000;btn.disabled=true;btn.textContent='Growing…';

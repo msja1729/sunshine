@@ -110,6 +110,10 @@ public class MainActivity extends BridgeActivity {
     public void onCreate(Bundle savedInstanceState) {
         registerPlugin(FocusLockPlugin.class);
         super.onCreate(savedInstanceState);
+        // Let the study playlist move on to the next song (and YouTube start) without an extra tap.
+        if (getBridge() != null && getBridge().getWebView() != null) {
+            getBridge().getWebView().getSettings().setMediaPlaybackRequiresUserGesture(false);
+        }
     }
 }
 `);

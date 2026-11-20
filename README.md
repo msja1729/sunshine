@@ -51,7 +51,8 @@ To switch this on, put the Web OAuth client ID into `const GOOGLE_CLIENT_ID=''` 
 - Gentle Grounding & Rescue Rituals (SOS page): 9 feelings, 7–8 evidence-based rituals each (CBT, DBT, ACT, somatic), shown 4 at a time with shuffle; live breathing circles, countdown timers, a write-and-release scratchpad that is never saved, and your own Spotify/YouTube comfort links. Every finished ritual is logged by day.
 - Up to 6 trusted people, each with Call and Message buttons on the SOS page.
 - Reminder sound: a gentle Sunshine chime, your phone's own sound, or silent (Me → Reminders).
-- Study sounds: calm piano, lo-fi, singing bowls, warm pad, rain, forest, stream, waves, fireplace, brown noise, your own music, or complete silence.
+- Study sounds: calm piano, lo-fi, singing bowls, warm pad, rain, forest, stream, waves, fireplace, brown noise, or complete silence.
+- My playlist for studying: add songs from your phone, YouTube links (videos or whole playlists) or direct song links. They play in order or shuffled during focus; YouTube shows in a small window, as YouTube requires.
 
 ## Files
 
